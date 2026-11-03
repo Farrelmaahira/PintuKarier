@@ -91,6 +91,7 @@ export const ROLE_INFO: Record<UserRole, { label: string; home: string; tone: st
 export const DASHBOARD_MENU: Record<UserRole, { href: string; label: string; icon: string }[]> = {
   mahasiswa: [
     { href: "/mahasiswa", label: "Beranda", icon: "house" },
+    { href: "/mahasiswa/readiness", label: "Readiness Tracker", icon: "chart" },
     { href: "/mahasiswa/lamar", label: "Lamar lowongan", icon: "upload" },
     { href: "/mahasiswa/interview", label: "Latihan Interview", icon: "video" },
     { href: "/mahasiswa/feedback", label: "Feedback", icon: "chat" },

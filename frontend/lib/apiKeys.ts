@@ -1,28 +1,36 @@
 /**
- * Kamus key JSON Golang API (Indonesia) ke nama field frontend (Inggris).
+ * Kamus key JSON Golang API (Indonesia/Snake) ke nama field frontend (Inggris CamelCase).
  * Hanya key; nilai seperti "Lolos" atau "Memenuhi Kriteria" tetap apa adanya.
  */
 const WIRE_TO_APP: Record<string, string> = {
+  action_recommendations: "actionRecommendations", actionRecommendations: "actionRecommendations",
+  action_url: "actionUrl", actionUrl: "actionUrl",
   aksi: "action", alasan: "reason", alasanKoreksi: "correctionReason", angkatan: "cohortYear", bidang: "jobField",
-  bidangIndustri: "industrySector", bukti: "evidence", catatan: "note", dari: "sender", deskripsi: "description",
-  detik: "seconds", dilamar: "appliedOn", dimensi: "dimensions", ditutup: "closed", durasi: "duration",
-  feedbackSla: "feedbackSla", feedbackTerkirim: "feedbackSent", fitur: "feature", instansi: "institution",
+  bidangIndustri: "industrySector", bukti: "evidence", catatan: "note", competencies: "competencies",
+  dari: "sender", deskripsi: "description", detik: "seconds", dilamar: "appliedOn", dimensi: "dimensions",
+  dimensions: "dimensions", ditutup: "closed", durasi: "duration", event_name: "eventName", eventName: "eventName",
+  evidence_src: "evidenceSrc", evidenceSrc: "evidenceSrc", feedbackSla: "feedbackSla",
+  feedbackTerkirim: "feedbackSent", fitur: "feature", instansi: "institution",
   interviewTanya: "interviewQuestions", ipk: "gpa", isi: "content", jawab: "answer", jawaban: "answers",
   jumlahLowongan: "vacancyCount", jumlahPelamar: "applicantCount", jurusan: "department", kampus: "campus",
   kategori: "category", kategoriAi: "aiCategory", kekuatan: "strengths", kenapa: "why", keputusan: "decision",
   kesenjanganSkill: "competencyGaps", kodeJurusan: "departmentCode", kompetensi: "competency", kutipan: "quote",
   lokasi: "location", lowongan: "vacancy", lowonganId: "vacancyId", matkul: "course", mitraPerekrut: "partnerCount",
   n: "count", nama: "name", namaJurusan: "departmentName", namaPerusahaan: "companyName", nim: "studentNumber",
-  oleh: "author", organisasi: "organizations", pelamar: "applicants", pengalaman: "experience", penutup: "closing",
-  peran: "role", peringatan: "warning", persentaseFeedback: "feedbackRate", perusahaan: "company", plus: "niceToHave",
-  poin: "points", posisi: "position", prescreen: "prescreenAnswers", prescreenTanya: "prescreenQuestions",
-  prodi: "studyProgram", prodiId: "studyProgramId", proyek: "projects", rataKesiapan: "avgReadiness",
-  ringkasan: "summary", ringkasanJurusan: "departmentSummaries", saran: "advice", sertifikasi: "certifications",
-  skill: "skills", slaFeedback: "feedbackSla", statusKemitraan: "partnershipStatus", sumber: "source",
-  syarat: "requirement", tahap: "stage", tahapKode: "stageCode", tanggal: "date", tempat: "place", tipe: "type",
-  tingkatKesiapan: "readinessLevel", totalLamaran: "totalApplications", totalLowongan: "totalVacancies",
-  totalMahasiswa: "totalStudents", totalMitra: "totalPartners", totalPelamar: "totalApplicants",
-  transkrip: "transcript", ukuran: "size", update: "lastUpdate", wajib: "mustHave", waktu: "period",
+  oleh: "author", organisasi: "organizations", overall_category: "overallCategory", overallCategory: "overallCategory",
+  overall_score: "overallScore", overallScore: "overallScore", pelamar: "applicants", pengalaman: "experience",
+  penutup: "closing", peran: "role", peringatan: "warning", persentaseFeedback: "feedbackRate", perusahaan: "company",
+  plus: "niceToHave", poin: "points", posisi: "position", potential_up: "potentialUp", potentialUp: "potentialUp",
+  prescreen: "prescreenAnswers", prescreenTanya: "prescreenQuestions", prodi: "studyProgram", prodiId: "studyProgramId",
+  progress_history: "progressHistory", progressHistory: "progressHistory", proyek: "projects",
+  rataKesiapan: "avgReadiness", ringkasan: "summary", ringkasanJurusan: "departmentSummaries", saran: "advice",
+  sertifikasi: "certifications", skill: "skills", slaFeedback: "feedbackSla", statusKemitraan: "partnershipStatus",
+  student_id: "studentId", studentId: "studentId", sumber: "source", syarat: "requirement", tahap: "stage",
+  tahapKode: "stageCode", tanggal: "date", target_position: "targetPosition", targetPosition: "targetPosition",
+  tempat: "place", tipe: "type", tingkatKesiapan: "readinessLevel", totalLamaran: "totalApplications",
+  totalLowongan: "totalVacancies", totalMahasiswa: "totalStudents", totalMitra: "totalPartners",
+  totalPelamar: "totalApplicants", transkrip: "transcript", ukuran: "size", update: "lastUpdate",
+  wajib: "mustHave", waktu: "period",
 };
 
 const APP_TO_WIRE = Object.fromEntries(Object.entries(WIRE_TO_APP).map(([wire, app]) => [app, wire]));
