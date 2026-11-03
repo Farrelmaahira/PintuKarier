@@ -33,6 +33,10 @@ const LOGIN_PLACEHOLDERS: Record<UserRole, RoleLoginPlaceholder> = {
     email: "kaprodi@kampus.ac.id",
     password: "Minimal 8 karakter",
   },
+  admin: {
+    email: "admin@kampus.ac.id",
+    password: "Minimal 8 karakter",
+  },
 };
 
 /** Form masuk + ilustrasi per peran. */
