@@ -2,7 +2,11 @@ import { redirect } from "next/navigation";
 import { toAppKeys, toWireKeys } from "./apiKeys";
 import { getSession } from "./getSession";
 
-type ApiInit = { method?: string; body?: unknown; auth?: boolean };
+export interface ApiInit {
+  method?: string;
+  body?: unknown;
+  auth?: boolean;
+}
 
 export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
   const session = init.auth === false ? null : await getSession();

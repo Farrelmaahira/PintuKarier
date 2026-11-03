@@ -112,5 +112,6 @@ export const DASHBOARD_MENU: Record<UserRole, { href: string; label: string; ico
     { href: "/admin", label: "Dasbor Kampus", icon: "house" },
     { href: "/admin/jurusan", label: "Statistik 7 Jurusan", icon: "chart" },
     { href: "/admin/mitra", label: "Mitra & Lowongan", icon: "building" },
+    { href: "/admin/profil", label: "Profil saya", icon: "user" },
   ],
 };
