@@ -6,8 +6,7 @@ import (
 	"pintukarier-backend/internal/domain"
 )
 
-// Route satu rute terlindungi beserta peran yang boleh memanggilnya.
-// Diekspor supaya tes bisa memastikan setiap rute menolak peran lain.
+// Route satu pola rute, daftar peran yang boleh memanggil, dan pembuat handler.
 type Route struct {
 	Pattern string
 	Roles   []domain.Role
@@ -19,10 +18,10 @@ var (
 	hrOnly    = []domain.Role{domain.RoleHRD, domain.RoleAdmin}
 	mhsOnly   = []domain.Role{domain.RoleMahasiswa, domain.RoleAdmin}
 	prodiOnly = []domain.Role{domain.RoleProdi}
+	adminOnly = []domain.Role{domain.RoleAdmin}
 )
 
-// Routes kontrak README bagian 5.4 plus rute konfirmasi upload.
-// Prodi tanpa admin: data agregat terikat prodi akun pemanggil.
+// Routes kontrak REST API Pintu Karier.
 var Routes = []Route{
 	{"GET /me", all, HandleMe},
 	{"GET /me/profil", mhsOnly, HandleProfilMahasiswaGet},
@@ -56,6 +55,10 @@ var Routes = []Route{
 	{"GET /prodi/{id}/catatan", prodiOnly, HandleCatatanList},
 	{"POST /prodi/{id}/catatan", prodiOnly, HandleCatatanCreate},
 
+	{"GET /admin/overview", adminOnly, HandleAdminOverview},
+	{"GET /admin/jurusan", adminOnly, HandleAdminJurusan},
+	{"GET /admin/mitra", adminOnly, HandleAdminMitra},
+
 	{"GET /jobs/{id}", all, HandleJobGet},
 }
 
@@ -68,7 +71,6 @@ func RegisterRoutes(mux *http.ServeMux, d *Deps) {
 	for _, rt := range Routes {
 		mux.Handle(rt.Pattern, RequireRole(d.Secret, rt.Roles...)(rt.Handler(d)))
 	}
-	// Upload dilindungi tanda tangan di URL, bukan token sesi.
 	files := CORS(d.WebOrigin, HandleFilePut(d))
 	mux.Handle("PUT /files/{key}", files)
 	mux.Handle("OPTIONS /files/{key}", files)

@@ -45,6 +45,10 @@ type Store interface {
 	FeedbackFor(ctx context.Context, studentID string) ([]Candidate, error)
 	RankRows(ctx context.Context, prodi string) ([]RankRow, error)
 
+	AdminOverview(ctx context.Context) (domain.AdminOverview, error)
+	AdminJurusan(ctx context.Context) ([]domain.AdminJurusanSummary, error)
+	AdminMitra(ctx context.Context) ([]domain.AdminMitraSummary, error)
+
 	Enqueue(ctx context.Context, key, kind, refID string) (domain.Job, error)
 	Job(ctx context.Context, id string) (domain.Job, error)
 	// ClaimJob ambil satu job siap jalan dan tandai running.
