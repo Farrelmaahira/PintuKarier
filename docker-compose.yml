@@ -1,0 +1,30 @@
+# Layanan pendukung untuk pengembangan lokal PintuKarier
+name: pintukarier
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pintukarier
+      POSTGRES_PASSWORD: pintukarier_dev_password
+      POSTGRES_DB: pintukarier
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pintukarier -d pintukarier"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ai-engine:
+    build: ./ai-engine
+    restart: unless-stopped
+    env_file: ./ai-engine/.env
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
