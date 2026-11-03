@@ -629,3 +629,492 @@
     display: none;
   }
 }
+
+/* Readiness Tracker Styles */
+.readinessHeroCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 24px;
+  padding: 28px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+}
+
+.readinessHeroLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.targetHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.targetLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.targetTitle {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  letter-spacing: -0.03em;
+}
+
+.targetDesc {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  max-width: 600px;
+}
+
+.targetMetaRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.targetMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-secondary);
+}
+
+.readinessScoreBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  padding: 20px 24px;
+  border: 2px solid var(--ink);
+  background: var(--surface-warm);
+  text-align: center;
+}
+
+.scoreBadgeTitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  margin-bottom: 8px;
+}
+
+.largeScoreDisplay {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.scoreNumBig {
+  font-size: 48px;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.scoreScale {
+  font-size: 18px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+}
+
+.scoreNotice {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 10px;
+}
+
+.dimList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.dimItem {
+  padding: 16px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+}
+
+.dimHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dimTitleCol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dimName {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dimWeightBadge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  background: var(--surface-warm);
+}
+
+.dimScoreCol {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.dimScoreVal {
+  font-size: 20px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+
+.dimScoreMax {
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+}
+
+.dimBarTrack {
+  height: 10px;
+  border: 2px solid var(--ink);
+  background: var(--surface-warm);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.dimBarFill {
+  height: 100%;
+  background: var(--accent);
+}
+
+.dimEvidenceBlock {
+  font-size: 13px;
+  background: var(--surface-warm);
+  padding: 10px 12px;
+  border-left: 3px solid var(--ink);
+}
+
+.dimEvidenceLabel {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ink-secondary);
+}
+
+.dimEvidenceText {
+  margin: 0;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.competencyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.competencyCard {
+  padding: 16px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.competencyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.compCategory {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}
+
+.compTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.compProgressWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.compProgressBar {
+  flex: 1;
+  height: 8px;
+  border: 1px solid var(--ink);
+  background: var(--surface-warm);
+  overflow: hidden;
+}
+
+.compProgressFill {
+  height: 100%;
+}
+
+.compPercent {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 34px;
+  text-align: right;
+}
+
+.compOrigin {
+  font-size: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+}
+
+.compOriginLabel {
+  color: var(--ink-muted);
+}
+
+.compOriginText {
+  font-weight: 600;
+}
+
+.timelineContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+.timelineMarker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20px;
+}
+
+.timelineDot {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--ink);
+  background: var(--accent);
+  margin-top: 4px;
+}
+
+.timelineLine {
+  flex: 1;
+  width: 2px;
+  background: var(--ink);
+  margin: 4px 0;
+}
+
+.timelineBody {
+  flex: 1;
+  padding-bottom: 24px;
+}
+
+.timelineMetaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.timelineDate {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.timelineScorePill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timelineScoreVal {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.timelineGain {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: var(--cat-green);
+  border: 1px solid var(--ink);
+}
+
+.timelineTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.timelineDesc {
+  font-size: 13px;
+  color: var(--ink-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.recList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.recCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+  gap: 16px;
+}
+
+.recLeft {
+  flex: 1;
+}
+
+.recBadges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.gainBadge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: var(--surface-warm);
+  border: 1px solid var(--ink);
+}
+
+.recTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.recRight {
+  display: flex;
+  align-items: center;
+}
+
+.recBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.recBtn:hover {
+  background: var(--ink-secondary);
+}
+
+@media (max-width: 991px) {
+  .readinessHeroCard {
+    flex-direction: column;
+  }
+  .recCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .recRight {
+    width: 100%;
+  }
+  .recBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+.tabNav {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.tabItem {
+  padding: 10px 18px;
+  border: 2px solid var(--ink);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  bottom: -2px;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.tabItem:hover {
+  background: var(--surface-warm);
+}
+
+.tabActive {
+  padding: 10px 18px;
+  border: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  bottom: -2px;
+  white-space: nowrap;
+}
