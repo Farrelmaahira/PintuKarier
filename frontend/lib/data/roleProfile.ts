@@ -3,7 +3,8 @@ import type { Session, UserRole } from "./auth";
 export interface ProfilePanelData {
   title: string;
   items: [string, string][];
-  action?: {
+  footer?: {
+    hint: string;
     href: string;
     label: string;
   };
@@ -20,7 +21,7 @@ export interface RoleProfileData {
 export function getRoleProfileData(session: Session | null, role: UserRole): RoleProfileData {
   if (role === "hrd") {
     const name = session?.name ?? "Rani Wulandari";
-    const email = session?.email ?? "rani@demo.lulusin.id";
+    const email = session?.email ?? "rani@demo.pintukarier.id";
     const company = session?.institution ?? "PT Arunika Teknologi";
 
     return {
@@ -33,19 +34,19 @@ export function getRoleProfileData(session: Session | null, role: UserRole): Rol
           ["Nama Lengkap", name],
           ["Email", email],
           ["Peran", "Talent Acquisition / HRD Mitra"],
-          ["Perusahaan", company],
-          ["Status Akun", "Terverifikasi Aktif"],
+          ["Status Kemitraan", "Terverifikasi Aktif"],
         ],
       },
       secondaryPanel: {
-        title: "Informasi Perusahaan",
+        title: "Profil Perusahaan",
         items: [
-          ["Nama Entitas", company],
-          ["Bidang Usaha", "Teknologi Informasi & Rekayasa Perangkat Lunak"],
-          ["Lokasi", "Jakarta Selatan, Indonesia"],
-          ["Program Mitra", "Rekrutmen Kampus & Magang Industri 2026/2027"],
+          ["Nama Perusahaan", company],
+          ["Bidang Industri", "Teknologi Informasi & Software"],
+          ["Lokasi Kantor", "Jakarta Selatan, DKI Jakarta"],
+          ["Kemitraan Kampus", "Politeknik Negeri Jakarta"],
         ],
-        action: {
+        footer: {
+          hint: "Ingin mengubah data perusahaan atau menambah lowongan baru?",
           href: "/hrd/lowongan",
           label: "Kelola Lowongan",
         },
@@ -53,13 +54,42 @@ export function getRoleProfileData(session: Session | null, role: UserRole): Rol
     };
   }
 
+  if (role === "admin") {
+    const name = session?.name ?? "Admin Pusat Karier";
+    const email = session?.email ?? "admin@demo.pintukarier.id";
+
+    return {
+      title: "Profil Pusat Karier",
+      lead: "Identitas akun pengelola pusat karier kampus untuk pemantauan seluruh 7 jurusan PNJ.",
+      href: "/admin",
+      primaryPanel: {
+        title: "Identitas Pengelola Kampus",
+        items: [
+          ["Nama Pengelola", name],
+          ["Email Resmi", email],
+          ["Unit Kerja", "Pusat Karier & Hubungan Alumni"],
+          ["Institusi", "Politeknik Negeri Jakarta"],
+        ],
+      },
+      secondaryPanel: {
+        title: "Cakupan Ekosistem",
+        items: [
+          ["Jumlah Jurusan", "7 Jurusan Vokasi"],
+          ["Jumlah Program Studi", "36 Program Studi"],
+          ["Cakupan Wilayah", "Kampus UI Depok"],
+          ["Status Sistem", "Pintu Karier Active Node"],
+        ],
+      },
+    };
+  }
+
   const name = session?.name ?? "Dr. Anita Hidayati";
-  const email = session?.email ?? "anita@demo.lulusin.id";
+  const email = session?.email ?? "anita@demo.pintukarier.id";
   const prodi = session?.institution ?? "D4 Teknik Informatika";
 
   return {
     title: "Profil Pengelola Prodi",
-    lead: "Identitas pengelola program studi, institusi pendidikan, dan kurikulum yang terhubung dengan Lulusin.",
+    lead: "Identitas pengelola program studi, institusi pendidikan, dan kurikulum yang terhubung dengan Pintu Karier.",
     href: "/prodi",
     primaryPanel: {
       title: "Identitas Pengelola",
@@ -68,20 +98,20 @@ export function getRoleProfileData(session: Session | null, role: UserRole): Rol
         ["Email Resmi", email],
         ["Jabatan", "Ketua Program Studi / Dosen Pembina"],
         ["Program Studi", prodi],
-        ["Perguruan Tinggi", "Politeknik Negeri Jakarta"],
       ],
     },
     secondaryPanel: {
-      title: "Program Studi & Integrasi",
+      title: "Informasi Institusi & Kurikulum",
       items: [
-        ["Program Studi", prodi],
-        ["Jenjang", "Diploma IV (Sarjana Terapan)"],
-        ["Fokus Kurikulum", "Rekayasa Perangkat Lunak & Industri IT"],
-        ["Status Integrasi", "Sinkron Evaluasi Kompetensi Seleksi"],
+        ["Perguruan Tinggi", "Politeknik Negeri Jakarta"],
+        ["Jenjang", "Sarjana Terapan (D4)"],
+        ["Basis Kurikulum", "Outcome-Based Education (OBE)"],
+        ["Siklus Evaluasi", "Tiap Periode Rekrutmen"],
       ],
-      action: {
-        href: "/prodi/kompetensi",
-        label: "Analisis Kompetensi Lulusan",
+      footer: {
+        hint: "Ingin meninjau kesenjangan kompetensi atau merancang tindak lanjut RPS?",
+        href: "/prodi/kurikulum",
+        label: "Buka Rekomendasi RPS",
       },
     },
   };

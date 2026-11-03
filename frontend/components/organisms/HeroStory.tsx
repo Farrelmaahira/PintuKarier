@@ -26,7 +26,7 @@ export function HeroStory() {
             Ditolak? Sekarang kamu tau kenapa.
           </h1>
           <p className={landing.heroSub}>
-            Lulusin bikin hasil seleksi kerja jadi feedback kompetensi. Buat kamu yang melamar, buat HRD yang menyeleksi, dan buat prodi yang nyusun kurikulum.
+            Pintu Karier bikin hasil seleksi kerja jadi feedback kompetensi. Buat kamu yang melamar, buat HRD yang menyeleksi, dan buat prodi yang nyusun kurikulum.
           </p>
           <div className={landing.heroCtas}>
             <HeroCta href="/register" icon={<ArrowUpRight size={22} aria-hidden />}>

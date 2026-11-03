@@ -4,7 +4,7 @@ import { DIFFERENTIATORS } from "@/lib/data/landing/differentiators";
 import { STATS } from "@/lib/data/landing/problem";
 import landing from "@/styles/landing.module.css";
 
-/** Section gelap: masalah rekrutmen, angkanya, dan pembeda Lulusin dari solusi lama. */
+/** Section gelap: masalah rekrutmen, angkanya, dan pembeda Pintu Karier dari solusi lama. */
 export function ProblemSection() {
   return (
     <section id="masalah" className={landing.ink} data-theme-section="dark">

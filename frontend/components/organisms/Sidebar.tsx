@@ -64,7 +64,7 @@ export function Sidebar({ session }: SidebarProps) {
     <aside className={dashboard.sidebar} style={{ "--tone": info.tone } as React.CSSProperties}>
       <Link href="/" className={dashboard.brand}>
         <Logo size={28} />
-        Lulusin
+        Pintu Karier
       </Link>
       <span className={dashboard.role}>Dashboard {info.label}</span>
       <nav className={dashboard.menu} aria-label="Menu dashboard">

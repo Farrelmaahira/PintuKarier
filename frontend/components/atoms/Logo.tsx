@@ -2,7 +2,7 @@ interface LogoProps {
   size?: number;
 }
 
-/** Tanda Lulusin: lembar CV dengan centang, kotak biru di pojok seperti logo template. */
+/** Tanda Pintu Karier: lembar CV dengan centang, kotak biru di pojok. */
 export function Logo({ size = 32 }: LogoProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden>

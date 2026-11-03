@@ -41,7 +41,7 @@ export function Nav() {
     <nav className={shell.nav} aria-label="Utama">
       <Link href="/" className={shell.brand}>
         <Logo size={32} />
-        Lulusin
+        Pintu Karier
       </Link>
       <div className={shell.links}>{links}</div>
       <div className={shell.wallet}>{cta}</div>

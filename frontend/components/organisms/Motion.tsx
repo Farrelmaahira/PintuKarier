@@ -19,7 +19,7 @@ interface MotionProps {
 
 /**
  * Landing choreography, same as the Fakturin template, in React + GSAP. The motion style (timings, reveals)
- * follows fakturin/apps/web/DESIGN.md section 7 (Overflow Grid), ported 1:1 to Lulusin. Behavior is declared in
+ * follows the Overflow Grid motion style, ported cleanly to Pintu Karier. Behavior is declared in
  * markup with data attributes; each effect lives in lib/motion.
  */
 export function Motion({ children }: MotionProps) {

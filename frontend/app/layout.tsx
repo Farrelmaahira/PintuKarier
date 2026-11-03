@@ -5,16 +5,16 @@ import "./globals.css";
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-font-geist-mono",
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "PintuKarier | TITIAN",
-    template: "%s | PintuKarier",
+    default: "Pintu Karier",
+    template: "%s | Pintu Karier",
   },
   description:
-    "Platform AI Jembatan Kompetensi yang Mengubah Hasil Seleksi Kerja Menjadi Jalur Belajar bagi Lulusan Vokasi. Politeknik Negeri Jakarta.",
+    "Platform AI Berbasis Bukti yang Menghubungkan Seleksi Kerja, Jalur Belajar Mahasiswa, dan Pemutakhiran Kurikulum Vokasi. Politeknik Negeri Jakarta.",
 };
 
 export const viewport: Viewport = {

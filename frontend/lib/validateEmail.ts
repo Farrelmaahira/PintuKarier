@@ -2,7 +2,7 @@
 const EMAIL_FORMAT = /^[^\s@]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
 
 // Domain mirip penyedia ini (gma4il.com) hampir pasti salah ketik, dan banyak yang sudah dimiliki pihak lain
-// sehingga email Lulusin bisa nyasar ke mereka.
+// sehingga email Pintu Karier bisa nyasar ke mereka.
 const POPULAR_PROVIDERS = ["gmail.com", "yahoo.com", "yahoo.co.id", "outlook.com", "hotmail.com", "icloud.com"];
 // Domain asli yang kebetulan mirip penyedia di atas.
 // shortcut: daftar tangan, satu-satunya cara pasti adalah link verifikasi email; tambah itu sebelum pilot.

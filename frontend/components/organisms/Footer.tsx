@@ -36,7 +36,7 @@ export function Footer() {
         <div className={shell.footerAbout}>
           <Link href="/" className={shell.footerLogo}>
             <Logo size={36} />
-            Lulusin
+            Pintu Karier
           </Link>
           <p>
             Platform rekrutmen kampus berbasis AI yang mengubah hasil seleksi kerja menjadi umpan balik kompetensi bagi
@@ -55,7 +55,7 @@ export function Footer() {
         ))}
       </div>
       <div className={shell.footerBottom}>
-        <span>© 2026 Lulusin. Politeknik Negeri Jakarta, Depok.</span>
+        <span>© 2026 Pintu Karier. Politeknik Negeri Jakarta, Depok.</span>
         <span>Data pada akun demo bersifat fiktif.</span>
       </div>
     </footer>

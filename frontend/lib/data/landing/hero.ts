@@ -7,7 +7,7 @@ export const CHAPTERS = [
     body: "Unggah CV, jawab 3 pertanyaan pre-screening, terus AI Interview lewat kamera. Semua lewat pusat karier kampus, gratis.",
   },
   {
-    who: "Sistem Lulusin",
+    who: "Pintu Karier",
     tone: "var(--accent)",
     title: "Dinilai dari bukti, bukan kata kunci.",
     body: "Tiap syarat lowongan dicocokkan ke bukti nyata di CV dan jawaban interview, lalu dihitung di 5 dimensi berbobot.",

@@ -1,7 +1,7 @@
 export const FAQ: [string, string][] = [
   [
-    "Lulusin itu apa sih?",
-    "Platform rekrutmen kampus berbasis AI yang nyambungin tiga pihak: mahasiswa yang melamar, HRD mitra industri yang menyeleksi, dan program studi yang butuh data buat memperbaiki pembelajaran.",
+    "Pintu Karier itu apa sih?",
+    "Platform rekrutmen dan pengembangan karier kampus berbasis AI yang menghubungkan mahasiswa, HRD mitra industri, program studi vokasi, dan pusat karier kampus untuk menutup kesenjangan kompetensi kerja.",
   ],
   [
     "AI yang nentuin aku lolos atau nggak?",
@@ -9,26 +9,26 @@ export const FAQ: [string, string][] = [
   ],
   [
     "Aku fresh graduate, belum pernah kerja. Kalah dong?",
-    "Justru nggak. Evidence-Based Scoring ngitung proyek, organisasi, magang, dan portofolio sebagai bukti. Skill yang kamu pakai di proyek PBL tetap kehitung.",
+    "Justru nggak. Evidence-Based Scoring ngitung proyek, organisasi, magang, dan portofolio sebagai bukti nyata. Skill yang kamu pakai di proyek PBL tetap terhitung.",
   ],
   [
     "Feedback-nya kayak gimana?",
-    "Ringkasan hasil evaluasi plus kompetensi yang perlu dikembangin, lengkap sama alasan dan saran belajar. Draft-nya disusun AI, ditinjau dan dikirim HRD.",
+    "Ringkasan hasil evaluasi plus kompetensi yang perlu dikembangkan, lengkap dengan alasan dan jalur belajar di Learning Hub. Draf disusun AI, ditinjau dan dikirim HRD.",
   ],
   [
     "Data aku aman? Dosen bisa lihat aku ditolak?",
-    "Dasbor Prodi cuma nampilin data agregat. Kelompok dengan kandidat di bawah 10 orang disembunyiin biar nggak ada individu yang bisa dikenali. Data dipakai atas persetujuan kamu.",
+    "Dasbor Institusi cuma menampilkan data agregat. Kelompok dengan kandidat di bawah 10 orang disembunyikan agar privasi tetap terjaga sesuai UU PDP. Data dipakai atas persetujuan kamu.",
   ],
   [
     "Kalau ada yang nyisipin instruksi rahasia di CV?",
-    "Sistem punya perlindungan prompt injection. Teks tersembunyi yang nyoba ngubah penilaian bakal ditandai buat HRD dan diabaikan waktu scoring.",
+    "Sistem punya perlindungan prompt injection. Teks tersembunyi yang mencoba memanipulasi penilaian akan ditandai untuk HRD dan diabaikan saat scoring.",
   ],
   [
     "Mahasiswa bayar?",
-    "Gratis buat mahasiswa. Biaya operasional ditanggung lewat lisensi institusi atau langganan perusahaan mitra.",
+    "Gratis buat mahasiswa. Biaya operasional ditanggung lewat kemitraan institusi kampus dan perusahaan mitra.",
   ],
   [
     "Ini beneran udah jalan?",
-    "Alur inti seleksi, AI Interview, dan dashboard HRD dikembangkan dari Direkrut AI, prototype yang udah ditinjau software engineer, product designer, praktisi HR, dan dosen. Demo ini pakai data dummy.",
+    "Alur inti seleksi, AI Interview, Learning Hub, dan dasbor institusi telah terintegrasi end-to-end. Demo ini menggunakan simulasi data terstandarisasi.",
   ],
 ];

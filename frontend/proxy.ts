@@ -15,10 +15,7 @@ export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   let role: string | null = null;
   try {
-    const rawCookie =
-      request.cookies.get("pintukarier_session")?.value ??
-      request.cookies.get("lulusin_session")?.value ??
-      "null";
+    const rawCookie = request.cookies.get("pintukarier_session")?.value ?? "null";
     role = JSON.parse(rawCookie)?.role ?? null;
   } catch {
     role = null;

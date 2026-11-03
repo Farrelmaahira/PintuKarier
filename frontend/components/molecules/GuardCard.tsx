@@ -8,7 +8,7 @@ interface GuardCardProps {
   chip: string;
 }
 
-/** Satu baris pembeda: keterbatasan solusi lama vs cara Lulusin. */
+/** Satu baris pembeda: keterbatasan solusi lama vs cara Pintu Karier. */
 export function GuardCard({ title, limitation, difference, chip }: GuardCardProps) {
   return (
     <div className={landing.guard} data-reveal-item>
