@@ -1,0 +1,143 @@
+/* Kerangka dashboard: sidebar kiri per peran, konten kanan. Jadi bar atas di layar kecil. */
+.shell {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.content {
+  min-width: 0;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  border-right: var(--border);
+  background: var(--surface);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--nav-h);
+  padding: 0 20px;
+  border-bottom: var(--border);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.role {
+  padding: 10px 20px;
+  border-bottom: var(--border);
+  background: var(--tone);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.menu {
+  display: grid;
+  align-content: start;
+  flex: 1;
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 20px;
+  border-bottom: var(--border);
+  font-size: 16px;
+  transition: background var(--dur) var(--ease);
+}
+
+.menu a:hover {
+  background: var(--surface-warm);
+}
+
+.menu a[aria-current="page"] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.account {
+  display: block;
+  padding: 16px 20px;
+  border-top: var(--border);
+}
+
+.account form {
+  width: 100%;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 44px;
+  border: var(--border);
+  font-weight: 500;
+  transition: background var(--dur) var(--ease);
+}
+
+.logout:hover {
+  background: var(--cat-orange);
+}
+
+@media (max-width: 991px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    flex-direction: row;
+    align-items: stretch;
+    height: var(--nav-h);
+    border-right: 0;
+    border-bottom: var(--border);
+  }
+  .brand {
+    border-bottom: 0;
+    border-right: var(--border);
+    padding: 0 var(--page-x);
+  }
+  .role {
+    display: none;
+  }
+  .menu {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .menu a {
+    border-bottom: 0;
+    border-right: var(--border);
+    white-space: nowrap;
+    min-height: 0;
+  }
+  .account {
+    display: flex;
+    padding: 0;
+    border-top: 0;
+    border-left: var(--border);
+  }
+  .avatar,
+  .who {
+    display: none;
+  }
+  .logout {
+    width: var(--nav-h);
+    height: 100%;
+    border: 0;
+  }
+  .logout span {
+    display: none;
+  }
+}
