@@ -1118,3 +1118,491 @@
   bottom: -2px;
   white-space: nowrap;
 }
+
+/* Learning Hub Styles */
+.learningBanner {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  background: var(--surface-warm);
+  border: 2px solid var(--ink);
+  padding: 24px;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.bannerLeft {
+  flex: 1;
+}
+
+.bannerPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--on-ink);
+  padding: 4px 8px;
+  margin-bottom: 12px;
+}
+
+.bannerTitle {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+}
+
+.bannerDesc {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  max-width: 600px;
+}
+
+.focusTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--ink);
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.bannerStats {
+  display: flex;
+  gap: 12px;
+}
+
+.bannerStatBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 120px;
+  padding: 16px;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+}
+
+.bannerStatLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-secondary);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.bannerStatNum {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.categoryFilterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.moduleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.moduleCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  padding: 20px;
+}
+
+.cardTopBadges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.categoryBadge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--surface-warm);
+  border: 1px solid var(--ink);
+  padding: 2px 6px;
+}
+
+.difficultyBadge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--cat-yellow);
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+}
+
+.durationBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ink-secondary);
+  margin-left: auto;
+}
+
+.moduleTitle {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.moduleSummary {
+  font-size: 13px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  flex: 1;
+}
+
+.moduleCompetencies {
+  margin-bottom: 16px;
+}
+
+.compLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  margin-bottom: 6px;
+}
+
+.compList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.compPill {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--surface-warm);
+  border: 1px solid var(--border-light);
+}
+
+.moduleFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
+  gap: 8px;
+}
+
+.gainIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.moduleActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btnExternal {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: 1px solid var(--ink);
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.btnExternal:hover {
+  background: var(--surface-warm);
+}
+
+.btnDrill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--on-ink);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btnDrill:hover {
+  opacity: 0.9;
+}
+
+.completedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--status-match);
+}
+
+/* Modal Drill */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 15, 29, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 640px;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--surface-warm);
+}
+
+.modalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drillBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.targetCompBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  background: var(--surface);
+}
+
+.modalCloseBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.modalBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scenarioBox {
+  background: var(--surface-warm);
+  border-left: 4px solid var(--ink);
+  padding: 12px 16px;
+}
+
+.scenarioLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.scenarioText {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.problemBox {
+  margin-top: 4px;
+}
+
+.problemTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.optionItem:hover:not(:disabled) {
+  background: var(--surface-warm);
+}
+
+.optionItemSelected {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--ink);
+  background: var(--cat-yellow);
+  text-align: left;
+  cursor: pointer;
+}
+
+.optionItemCorrect {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--status-match);
+  background: rgba(30, 130, 76, 0.1);
+  text-align: left;
+}
+
+.optionItemWrong {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--status-gap);
+  background: rgba(192, 57, 43, 0.1);
+  text-align: left;
+}
+
+.optionIdx {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+  min-width: 20px;
+}
+
+.optionText {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.resultSuccess {
+  padding: 14px;
+  background: rgba(30, 130, 76, 0.1);
+  border: 2px solid var(--status-match);
+}
+
+.resultWarning {
+  padding: 14px;
+  background: rgba(230, 126, 34, 0.1);
+  border: 2px solid var(--cat-orange);
+}
+
+.resultHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.resultExplanation {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 2px solid var(--ink);
+  background: var(--surface-warm);
+}
+
+.btnCancel {
+  padding: 8px 16px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnSubmitDrill {
+  padding: 8px 18px;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btnSubmitDrill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 991px) {
+  .learningBanner {
+    flex-direction: column;
+  }
+  .bannerStats {
+    width: 100%;
+  }
+  .bannerStatBox {
+    flex: 1;
+  }
+}
