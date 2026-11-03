@@ -92,6 +92,7 @@ export const DASHBOARD_MENU: Record<UserRole, { href: string; label: string; ico
   mahasiswa: [
     { href: "/mahasiswa", label: "Beranda", icon: "house" },
     { href: "/mahasiswa/readiness", label: "Readiness Tracker", icon: "chart" },
+    { href: "/mahasiswa/learning-hub", label: "Learning Hub", icon: "book" },
     { href: "/mahasiswa/lamar", label: "Lamar lowongan", icon: "upload" },
     { href: "/mahasiswa/interview", label: "Latihan Interview", icon: "video" },
     { href: "/mahasiswa/feedback", label: "Feedback", icon: "chat" },
