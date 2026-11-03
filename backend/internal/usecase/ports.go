@@ -44,6 +44,8 @@ type Store interface {
 	Candidates(ctx context.Context, vacancyID string) ([]Candidate, error)
 	FeedbackFor(ctx context.Context, studentID string) ([]Candidate, error)
 	StudentReadiness(ctx context.Context, studentID string) (domain.ReadinessProfile, error)
+	StudentLearning(ctx context.Context, studentID string) (domain.LearningOverview, error)
+	SubmitDrill(ctx context.Context, studentID, drillID string, optionIndex int) (domain.DrillSubmissionResult, error)
 	RankRows(ctx context.Context, prodi string) ([]RankRow, error)
 
 	AdminOverview(ctx context.Context) (domain.AdminOverview, error)

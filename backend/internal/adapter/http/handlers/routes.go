@@ -29,6 +29,8 @@ var Routes = []Route{
 	{"POST /me/cv", mhsOnly, HandleProfilCVUpload},
 	{"POST /me/cv/selesai", mhsOnly, HandleProfilCVDone},
 	{"GET /me/readiness", mhsOnly, HandleStudentReadiness},
+	{"GET /me/learning", mhsOnly, HandleStudentLearning},
+	{"POST /me/learning/drill", mhsOnly, HandleSubmitDrill},
 
 	{"GET /lowongan", all, HandleVacancyList},
 	{"POST /lowongan", hrOnly, HandleVacancyCreate},
