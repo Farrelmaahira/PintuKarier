@@ -97,7 +97,11 @@ type DemoAccount struct {
 func DemoAccountsFromEnv(getenv func(string) string) ([]DemoAccount, error) {
 	var out []DemoAccount
 	var missing []string
-	for _, role := range []domain.Role{domain.RoleMahasiswa, domain.RoleHRD, domain.RoleProdi} {
+	roles := []domain.Role{domain.RoleMahasiswa, domain.RoleHRD, domain.RoleProdi}
+	if getenv("DEMO_ADMIN_EMAIL") != "" {
+		roles = append(roles, domain.RoleAdmin)
+	}
+	for _, role := range roles {
 		prefix := "DEMO_" + strings.ToUpper(string(role)) + "_"
 		a := DemoAccount{Role: role, Email: strings.ToLower(strings.TrimSpace(getenv(prefix + "EMAIL"))), Password: getenv(prefix + "PASSWORD"), Nama: strings.TrimSpace(getenv(prefix + "NAMA"))}
 		for key, v := range map[string]string{"EMAIL": a.Email, "PASSWORD": a.Password, "NAMA": a.Nama} {
@@ -130,7 +134,12 @@ func SeedDemo(ctx context.Context, s *Store, accounts []DemoAccount) error {
 	}
 	now := time.Now()
 	prodi := fx.Mahasiswa.Prodi
-	instansi := map[domain.Role]string{domain.RoleMahasiswa: prodi, domain.RoleHRD: fx.LowonganHRD.Perusahaan, domain.RoleProdi: prodi}
+	instansi := map[domain.Role]string{
+		domain.RoleMahasiswa: prodi,
+		domain.RoleHRD:       fx.LowonganHRD.Perusahaan,
+		domain.RoleProdi:     prodi,
+		domain.RoleAdmin:     "Pusat Karier PNJ",
+	}
 	for _, a := range accounts {
 		hash, err := usecase.HashPassword(a.Password)
 		if err != nil {

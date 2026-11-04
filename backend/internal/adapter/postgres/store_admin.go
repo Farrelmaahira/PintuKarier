@@ -11,14 +11,14 @@ func (s *Store) AdminOverview(ctx context.Context) (domain.AdminOverview, error)
 	var ov domain.AdminOverview
 
 	// Parameterized queries untuk mencegah SQL injection.
-	_ = s.pool.QueryRow(ctx, "SELECT COUNT(*) FROM users WHERE peran = $1", "mahasiswa").Scan(&ov.TotalMahasiswa)
-	_ = s.pool.QueryRow(ctx, "SELECT COUNT(*) FROM lowongan").Scan(&ov.TotalLowongan)
-	_ = s.pool.QueryRow(ctx, "SELECT COUNT(DISTINCT perusahaan) FROM lowongan").Scan(&ov.TotalMitra)
-	_ = s.pool.QueryRow(ctx, "SELECT COUNT(*) FROM lamaran").Scan(&ov.TotalLamaran)
+	_ = s.db.QueryRow(ctx, "SELECT COUNT(*) FROM users WHERE peran = $1", "mahasiswa").Scan(&ov.TotalMahasiswa)
+	_ = s.db.QueryRow(ctx, "SELECT COUNT(*) FROM lowongan").Scan(&ov.TotalLowongan)
+	_ = s.db.QueryRow(ctx, "SELECT COUNT(DISTINCT perusahaan) FROM lowongan").Scan(&ov.TotalMitra)
+	_ = s.db.QueryRow(ctx, "SELECT COUNT(*) FROM lamaran").Scan(&ov.TotalLamaran)
 
 	var totalHasil, totalFeedback int
 	var sumScore float64
-	row := s.pool.QueryRow(ctx, `
+	row := s.db.QueryRow(ctx, `
 		SELECT 
 			COUNT(*), 
 			COUNT(*) FILTER (WHERE feedback IS NOT NULL),

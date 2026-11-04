@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useActionState, useState } from "react";
-import { SignIn } from "@phosphor-icons/react";
+import { SignIn, Lightning } from "@phosphor-icons/react";
 import { Button } from "../atoms/Button";
 import { AuthArt } from "../molecules/AuthArt";
 import { Field } from "../molecules/Field";
@@ -22,20 +22,20 @@ interface RoleLoginPlaceholder {
 
 const LOGIN_PLACEHOLDERS: Record<UserRole, RoleLoginPlaceholder> = {
   mahasiswa: {
-    email: "nama@kampus.ac.id",
-    password: "Minimal 8 karakter",
+    email: "raka@demo.pintukarier.id",
+    password: "demo12345",
   },
   hrd: {
-    email: "hrd@perusahaan.com",
-    password: "Minimal 8 karakter",
+    email: "rani@demo.pintukarier.id",
+    password: "demo12345",
   },
   prodi: {
-    email: "kaprodi@kampus.ac.id",
-    password: "Minimal 8 karakter",
+    email: "anita@demo.pintukarier.id",
+    password: "demo12345",
   },
   admin: {
-    email: "admin@kampus.ac.id",
-    password: "Minimal 8 karakter",
+    email: "admin@demo.pintukarier.id",
+    password: "demo12345",
   },
 };
 
@@ -44,8 +44,24 @@ export function LoginPanel() {
   const params = useSearchParams();
   const next = params.get("next") ?? "";
   const [state, action, pending] = useActionState<AuthState, FormData>(login, {});
-  const [role, setRole] = useState(USER_ROLES.find((userRole) => next.startsWith(ROLE_INFO[userRole].home)) ?? "mahasiswa");
+  const initialRole = USER_ROLES.find((userRole) => next.startsWith(ROLE_INFO[userRole].home)) ?? "mahasiswa";
+  const [role, setRole] = useState<UserRole>(initialRole);
+  const [email, setEmail] = useState<string>(LOGIN_PLACEHOLDERS[initialRole].email);
+  const [password, setPassword] = useState<string>(LOGIN_PLACEHOLDERS[initialRole].password);
+
   const info = ROLE_INFO[role];
+
+  const handleRoleSelect = (label: string) => {
+    const nextRole = USER_ROLES[ROLE_LABELS.indexOf(label)] ?? "mahasiswa";
+    setRole(nextRole);
+    setEmail(LOGIN_PLACEHOLDERS[nextRole].email);
+    setPassword(LOGIN_PLACEHOLDERS[nextRole].password);
+  };
+
+  const fillDemo = () => {
+    setEmail(LOGIN_PLACEHOLDERS[role].email);
+    setPassword(LOGIN_PLACEHOLDERS[role].password);
+  };
 
   return (
     <div className={auth.split}>
@@ -56,7 +72,7 @@ export function LoginPanel() {
         </div>
         <div className={auth.group}>
           <span className={auth.label}>Masuk sebagai</span>
-          <Segmented label="Peran" options={ROLE_LABELS} value={info.label} onChange={(label) => setRole(USER_ROLES[ROLE_LABELS.indexOf(label)]!)} />
+          <Segmented label="Peran" options={ROLE_LABELS} value={info.label} onChange={handleRoleSelect} />
         </div>
         <form action={action} className={auth.form} noValidate>
           <input type="hidden" name="next" value={next} />
@@ -66,16 +82,43 @@ export function LoginPanel() {
             name="email"
             type="email"
             autoComplete="email"
-            defaultValue={state.email}
+            value={email}
+            onChange={setEmail}
             placeholder={LOGIN_PLACEHOLDERS[role].email}
           />
           <Field
+            key={`password-${role}`}
             label="Password"
             name="password"
             type="password"
             autoComplete="current-password"
+            value={password}
+            onChange={setPassword}
             placeholder={LOGIN_PLACEHOLDERS[role].password}
           />
+
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "-6px" }}>
+            <button
+              type="button"
+              onClick={fillDemo}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                fontSize: "12px",
+                fontFamily: "var(--font-mono, monospace)",
+                background: "#f0f0f0",
+                border: "1px solid #000f1d",
+                padding: "3px 8px",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              <Lightning size={14} weight="fill" color="#ffd731" />
+              Isi akun demo ({LOGIN_PLACEHOLDERS[role].email})
+            </button>
+          </div>
+
           {params.get("expired") && !state.error && <Notice tone="error">Sesi kamu udah habis. Masuk lagi, ya.</Notice>}
           {params.get("terdaftar") && !state.error && <Notice tone="success">Akun kamu udah jadi. Masuk dulu, ya.</Notice>}
           {state.error && <Notice tone="error">{state.error}</Notice>}

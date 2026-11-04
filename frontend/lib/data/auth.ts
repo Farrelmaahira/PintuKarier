@@ -82,7 +82,7 @@ export const ROLE_INFO: Record<UserRole, { label: string; home: string; tone: st
     label: "Pusat Karier",
     home: "/admin",
     tone: "var(--accent)",
-    img: "prodi",
+    img: "admin",
     title: "Satu kampus, seluruh jurusan.",
     description: "Pantau serapan kerja makro, kemitraan industri, dan SLA feedback mahasiswa lintas 7 jurusan.",
   },

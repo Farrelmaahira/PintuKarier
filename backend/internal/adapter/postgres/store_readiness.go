@@ -13,7 +13,7 @@ func (s *Store) StudentReadiness(ctx context.Context, studentID string) (domain.
 	var targetPosisi string
 	var latestScore float64
 
-	row := s.pool.QueryRow(ctx, `
+	row := s.db.QueryRow(ctx, `
 		SELECT l.posisi, COALESCE(h.total, 74.0)
 		FROM lamaran lam
 		JOIN lowongan l ON l.id = lam.lowongan_id

@@ -11,7 +11,7 @@ import (
 func (s *Store) StudentLearning(ctx context.Context, studentID string) (domain.LearningOverview, error) {
 	// Query parameterized untuk mengecek jurusan/target lamaran mahasiswa
 	var userProdi string
-	err := s.pool.QueryRow(ctx, `
+	err := s.db.QueryRow(ctx, `
 		SELECT COALESCE(prodi, 'Teknik Informatika')
 		FROM pengguna
 		WHERE id = $1
