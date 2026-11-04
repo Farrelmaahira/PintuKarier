@@ -34,7 +34,8 @@ export function playLoaderTimeline(overlay: HTMLElement, select: Select, onCompl
       },
       0,
     )
-    .to(select("[data-status]"), { scrambleText: { text: "KANDIDAT SIAP", chars: "upperCase" }, duration: 0.6 }, 1.3)
+    .to(select("[data-status]"), { scrambleText: { text: "MENYELARASKAN TALENTA…", chars: "upperCase" }, duration: 0.5 }, 0.8)
+    .to(select("[data-status]"), { scrambleText: { text: "PINTU KARIER SIAP", chars: "upperCase" }, duration: 0.5 }, 1.4)
     .to(select("[data-block]"), { opacity: 0, stagger: 0.01 })
     .to(select("[data-blocks]"), { clipPath: "inset(0 0 100% 0)" }, "<+=0.2")
     .to(select("[data-icon]"), { xPercent: 800 }, "<")

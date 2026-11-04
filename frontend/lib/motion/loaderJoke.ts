@@ -14,7 +14,7 @@ export function attachLoaderJoke(select: Select): Cleanup {
     const before = [openTag.textContent ?? "", closeTag.textContent ?? "", status.textContent ?? ""];
     gsap.to(openTag, { scrambleText: { text: "<sabar-dulu>" } });
     gsap.to(closeTag, { scrambleText: { text: "</sabar-dulu>" } });
-    gsap.to(status, { scrambleText: { text: "BARU JUGA NYAMPE", chars: "upperCase" } });
+    gsap.to(status, { scrambleText: { text: "SEDANG MENYIAPKAN RUANG", chars: "upperCase" } });
     gsap.delayedCall(2, () => {
       gsap.to(openTag, { scrambleText: { text: before[0]! } });
       gsap.to(closeTag, { scrambleText: { text: before[1]! } });

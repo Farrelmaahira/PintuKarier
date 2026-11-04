@@ -8,7 +8,7 @@ import landing from "@/styles/landing.module.css";
 
 const BLOCK_COUNT = 16;
 
-/** Overflow-style loader (fakturin DESIGN.md section 4): progress window that expands into the page. */
+/** Overflow-style loader: progress window that expands into the page. */
 export function Loader() {
   const ref = useRef<HTMLDivElement>(null);
   const gone = useLoaderIntro(ref);
@@ -21,11 +21,11 @@ export function Loader() {
         <div className={landing.loaderBar} data-bar>
           <span className={landing.loaderTitle}>
             <span className={landing.codeTag} data-tag>
-              &lt;hackathon&gt;
+              &lt;system&gt;
             </span>{" "}
-            IT Comp 2026{" "}
+            Pintu Karier Platform{" "}
             <span className={landing.codeTag} data-tag>
-              &lt;/hackathon&gt;
+              &lt;/system&gt;
             </span>
           </span>
           <button type="button" className={landing.loaderClose} data-close tabIndex={-1}>
@@ -39,7 +39,7 @@ export function Loader() {
                 <DottedArrow />
               </span>
               <span className={landing.loaderText}>
-                <span data-status>MEMBACA CV…</span>
+                <span data-status>MEMUAT PLATFORM…</span>
                 <span data-pct>0%</span>
               </span>
             </div>
