@@ -1,58 +1,103 @@
 import { Badge } from "../atoms/Badge";
+import { Panel } from "../molecules/Panel";
+import { Stat } from "../molecules/Stat";
+import { StatGrid } from "../molecules/StatGrid";
 import { ReadinessProfile } from "@/lib/data/readiness/types";
-import { Briefcase, ChartLineUp, CheckCircle, Target } from "@phosphor-icons/react";
-import dashboard from "@/styles/dashboard.module.css";
-import ui from "@/styles/ui.module.css";
+import { CATEGORY_TONE, Tone } from "@/lib/tone";
 
 export interface ReadinessScoreOverviewProps {
   profile: ReadinessProfile;
+  availablePositions?: readonly string[];
+  selectedPosition?: string;
+  onPositionChange?: (position: string) => void;
 }
 
-export function ReadinessScoreOverview({ profile }: ReadinessScoreOverviewProps) {
-  const categoryTone =
-    profile.overallScore >= 80
-      ? "var(--cat-green)"
+export function ReadinessScoreOverview({
+  profile,
+  availablePositions,
+  selectedPosition,
+  onPositionChange,
+}: ReadinessScoreOverviewProps) {
+  const categoryTone: Tone =
+    CATEGORY_TONE[profile.overallCategory] ??
+    (profile.overallScore >= 80
+      ? "green"
       : profile.overallScore >= 65
-      ? "var(--cat-yellow)"
-      : "var(--cat-orange)";
+      ? "yellow"
+      : "orange");
 
-  return (
-    <div className={dashboard.readinessHeroCard}>
-      <div className={dashboard.readinessHeroLeft}>
-        <div className={dashboard.targetHeader}>
-          <Target size={20} color="var(--accent)" aria-hidden />
-          <span className={dashboard.targetLabel}>Posisi Sasaran Karier</span>
-        </div>
-        <h2 className={dashboard.targetTitle}>{profile.targetPosition}</h2>
-        <p className={dashboard.targetDesc}>
-          Skor kesiapan dihitung dinamis dari bukti nyata proyek PBL, magang industri, jawaban wawancara AI, dan latihan mandiri.
-        </p>
-
-        <div className={dashboard.targetMetaRow}>
-          <div className={dashboard.targetMetaItem}>
-            <Briefcase size={16} aria-hidden />
-            <span>Standar Industri Vokasi</span>
-          </div>
-          <div className={dashboard.targetMetaItem}>
-            <CheckCircle size={16} aria-hidden />
-            <span>5 Dimensi Penilaian Berbobot</span>
-          </div>
-        </div>
-      </div>
-
-      <div className={dashboard.readinessScoreBox}>
-        <span className={dashboard.scoreBadgeTitle}>Indeks Kesiapan Kerja</span>
-        <div className={dashboard.largeScoreDisplay}>
-          <span className={dashboard.scoreNumBig}>{profile.overallScore.toFixed(1)}</span>
-          <span className={dashboard.scoreScale}>/100</span>
-        </div>
-
-        <Badge tone={categoryTone}>{profile.overallCategory}</Badge>
-
-        <span className={dashboard.scoreNotice}>
-          Ambang minimum rekrutmen: 80.0
+  const positionValue =
+    availablePositions && onPositionChange ? (
+      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+        <select
+          value={selectedPosition || profile.targetPosition}
+          onChange={(e) => onPositionChange(e.target.value)}
+          aria-label="Ganti Posisi Sasaran Karier"
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "14px",
+            fontWeight: 700,
+            border: "1px solid var(--ink)",
+            background: "var(--surface)",
+            padding: "4px 8px",
+            color: "var(--ink)",
+            cursor: "pointer",
+            width: "100%",
+            maxWidth: "320px",
+          }}
+        >
+          {availablePositions.map((pos) => (
+            <option key={pos} value={pos}>
+              {pos}
+            </option>
+          ))}
+        </select>
+        <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+          Ubah fokus target untuk evaluasi spesifik
         </span>
       </div>
-    </div>
+    ) : (
+      profile.targetPosition || "Frontend Developer"
+    );
+
+  return (
+    <Panel title="Indeks Kesiapan Kerja Mahasiswa" tag="Evaluasi Berbasis Bukti" flush>
+      <StatGrid cols={3}>
+        <Stat
+          label="Posisi Sasaran Karier"
+          value={positionValue}
+        />
+        <Stat
+          label="Indeks Kesiapan"
+          value={`${profile.overallScore.toFixed(1)} / 100`}
+        />
+        <Stat
+          label="Status Rekomendasi"
+          value={<Badge tone={categoryTone}>{profile.overallCategory}</Badge>}
+        />
+      </StatGrid>
+
+      <div
+        style={{
+          padding: "14px 20px",
+          borderTop: "var(--border)",
+          background: "var(--surface-warm)",
+          fontSize: "13px",
+          color: "var(--text-muted)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <span>
+          Skor dihitung dinamis dari bukti nyata portofolio, magang industri, jawaban wawancara AI, dan drill kompetensi.
+        </span>
+        <span style={{ fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--ink)" }}>
+          Ambang minimum seleksi kerja: 80.0
+        </span>
+      </div>
+    </Panel>
   );
 }

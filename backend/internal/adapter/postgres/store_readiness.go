@@ -26,7 +26,7 @@ func (s *Store) StudentReadiness(ctx context.Context, studentID string) (domain.
 	_ = row.Scan(&targetPosisi, &latestScore)
 
 	if targetPosisi == "" {
-		targetPosisi = "Frontend Developer Vokasi"
+		targetPosisi = "Frontend Developer"
 	}
 	if latestScore <= 0 {
 		latestScore = 74.5

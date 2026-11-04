@@ -1,7 +1,9 @@
 import { ReadinessCompetency } from "@/lib/data/readiness/types";
 import { Badge } from "../atoms/Badge";
-import dashboard from "@/styles/dashboard.module.css";
-import ui from "@/styles/ui.module.css";
+import { Tag } from "../atoms/Tag";
+import { Meter } from "../atoms/Meter";
+import { Panel } from "../molecules/Panel";
+import rows from "@/styles/rows.module.css";
 
 export interface ReadinessCompetencyMatrixProps {
   competencies: ReadinessCompetency[];
@@ -9,55 +11,47 @@ export interface ReadinessCompetencyMatrixProps {
 
 export function ReadinessCompetencyMatrix({ competencies }: ReadinessCompetencyMatrixProps) {
   return (
-    <div className={ui.card}>
-      <div className={dashboard.cardHeaderRow}>
-        <div>
-          <h2 className={ui.cardTitle}>Matriks Penguasaan Kompetensi Terverifikasi</h2>
-          <span className={ui.cardSub}>
-            Pemetaan keahlian yang diekstrak langsung dari bukti proyek, transkrip wawancara, dan evaluasi HRD.
-          </span>
-        </div>
-      </div>
-
-      <div className={dashboard.competencyGrid}>
+    <Panel
+      title="Matriks Penguasaan Kompetensi Terverifikasi"
+      tag="Keahlian Industri"
+      flush
+    >
+      <ul className={rows.list}>
         {competencies.map((comp) => {
-          const isNeedGrowth = comp.progress < 60;
-          const tone = isNeedGrowth
-            ? "var(--cat-orange)"
-            : comp.progress >= 85
-            ? "var(--cat-green)"
-            : "var(--accent)";
+          const tone =
+            comp.progress >= 85
+              ? "green"
+              : comp.progress >= 60
+              ? "yellow"
+              : "orange";
 
           return (
-            <div key={comp.name} className={dashboard.competencyCard}>
-              <div className={dashboard.competencyHeader}>
-                <span className={dashboard.compCategory}>{comp.category}</span>
-                <Badge tone={tone}>{comp.level}</Badge>
-              </div>
-
-              <h3 className={dashboard.compTitle}>{comp.name}</h3>
-
-              <div className={dashboard.compProgressWrap}>
-                <div className={dashboard.compProgressBar}>
-                  <div
-                    className={dashboard.compProgressFill}
-                    style={{
-                      width: `${comp.progress}%`,
-                      background: tone,
-                    }}
-                  />
+            <li key={comp.name} className={rows.row} style={{ gridTemplateColumns: "1fr auto" }}>
+              <div className={rows.main} style={{ gap: "6px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                  <strong style={{ fontSize: "16px", letterSpacing: "-0.02em" }}>{comp.name}</strong>
+                  <Tag>{comp.category}</Tag>
+                  <Badge tone={tone}>{comp.level}</Badge>
                 </div>
-                <span className={dashboard.compPercent}>{comp.progress.toFixed(0)}%</span>
+
+                <Meter value={comp.progress} label={comp.name} tone="var(--accent)" />
+
+                <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>
+                  <span>Sumber Bukti: </span>
+                  <span style={{ fontWeight: 500, color: "var(--ink)" }}>{comp.evidenceSrc}</span>
+                </div>
               </div>
 
-              <div className={dashboard.compOrigin}>
-                <span className={dashboard.compOriginLabel}>Sumber Bukti:</span>
-                <span className={dashboard.compOriginText}>{comp.evidenceSrc}</span>
+              <div style={{ textAlign: "right", minWidth: "60px" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "18px" }}>
+                  {comp.progress.toFixed(0)}%
+                </span>
+                <span style={{ display: "block", fontSize: "11px", color: "var(--text-muted)" }}>Capaian</span>
               </div>
-            </div>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ul>
+    </Panel>
   );
 }

@@ -48,5 +48,8 @@ export interface ReadinessTrackerState {
   error: string | null;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  targetPosition: string;
+  setTargetPosition: (position: string) => void;
+  availablePositions: readonly string[];
   refreshReadiness: () => Promise<void>;
 }
