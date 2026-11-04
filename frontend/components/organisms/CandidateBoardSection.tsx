@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { CandidateBoard } from "./CandidateBoard";
 import { api } from "@/lib/api";
 import type { Candidate } from "@/lib/data/candidate";
@@ -8,6 +9,7 @@ interface CandidateBoardSectionProps {
 }
 
 export async function CandidateBoardSection({ searchParams }: CandidateBoardSectionProps) {
+  await connection();
   // `lowongan` adalah nama parameter di URL (/hrd?lowongan=...), jadi tidak ikut diganti.
   const { lowongan: selectedId } = await searchParams;
   const vacancies = await api<Vacancy[]>("/lowongan");

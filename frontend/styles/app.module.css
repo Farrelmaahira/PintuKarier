@@ -157,22 +157,25 @@
   border: 1px solid var(--ink);
 }
 
-/* ---------- Filter kategori (grid tab) ---------- */
+/* ---------- Filter kategori (tab bar adaptif flex-wrap) ----------
+   Menggunakan flex-wrap (bukan grid) agar tombol di baris berikutnya melebar
+   mengisi ruang baris dan tidak menyisakan rongga hitam (black void). */
 .catFilter {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 2px;
   border: var(--border);
   background: var(--ink);
 }
 
 .catFilter button {
+  flex: 1 1 160px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   min-height: 48px;
-  padding: 8px 12px;
+  padding: 8px 14px;
   background: var(--surface-raised);
   font-size: 14px;
   font-weight: 500;

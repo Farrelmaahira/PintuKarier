@@ -22,9 +22,9 @@ export function RoleProfileView({ data }: RoleProfileViewProps) {
         <div className={shell.stack}>
           <Panel title={data.secondaryPanel.title}>
             <KeyValue items={data.secondaryPanel.items} />
-            {data.secondaryPanel.action && (
-              <Button href={data.secondaryPanel.action.href} variant="ghost" size="sm">
-                {data.secondaryPanel.action.label}
+            {data.secondaryPanel.footer && (
+              <Button href={data.secondaryPanel.footer.href} variant="ghost" size="sm">
+                {data.secondaryPanel.footer.label}
               </Button>
             )}
           </Panel>

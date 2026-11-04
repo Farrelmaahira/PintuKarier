@@ -46,21 +46,14 @@ export function LoginPanel() {
   const [state, action, pending] = useActionState<AuthState, FormData>(login, {});
   const initialRole = USER_ROLES.find((userRole) => next.startsWith(ROLE_INFO[userRole].home)) ?? "mahasiswa";
   const [role, setRole] = useState<UserRole>(initialRole);
-  const [email, setEmail] = useState<string>(LOGIN_PLACEHOLDERS[initialRole].email);
-  const [password, setPassword] = useState<string>(LOGIN_PLACEHOLDERS[initialRole].password);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const info = ROLE_INFO[role];
 
   const handleRoleSelect = (label: string) => {
     const nextRole = USER_ROLES[ROLE_LABELS.indexOf(label)] ?? "mahasiswa";
     setRole(nextRole);
-    setEmail(LOGIN_PLACEHOLDERS[nextRole].email);
-    setPassword(LOGIN_PLACEHOLDERS[nextRole].password);
-  };
-
-  const fillDemo = () => {
-    setEmail(LOGIN_PLACEHOLDERS[role].email);
-    setPassword(LOGIN_PLACEHOLDERS[role].password);
   };
 
   return (
@@ -96,28 +89,6 @@ export function LoginPanel() {
             onChange={setPassword}
             placeholder={LOGIN_PLACEHOLDERS[role].password}
           />
-
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "-6px" }}>
-            <button
-              type="button"
-              onClick={fillDemo}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                fontSize: "12px",
-                fontFamily: "var(--font-mono, monospace)",
-                background: "#f0f0f0",
-                border: "1px solid #000f1d",
-                padding: "3px 8px",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              <Lightning size={14} weight="fill" color="#ffd731" />
-              Isi akun demo ({LOGIN_PLACEHOLDERS[role].email})
-            </button>
-          </div>
 
           {params.get("expired") && !state.error && <Notice tone="error">Sesi kamu udah habis. Masuk lagi, ya.</Notice>}
           {params.get("terdaftar") && !state.error && <Notice tone="success">Akun kamu udah jadi. Masuk dulu, ya.</Notice>}

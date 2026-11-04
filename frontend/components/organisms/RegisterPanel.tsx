@@ -20,6 +20,7 @@ const INSTITUTION_FIELD: Record<UserRole, { label: string; placeholder: string }
   mahasiswa: { label: "Program studi", placeholder: "D4 Teknik Informatika" },
   hrd: { label: "Nama perusahaan", placeholder: "PT Arunika Teknologi" },
   prodi: { label: "Program studi yang kamu kelola", placeholder: "D4 Teknik Informatika" },
+  admin: { label: "Unit / Lembaga Kampus", placeholder: "Pusat Karier PNJ" },
 };
 
 /** Form daftar dengan field menyesuaikan peran, plus persetujuan penggunaan data. */
