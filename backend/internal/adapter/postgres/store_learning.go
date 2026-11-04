@@ -12,8 +12,8 @@ func (s *Store) StudentLearning(ctx context.Context, studentID string) (domain.L
 	// Query parameterized untuk mengecek jurusan/target lamaran mahasiswa
 	var userProdi string
 	err := s.db.QueryRow(ctx, `
-		SELECT COALESCE(prodi, 'Teknik Informatika')
-		FROM pengguna
+		SELECT COALESCE(instansi, 'Teknik Informatika')
+		FROM users
 		WHERE id = $1
 	`, studentID).Scan(&userProdi)
 	if err != nil {
@@ -51,7 +51,7 @@ func (s *Store) StudentLearning(ctx context.Context, studentID string) (domain.L
 			Category:            "Cloud & DevOps",
 			Difficulty:          "Menengah",
 			DurationMinutes:     40,
-			Summary:             "Bangun image Docker yang ramping dan aman dengan multi-stage builds untuk Golang dan Node.js vokasi.",
+			Summary:             "Bangun image Docker yang ramping dan aman dengan multi-stage builds untuk Golang dan Node.js.",
 			CompetenciesCovered: []string{"Docker", "Container Security", "CI/CD Pipeline"},
 			EstimatedGain:       6,
 			Status:              "recommended",

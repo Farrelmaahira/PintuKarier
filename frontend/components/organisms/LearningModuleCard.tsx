@@ -19,7 +19,9 @@ export function LearningModuleCard({
     <div className={dashboard.moduleCard} data-status={module.status}>
       <div className={dashboard.cardTopBadges}>
         <span className={dashboard.categoryBadge}>{module.category}</span>
-        <span className={dashboard.difficultyBadge}>{module.difficulty}</span>
+        <span className={dashboard.difficultyBadge} data-difficulty={module.difficulty}>
+          {module.difficulty}
+        </span>
         <span className={dashboard.durationBadge}>
           <Clock size={12} weight="bold" /> {module.durationMinutes} mnt
         </span>
@@ -41,7 +43,7 @@ export function LearningModuleCard({
 
       <div className={dashboard.moduleFooter}>
         <div className={dashboard.gainIndicator}>
-          <Lightning size={14} weight="fill" color="var(--cat-orange)" />
+          <Lightning size={14} weight="bold" color="var(--ink)" />
           <span>+{module.estimatedGain} Poin Kesiapan</span>
         </div>
 
