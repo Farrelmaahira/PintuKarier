@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"net/url"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 
@@ -16,7 +17,7 @@ func OpenTemp(ctx context.Context, baseURL string) (s *Store, drop func(), err e
 	if err != nil {
 		return nil, nil, err
 	}
-	name := "PINTUKARIER_tmp_" + usecase.NewID("")
+	name := strings.ToLower("pintukarier_tmp_" + usecase.NewID(""))
 	if _, err := admin.Exec(ctx, "CREATE DATABASE "+name); err != nil {
 		_ = admin.Close(ctx)
 		return nil, nil, err
