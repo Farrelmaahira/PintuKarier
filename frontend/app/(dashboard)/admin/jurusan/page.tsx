@@ -1,35 +1,19 @@
-"use client";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/molecules/PageHeader";
+import { AdminJurusanClient } from "./AdminJurusanClient";
+import shell from "@/styles/shell.module.css";
 
-import { useAdminCareerCenter } from "@/lib/hooks/useAdminCareerCenter";
-import { AdminDepartmentsView } from "@/components/organisms/AdminDepartmentsView";
-import { Skeleton } from "@/components/atoms/Skeleton";
-import dashboard from "@/styles/dashboard.module.css";
+export const metadata: Metadata = { title: "Statistik 7 Jurusan - PNJ" };
 
-export function AdminJurusanPage() {
-  const { departments, isLoading, activeDepartmentFilter, setDepartmentFilter } =
-    useAdminCareerCenter();
-
-  if (isLoading && departments.length === 0) {
-    return (
-      <div className={dashboard.viewStack}>
-        <Skeleton width="300px" height="36px" />
-        <Skeleton height="50px" />
-        <div className={dashboard.deptGridDetailed}>
-          <Skeleton height="220px" />
-          <Skeleton height="220px" />
-          <Skeleton height="220px" />
-        </div>
-      </div>
-    );
-  }
-
+export default function AdminJurusanPage() {
   return (
-    <AdminDepartmentsView
-      departments={departments}
-      activeFilter={activeDepartmentFilter}
-      onFilterChange={setDepartmentFilter}
-    />
+    <main id="content" className={shell.page}>
+      <PageHeader
+        href="/admin/jurusan"
+        title="Statistik 7 Jurusan"
+        lead="Pemantauan daya serap lulusan, kesenjangan kompetensi prioritas, dan rata-rata skor kesiapan kerja per jurusan Politeknik Negeri Jakarta."
+      />
+      <AdminJurusanClient />
+    </main>
   );
 }
-
-export default AdminJurusanPage;

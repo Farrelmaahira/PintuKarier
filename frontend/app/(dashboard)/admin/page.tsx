@@ -1,39 +1,19 @@
-"use client";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/molecules/PageHeader";
+import { AdminOverviewSection } from "./AdminOverviewSection";
+import shell from "@/styles/shell.module.css";
 
-import { useAdminCareerCenter } from "@/lib/hooks/useAdminCareerCenter";
-import { AdminOverview } from "@/components/organisms/AdminOverview";
-import { Skeleton } from "@/components/atoms/Skeleton";
-import dashboard from "@/styles/dashboard.module.css";
+export const metadata: Metadata = { title: "Dasbor Eksekutif Kampus" };
 
-export function AdminDashboardPage() {
-  const { overview, isLoading, error } = useAdminCareerCenter();
-
-  if (isLoading && !overview) {
-    return (
-      <div className={dashboard.viewStack}>
-        <Skeleton width="320px" height="40px" />
-        <div className={dashboard.statsGrid}>
-          <Skeleton height="110px" />
-          <Skeleton height="110px" />
-          <Skeleton height="110px" />
-          <Skeleton height="110px" />
-        </div>
-        <Skeleton height="360px" />
-      </div>
-    );
-  }
-
-  if (error && !overview) {
-    return (
-      <div className={dashboard.viewStack}>
-        <div className={dashboard.emptyCell}>{error}</div>
-      </div>
-    );
-  }
-
-  if (!overview) return null;
-
-  return <AdminOverview overview={overview} />;
+export default function AdminPage() {
+  return (
+    <main id="content" className={shell.page}>
+      <PageHeader
+        href="/admin"
+        title="Dasbor Eksekutif Kampus"
+        lead="Pengawasan makro serapan kerja, kesiapan kompetensi lulusan, dan kepatuhan feedback industri di seluruh 7 jurusan Politeknik Negeri Jakarta."
+      />
+      <AdminOverviewSection />
+    </main>
+  );
 }
-
-export default AdminDashboardPage;
