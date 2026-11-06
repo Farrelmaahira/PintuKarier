@@ -65,6 +65,13 @@ type Store interface {
 
 	Notes(ctx context.Context, prodi string) ([]domain.FollowUpNote, error)
 	CreateNote(ctx context.Context, n domain.FollowUpNote) error
+
+	// Claim evidences (verifikasi berkas sertifikat & klaim kompetensi CV mahasiswa).
+	SaveClaims(ctx context.Context, claims []domain.ClaimEvidence) error
+	ClaimsByStudent(ctx context.Context, studentID string) ([]domain.ClaimEvidence, error)
+	ClaimByID(ctx context.Context, claimID, studentID string) (domain.ClaimEvidence, error)
+	UpdateClaimStatus(ctx context.Context, claimID, studentID string, fileKey, fileName string, status domain.ClaimStatus, confidence float64, notes string) error
+	ClaimsByApplication(ctx context.Context, applicationID string) ([]domain.ClaimEvidence, error)
 }
 
 // Candidate gabungan lamaran, mahasiswa, lowongan, dan hasil untuk layar HRD dan feedback.

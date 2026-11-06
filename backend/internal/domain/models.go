@@ -172,3 +172,33 @@ type FollowUpNote struct {
 	Status     string
 	CreatedAt  time.Time
 }
+
+type ClaimStatus string
+
+const (
+	ClaimPendingUpload      ClaimStatus = "pending_upload"
+	ClaimVerifying          ClaimStatus = "verifying"
+	ClaimVerified           ClaimStatus = "verified"
+	ClaimNeedsManualReview  ClaimStatus = "needs_manual_review"
+	ClaimRejected           ClaimStatus = "rejected"
+)
+
+// ClaimEvidence adalah berkas bukti verifikasi untuk klaim sertifikasi/kompetensi yang tercantum di CV.
+type ClaimEvidence struct {
+	ID                string      `json:"id"`
+	ApplicationID     string      `json:"application_id"`
+	StudentID         string      `json:"student_id"`
+	ClaimType         string      `json:"claim_type"` // e.g. "sertifikasi", "proyek", "penghargaan"
+	Title             string      `json:"title"`      // Nama sertifikat atau klaim
+	Issuer            string      `json:"issuer,omitempty"`
+	Year              string      `json:"year,omitempty"`
+	Context           string      `json:"context,omitempty"` // Kutipan CV
+	FileKey           string      `json:"file_key,omitempty"`
+	FileName          string      `json:"file_name,omitempty"`
+	Status            ClaimStatus `json:"status"`
+	MatchConfidence   float64     `json:"match_confidence"` // 0.0 - 1.0
+	VerificationNotes string      `json:"verification_notes,omitempty"`
+	CreatedAt         time.Time   `json:"created_at"`
+	UpdatedAt         time.Time   `json:"updated_at"`
+}
+

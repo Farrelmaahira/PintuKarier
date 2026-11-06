@@ -114,7 +114,7 @@ def _post(monkeypatch: pytest.MonkeyPatch, raw: str, cv: str = CV):
     return TestClient(app).post("/v1/score", json=body, headers={"X-Internal-Api-Key": "k"})
 
 
-def test_score_endpoint_returns_Pintu Karier_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_score_endpoint_returns_pintukarier_contract(monkeypatch: pytest.MonkeyPatch) -> None:
     raw = json.dumps(_llm({"id": "W1", "category": "SKILL", "match_status": "MATCHED", "source": "CV",
                            "evidence_text": "Next.js 15 dan React Query", "dimension_factors": {"skill_usage_level": "PROJECT_USAGE"}}))
     res = _post(monkeypatch, raw)

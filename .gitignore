@@ -63,3 +63,7 @@ __pycache__/
 # Auto-generated agent docs
 AGENTS.md
 frontend/AGENTS.md
+
+# Graphify cache
+graphify-out/cache/
+

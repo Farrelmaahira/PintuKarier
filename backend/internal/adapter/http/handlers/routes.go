@@ -31,6 +31,9 @@ var Routes = []Route{
 	{"GET /me/readiness", mhsOnly, HandleStudentReadiness},
 	{"GET /me/learning", mhsOnly, HandleStudentLearning},
 	{"POST /me/learning/drill", mhsOnly, HandleSubmitDrill},
+	{"GET /me/claims", mhsOnly, HandleListClaims},
+	{"POST /me/claims/{id}/upload", mhsOnly, HandleClaimUploadURL},
+	{"POST /me/claims/{id}/verify", mhsOnly, HandleClaimVerify},
 
 	{"GET /lowongan", all, HandleVacancyList},
 	{"POST /lowongan", hrOnly, HandleVacancyCreate},

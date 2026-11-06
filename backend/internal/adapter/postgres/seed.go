@@ -199,6 +199,80 @@ func SeedDemo(ctx context.Context, s *Store, accounts []DemoAccount) error {
 			return err
 		}
 	}
+
+	// Seed bukti klaim sertifikasi mahasiswa demo
+	demoClaims := []domain.ClaimEvidence{
+		{
+			ID:                "claim-demo-1",
+			ApplicationID:     "lam-k1",
+			StudentID:         "u-demo-mahasiswa",
+			ClaimType:         "sertifikasi",
+			Title:             "AWS Certified Cloud Practitioner",
+			Issuer:            "Amazon Web Services",
+			Year:              "2023",
+			Context:           "Memiliki sertifikasi AWS Cloud Practitioner untuk arsitektur cloud dasar dan manajemen IAM.",
+			FileKey:           "demo-aws-cert.pdf",
+			FileName:          "AWS_Cloud_Practitioner_Certificate.pdf",
+			Status:            domain.ClaimVerified,
+			MatchConfidence:   0.94,
+			VerificationNotes: "Kredensial AWS tervalidasi via digital credential verification. Nama dan tahun sesuai dengan CV.",
+			CreatedAt:         now,
+			UpdatedAt:         now,
+		},
+		{
+			ID:                "claim-demo-2",
+			ApplicationID:     "lam-k1",
+			StudentID:         "u-demo-mahasiswa",
+			ClaimType:         "sertifikasi",
+			Title:             "Sertifikasi Kompetensi BNSP Junior Web Developer",
+			Issuer:            "Badan Nasional Sertifikasi Profesi (BNSP)",
+			Year:              "2024",
+			Context:           "Lulus uji kompetensi okupasi Junior Web Developer LSP Teknologi Informasi.",
+			FileKey:           "demo-bnsp-cert.pdf",
+			FileName:          "Sertifikat_Kompetensi_BNSP_Web.pdf",
+			Status:            domain.ClaimVerified,
+			MatchConfidence:   0.98,
+			VerificationNotes: "Nomor registrasi MET.000.004928 2024 terverifikasi cocok dengan data profil vokasi.",
+			CreatedAt:         now,
+			UpdatedAt:         now,
+		},
+		{
+			ID:                "claim-demo-3",
+			ApplicationID:     "lam-k1",
+			StudentID:         "u-demo-mahasiswa",
+			ClaimType:         "sertifikasi",
+			Title:             "Oracle Certified Associate, Java SE 8 Programmer",
+			Issuer:            "Oracle University",
+			Year:              "2023",
+			Context:           "Sertifikasi pemrograman Java standar industri untuk logika berorientasi objek.",
+			FileKey:           "demo-oracle-cert.jpg",
+			FileName:          "Oracle_Associate_Java.jpg",
+			Status:            domain.ClaimNeedsManualReview,
+			MatchConfidence:   0.72,
+			VerificationNotes: "Format gambar scan miring, nama terkonfirmasi tapi nomor lisensi butuh konfirmasi manual admin prodi.",
+			CreatedAt:         now,
+			UpdatedAt:         now,
+		},
+		{
+			ID:                "claim-demo-4",
+			ApplicationID:     "lam-k1",
+			StudentID:         "u-demo-mahasiswa",
+			ClaimType:         "sertifikasi",
+			Title:             "Docker Certified Associate (DCA)",
+			Issuer:            "Docker Inc.",
+			Year:              "2024",
+			Context:           "Spesialisasi containerization multi-stage dan deployment Docker Swarm.",
+			FileKey:           "",
+			FileName:          "",
+			Status:            domain.ClaimPendingUpload,
+			MatchConfidence:   0.0,
+			VerificationNotes: "Tercantum di ringkasan CV, menunggu mahasiswa mengunggah dokumen bukti sertifikat.",
+			CreatedAt:         now,
+			UpdatedAt:         now,
+		},
+	}
+	_ = s.SaveClaims(ctx, demoClaims)
+
 	return nil
 }
 
