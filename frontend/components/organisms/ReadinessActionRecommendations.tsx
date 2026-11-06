@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { ArrowRight, Lightning } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { ReadinessActionRecommendation } from "@/lib/data/readiness/types";
 import { Badge } from "../atoms/Badge";
-import dashboard from "@/styles/dashboard.module.css";
-import ui from "@/styles/ui.module.css";
+import { Button } from "../atoms/Button";
+import { Panel } from "../molecules/Panel";
+import rows from "@/styles/rows.module.css";
 
 export interface ReadinessActionRecommendationsProps {
   recommendations: ReadinessActionRecommendation[];
@@ -13,36 +13,33 @@ export function ReadinessActionRecommendations({
   recommendations,
 }: ReadinessActionRecommendationsProps) {
   return (
-    <div className={ui.card}>
-      <div className={dashboard.cardHeaderRow}>
-        <div>
-          <h2 className={ui.cardTitle}>Langkah Belajar Rekomendasi AI</h2>
-          <span className={ui.cardSub}>
-            Tindakan prioritas untuk menaikkan skor menuju ambang Memenuhi Kriteria (80.0+).
-          </span>
-        </div>
-        <Lightning size={22} color="var(--accent)" aria-hidden />
-      </div>
-
-      <div className={dashboard.recList}>
+    <Panel
+      title="Langkah Belajar Rekomendasi AI"
+      tag="Prioritas Kesiapan"
+      flush
+    >
+      <ul className={rows.list}>
         {recommendations.map((rec) => (
-          <div key={rec.id} className={dashboard.recCard}>
-            <div className={dashboard.recLeft}>
-              <div className={dashboard.recBadges}>
-                <Badge tone="var(--accent)">{rec.type}</Badge>
-                <span className={dashboard.gainBadge}>+{rec.potentialUp} Poin Kesiapan</span>
+          <li key={rec.id} className={rows.row} style={{ gridTemplateColumns: "1fr auto" }}>
+            <div className={rows.main} style={{ gap: "4px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <strong style={{ fontSize: "15px" }}>{rec.title}</strong>
+                <Badge tone="accent">{rec.type}</Badge>
+                <Badge tone="yellow">+{rec.potentialUp} Poin</Badge>
               </div>
-              <h3 className={dashboard.recTitle}>{rec.title}</h3>
+              <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>
+                Prioritas: {rec.priority}
+              </span>
             </div>
 
-            <div className={dashboard.recRight}>
-              <Link href={rec.actionUrl} className={dashboard.recBtn}>
-                Mulai Tindak Lanjut <ArrowRight size={16} aria-hidden />
-              </Link>
+            <div>
+              <Button href={rec.actionUrl} size="sm" icon={<ArrowRight size={16} />}>
+                Mulai Tindak Lanjut
+              </Button>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </Panel>
   );
 }

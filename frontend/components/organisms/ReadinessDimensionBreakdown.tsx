@@ -1,6 +1,9 @@
 import { ReadinessDimension } from "@/lib/data/readiness/types";
-import dashboard from "@/styles/dashboard.module.css";
-import ui from "@/styles/ui.module.css";
+import { Tag } from "../atoms/Tag";
+import { Meter } from "../atoms/Meter";
+import { Panel } from "../molecules/Panel";
+import rows from "@/styles/rows.module.css";
+import app from "@/styles/app.module.css";
 
 export interface ReadinessDimensionBreakdownProps {
   dimensions: ReadinessDimension[];
@@ -8,44 +11,41 @@ export interface ReadinessDimensionBreakdownProps {
 
 export function ReadinessDimensionBreakdown({ dimensions }: ReadinessDimensionBreakdownProps) {
   return (
-    <div className={ui.card}>
-      <div className={dashboard.cardHeaderRow}>
-        <div>
-          <h2 className={ui.cardTitle}>Rincian 5 Dimensi Penilaian Berbasis Bukti</h2>
-          <span className={ui.cardSub}>
-            Tiap dimensi memiliki bobot tetap sesuai standar evaluasi rekrutmen vokasi.
-          </span>
-        </div>
-      </div>
-
-      <div className={dashboard.dimList}>
+    <Panel
+      title="Rincian 5 Dimensi Penilaian Berbasis Bukti"
+      tag="5 Dimensi Penilaian"
+      flush
+    >
+      <ul className={rows.list}>
         {dimensions.map((dim) => (
-          <div key={dim.name} className={dashboard.dimItem}>
-            <div className={dashboard.dimHeader}>
-              <div className={dashboard.dimTitleCol}>
-                <h3 className={dashboard.dimName}>{dim.name}</h3>
-                <span className={dashboard.dimWeightBadge}>Bobot {dim.weight}%</span>
+          <li key={dim.name} className={rows.row} style={{ gridTemplateColumns: "1fr auto" }}>
+            <div className={rows.main} style={{ gap: "6px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                <strong style={{ fontSize: "16px", letterSpacing: "-0.02em" }}>{dim.name}</strong>
+                <Tag>Bobot {dim.weight}%</Tag>
               </div>
-              <div className={dashboard.dimScoreCol}>
-                <span className={dashboard.dimScoreVal}>{dim.score.toFixed(1)}</span>
-                <span className={dashboard.dimScoreMax}>/100</span>
-              </div>
+
+              <p style={{ fontSize: "14px", color: "var(--text-muted)", margin: 0 }}>
+                {dim.description}
+              </p>
+
+              <Meter value={dim.score} label={dim.name} tone="var(--accent)" />
+
+              <blockquote className={app.quote} style={{ margin: "4px 0 0" }}>
+                “{dim.evidence}”
+                <cite>Bukti Terverifikasi Portofolio / Magang</cite>
+              </blockquote>
             </div>
 
-            <div className={dashboard.dimBarTrack}>
-              <div
-                className={dashboard.dimBarFill}
-                style={{ width: `${Math.min(dim.score, 100)}%` }}
-              />
+            <div style={{ textAlign: "right", minWidth: "64px" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "20px" }}>
+                {dim.score.toFixed(1)}
+              </span>
+              <span style={{ display: "block", fontSize: "11px", color: "var(--text-muted)" }}>/100</span>
             </div>
-
-            <div className={dashboard.dimEvidenceBlock}>
-              <span className={dashboard.dimEvidenceLabel}>Bukti Terverifikasi:</span>
-              <p className={dashboard.dimEvidenceText}>"{dim.evidence}"</p>
-            </div>
-          </div>
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </Panel>
   );
 }
