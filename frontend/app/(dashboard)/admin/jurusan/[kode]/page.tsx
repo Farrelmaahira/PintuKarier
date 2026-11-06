@@ -9,6 +9,13 @@ interface PageProps {
   params: Promise<{ kode: string }>;
 }
 
+export function generateStaticParams() {
+  return Object.keys(DEPARTMENT_DETAILS).flatMap((kode) => [
+    { kode },
+    { kode: kode.toLowerCase() },
+  ]);
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { kode } = await params;
   const upperCode = kode.toUpperCase();
