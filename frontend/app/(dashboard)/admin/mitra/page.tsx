@@ -1,31 +1,19 @@
-"use client";
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/molecules/PageHeader";
+import { AdminMitraClient } from "./AdminMitraClient";
+import shell from "@/styles/shell.module.css";
 
-import { useAdminCareerCenter } from "@/lib/hooks/useAdminCareerCenter";
-import { AdminPartnersView } from "@/components/organisms/AdminPartnersView";
-import { Skeleton } from "@/components/atoms/Skeleton";
-import dashboard from "@/styles/dashboard.module.css";
+export const metadata: Metadata = { title: "Mitra Industri & Audit SLA - PNJ" };
 
-export function AdminMitraPage() {
-  const { filteredPartners, partnerSearchQuery, setPartnerSearchQuery, isLoading } =
-    useAdminCareerCenter();
-
-  if (isLoading && filteredPartners.length === 0) {
-    return (
-      <div className={dashboard.viewStack}>
-        <Skeleton width="320px" height="36px" />
-        <Skeleton height="44px" />
-        <Skeleton height="300px" />
-      </div>
-    );
-  }
-
+export default function AdminMitraPage() {
   return (
-    <AdminPartnersView
-      partners={filteredPartners}
-      searchQuery={partnerSearchQuery}
-      onSearchChange={setPartnerSearchQuery}
-    />
+    <main id="content" className={shell.page}>
+      <PageHeader
+        href="/admin/mitra"
+        title="Mitra Perusahaan & Audit SLA"
+        lead="Daftar korporasi mitra rekrutmen resmi Politeknik Negeri Jakarta beserta kepatuhan pengiriman feedback ke kandidat."
+      />
+      <AdminMitraClient />
+    </main>
   );
 }
-
-export default AdminMitraPage;
