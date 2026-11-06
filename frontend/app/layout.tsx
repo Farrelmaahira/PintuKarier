@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   },
   description:
     "Platform AI Berbasis Bukti yang Menghubungkan Seleksi Kerja, Jalur Belajar Mahasiswa, dan Pemutakhiran Kurikulum Vokasi. Politeknik Negeri Jakarta.",
+  icons: {
+    icon: [
+      { url: "/pintukarier.webp", type: "image/webp" },
+    ],
+    shortcut: "/pintukarier.webp",
+    apple: "/pintukarier.webp",
+  },
 };
 
 export const viewport: Viewport = {

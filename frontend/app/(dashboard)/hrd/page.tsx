@@ -11,7 +11,7 @@ import shell from "@/styles/shell.module.css";
 
 export const metadata: Metadata = { title: "Dashboard HRD" };
 
-export default function HrdPage({ searchParams }: PageProps<"/hrd">) {
+export default async function HrdPage({ searchParams }: PageProps<"/hrd">) {
   return (
     <main id="content" className={shell.page}>
       <PageHeader
