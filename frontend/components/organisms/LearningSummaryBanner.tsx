@@ -1,5 +1,6 @@
-import { Sparkle, GraduationCap, CheckCircle, Flame } from "@phosphor-icons/react";
-import dashboard from "@/styles/dashboard.module.css";
+import { Panel } from "../molecules/Panel";
+import { Stat } from "../molecules/Stat";
+import { StatGrid } from "../molecules/StatGrid";
 
 export interface LearningSummaryBannerProps {
   totalModules: number;
@@ -17,46 +18,35 @@ export function LearningSummaryBanner({
   recommendedCategory,
 }: LearningSummaryBannerProps) {
   return (
-    <div className={dashboard.learningBanner}>
-      <div className={dashboard.bannerLeft}>
-        <div className={dashboard.bannerPill}>
-          <Sparkle size={14} weight="bold" />
-          Rekomendasi Berbasis AI Feedback
-        </div>
-        <h2 className={dashboard.bannerTitle}>Learning Hub: Tutup Gap Kompetensi Industri</h2>
-        <p className={dashboard.bannerDesc}>
+    <Panel title="Rekomendasi Berbasis AI Feedback" tag="Ringkasan Belajar" flush>
+      <StatGrid cols={4}>
+        <Stat label="Total Modul Tersedia" value={`${totalModules} Modul`} />
+        <Stat label="Modul Selesai" value={`${completedModules}/${totalModules}`} />
+        <Stat label="Sedang Berjalan" value={`${inProgressModules} Modul`} />
+        <Stat label="Potensi Kenaikan Skor" value={`+${totalScoreBoost} Poin`} />
+      </StatGrid>
+
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "var(--border)",
+          background: "var(--surface-warm)",
+          fontSize: "13px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <span>
           Modul materi terkurasi dan studi kasus industri (*Drill Scenario*) untuk menaikkan skor kesiapan kerja kamu secara langsung.
-        </p>
-
-        <div className={dashboard.focusTag}>
-          <GraduationCap size={16} weight="bold" />
-          Fokus Utama: <strong>{recommendedCategory}</strong>
-        </div>
+        </span>
+        <span style={{ fontSize: "12px", color: "var(--ink)", fontWeight: 600 }}>
+          Fokus Utama: <span style={{ color: "var(--accent)" }}>{recommendedCategory}</span>
+        </span>
       </div>
-
-      <div className={dashboard.bannerStats}>
-        <div className={dashboard.bannerStatBox}>
-          <span className={dashboard.bannerStatLabel}>
-            <Flame size={14} weight="fill" color="var(--cat-orange)" /> Total Boost Skor
-          </span>
-          <span className={dashboard.bannerStatNum}>+{totalScoreBoost}</span>
-        </div>
-
-        <div className={dashboard.bannerStatBox}>
-          <span className={dashboard.bannerStatLabel}>
-            <CheckCircle size={14} weight="bold" /> Modul Selesai
-          </span>
-          <span className={dashboard.bannerStatNum}>
-            {completedModules}/{totalModules}
-          </span>
-        </div>
-
-        <div className={dashboard.bannerStatBox}>
-          <span className={dashboard.bannerStatLabel}>Sedang Dikerjakan</span>
-          <span className={dashboard.bannerStatNum}>{inProgressModules}</span>
-        </div>
-      </div>
-    </div>
+    </Panel>
   );
 }
 

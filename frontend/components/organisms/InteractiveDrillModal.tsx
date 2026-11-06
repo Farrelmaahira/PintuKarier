@@ -31,7 +31,7 @@ export function InteractiveDrillModal({
         <div className={dashboard.modalHeader}>
           <div className={dashboard.modalHeaderLeft}>
             <span className={dashboard.drillBadge}>
-              <Lightning size={14} weight="fill" color="var(--cat-orange)" />
+              <Lightning size={14} weight="bold" color="var(--ink)" />
               Drill Studi Kasus (+{drill.readinessBoost} Poin)
             </span>
             <span className={dashboard.targetCompBadge}>{drill.targetCompetency}</span>

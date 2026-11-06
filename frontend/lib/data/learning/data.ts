@@ -39,7 +39,7 @@ export const BASELINE_LEARNING_OVERVIEW: ILearningOverview = {
       category: "Cloud & DevOps",
       difficulty: "Menengah",
       durationMinutes: 40,
-      summary: "Bangun image Docker yang ramping dan aman dengan multi-stage builds untuk Golang dan Node.js vokasi.",
+      summary: "Bangun image Docker yang ramping dan aman dengan multi-stage builds untuk Golang dan Node.js.",
       competenciesCovered: ["Docker", "Container Security", "CI/CD Pipeline"],
       estimatedGain: 6,
       status: "recommended",

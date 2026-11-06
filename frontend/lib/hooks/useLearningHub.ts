@@ -35,7 +35,27 @@ export function useLearningHub(): UseLearningHubReturn {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchStudentLearning();
+      let data = await fetchStudentLearning();
+      if (typeof window !== "undefined") {
+        try {
+          const saved = localStorage.getItem("pintukarier_admin_learning_modules");
+          const savedDrills = localStorage.getItem("pintukarier_admin_learning_drills");
+          if (saved) {
+            const parsedMods = JSON.parse(saved);
+            if (Array.isArray(parsedMods) && parsedMods.length > 0) {
+              data = { ...data, modules: parsedMods, totalModules: parsedMods.length };
+            }
+          }
+          if (savedDrills) {
+            const parsedDrills = JSON.parse(savedDrills);
+            if (Array.isArray(parsedDrills) && parsedDrills.length > 0) {
+              data = { ...data, activeDrills: parsedDrills };
+            }
+          }
+        } catch {
+          // Fallback ke server data
+        }
+      }
       setOverview(data);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Gagal memuat data Learning Hub");
