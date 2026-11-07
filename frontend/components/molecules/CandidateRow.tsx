@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CaretRight, ShieldWarning } from "@phosphor-icons/react/dist/ssr";
+import { CaretRight, SealCheck, ShieldWarning } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "../atoms/Badge";
 import { ScoreBox } from "../atoms/ScoreBox";
 import type { Candidate } from "@/lib/data/candidate";
@@ -25,9 +25,20 @@ export function CandidateRow({ candidate, rank }: CandidateRowProps) {
           <span className={rows.top}>
             <strong className={app.name}>{candidate.name}</strong>
             {candidate.prodiVerified && (
-              <Badge tone="green" title="Sertifikasi & portofolio telah divalidasi oleh Program Studi PNJ">
-                🛡️ Terverifikasi Prodi PNJ
-              </Badge>
+              <span
+                title="Terverifikasi Prodi PNJ: Sertifikasi & portofolio tervalidasi resmi"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#1d9bf0",
+                  lineHeight: 1,
+                  cursor: "help",
+                }}
+                aria-label="Terverifikasi Prodi PNJ"
+              >
+                <SealCheck size={20} weight="fill" />
+              </span>
             )}
             <Badge tone={CATEGORY_TONE[candidate.category]}>{candidate.category}</Badge>
             {candidate.warning && (

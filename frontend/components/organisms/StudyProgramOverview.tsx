@@ -44,7 +44,7 @@ export function StudyProgramOverview() {
           cta="Buka Daftar Mahasiswa"
         >
           <div style={HIGHLIGHT_BOX}>
-            <strong>Integrasi:</strong> Verifikasi prodi otomatis menyematkan lencana <em>🛡️ Terverifikasi Prodi PNJ</em> pada kandidat.
+            <strong>Integrasi:</strong> Verifikasi prodi otomatis menyematkan lencana centang biru terverifikasi pada kandidat di dashboard HRD.
           </div>
         </OverviewModuleCard>
         <OverviewModuleCard

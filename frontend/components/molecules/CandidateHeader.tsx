@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, FilePdf } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, FilePdf, SealCheck } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "../atoms/Badge";
 import { Button } from "../atoms/Button";
 import { ScoreBox } from "../atoms/ScoreBox";
@@ -27,10 +27,20 @@ export function CandidateHeader({ candidate }: CandidateHeaderProps) {
         <h1 className={shell.title}>
           {candidate.name}
           {candidate.prodiVerified && (
-            <span style={{ marginLeft: 12, verticalAlign: "middle" }}>
-              <Badge tone="green" title="Klaim kompetensi & sertifikasi tervalidasi Prodi">
-                🛡️ Terverifikasi Prodi PNJ
-              </Badge>
+            <span
+              style={{
+                marginLeft: 8,
+                verticalAlign: "middle",
+                display: "inline-flex",
+                alignItems: "center",
+                color: "#1d9bf0",
+                lineHeight: 1,
+                cursor: "help",
+              }}
+              title="Terverifikasi Prodi PNJ: Sertifikasi & portofolio tervalidasi resmi"
+              aria-label="Terverifikasi Prodi PNJ"
+            >
+              <SealCheck size={26} weight="fill" />
             </span>
           )}
         </h1>
