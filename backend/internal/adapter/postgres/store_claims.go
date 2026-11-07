@@ -180,3 +180,73 @@ func (s *Store) ClaimsByApplication(ctx context.Context, applicationID string) (
 	return claims, rows.Err()
 }
 
+// ProdiStudents mengambil daftar mahasiswa dalam program studi beserta ringkasan status bukti klaimnya.
+func (s *Store) ProdiStudents(ctx context.Context, prodi string) ([]domain.ProdiStudentSummary, error) {
+	query := `
+		SELECT
+			u.id, u.nama, u.nim, u.instansi, u.kampus, u.semester, u.ipk,
+			COUNT(ce.id) AS total_claims,
+			COUNT(CASE WHEN ce.status = 'verified' THEN 1 END) AS verified_claims,
+			COUNT(CASE WHEN ce.status IN ('pending_upload', 'needs_manual_review') THEN 1 END) AS pending_claims
+		FROM users u
+		LEFT JOIN claim_evidences ce ON ce.student_id = u.id
+		WHERE u.peran = 'mahasiswa' AND (u.instansi = $1 OR $1 = '')
+		GROUP BY u.id, u.nama, u.nim, u.instansi, u.kampus, u.semester, u.ipk
+		ORDER BY u.nama ASC
+	`
+	rows, err := s.db.Query(ctx, query, prodi)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var students []domain.ProdiStudentSummary
+	for rows.Next() {
+		var st domain.ProdiStudentSummary
+		if err := rows.Scan(
+			&st.ID, &st.Name, &st.NIM, &st.Institution, &st.Campus, &st.Semester, &st.IPK,
+			&st.TotalClaims, &st.VerifiedClaims, &st.PendingClaims,
+		); err != nil {
+			return nil, err
+		}
+		students = append(students, st)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	for i := range students {
+		cList, err := s.ClaimsByStudent(ctx, students[i].ID)
+		if err == nil {
+			students[i].Claims = cList
+		}
+	}
+	return students, nil
+}
+
+// VerifyClaimByProdi memungkinkan koordinator prodi menyetujui atau memberi catatan verifikasi manual.
+func (s *Store) VerifyClaimByProdi(ctx context.Context, claimID, prodi, notes string, verified bool) error {
+	newStatus := domain.ClaimVerified
+	if !verified {
+		newStatus = domain.ClaimRejected
+	}
+
+	query := `
+		UPDATE claim_evidences ce
+		SET
+			status = $3,
+			verification_notes = CASE WHEN $4 != '' THEN $4 ELSE ce.verification_notes END,
+			updated_at = now()
+		FROM users u
+		WHERE ce.id = $1 AND ce.student_id = u.id AND (u.instansi = $2 OR $2 = '')
+	`
+	cmd, err := s.db.Exec(ctx, query, claimID, prodi, string(newStatus), notes)
+	if err != nil {
+		return err
+	}
+	if cmd.RowsAffected() == 0 {
+		return usecase.ErrNotFound
+	}
+	return nil
+}
+

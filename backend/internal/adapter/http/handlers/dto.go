@@ -177,6 +177,7 @@ type KandidatResponse struct {
 	Keputusan        string         `json:"keputusan"`
 	Feedback         string         `json:"feedback"`
 	FeedbackTerkirim bool           `json:"feedbackTerkirim"`
+	ProdiVerified    bool           `json:"prodiVerified"`
 }
 
 type KeputusanRequest struct {
@@ -227,4 +228,9 @@ type CatatanResponse struct {
 	Oleh       string `json:"oleh"`
 	Tanggal    string `json:"tanggal"`
 	Status     string `json:"status"`
+}
+
+type ProdiVerifyClaimRequest struct {
+	Verified bool   `json:"verified"`
+	Notes    string `json:"notes"`
 }

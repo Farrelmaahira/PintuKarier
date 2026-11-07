@@ -42,4 +42,5 @@ export interface Candidate {
   prescreenQuestions?: string[];
   interviewQuestions?: string[];
   feedbackSent?: boolean;
+  prodiVerified?: boolean;
 }

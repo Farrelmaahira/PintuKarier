@@ -105,6 +105,7 @@ export const DASHBOARD_MENU: Record<UserRole, { href: string; label: string; ico
   ],
   prodi: [
     { href: "/prodi", label: "Dasbor Utama", icon: "house" },
+    { href: "/prodi/mahasiswa", label: "Data Mahasiswa & Portofolio", icon: "cap" },
     { href: "/prodi/kompetensi", label: "Analisis Kompetensi", icon: "chart" },
     { href: "/prodi/kurikulum", label: "Rekomendasi RPS & PBL", icon: "book" },
     { href: "/prodi/industri", label: "Kebutuhan Industri & IKU", icon: "building" },

@@ -60,6 +60,8 @@ var Routes = []Route{
 	{"GET /prodi/{id}/ranking", prodiOnly, HandleRanking},
 	{"GET /prodi/{id}/catatan", prodiOnly, HandleCatatanList},
 	{"POST /prodi/{id}/catatan", prodiOnly, HandleCatatanCreate},
+	{"GET /prodi/{id}/mahasiswa", prodiOnly, HandleProdiStudents},
+	{"POST /prodi/{id}/claims/{claimId}/verify", prodiOnly, HandleProdiVerifyClaim},
 
 	{"GET /admin/overview", adminOnly, HandleAdminOverview},
 	{"GET /admin/jurusan", adminOnly, HandleAdminJurusan},

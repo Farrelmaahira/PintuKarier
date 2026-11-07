@@ -75,14 +75,19 @@ type Store interface {
 	ClaimByID(ctx context.Context, claimID, studentID string) (domain.ClaimEvidence, error)
 	UpdateClaimStatus(ctx context.Context, claimID, studentID string, fileKey, fileName string, status domain.ClaimStatus, confidence float64, notes string) error
 	ClaimsByApplication(ctx context.Context, applicationID string) ([]domain.ClaimEvidence, error)
+
+	// Prodi student tracking & audit
+	ProdiStudents(ctx context.Context, prodi string) ([]domain.ProdiStudentSummary, error)
+	VerifyClaimByProdi(ctx context.Context, claimID, prodi, notes string, verified bool) error
 }
 
 // Candidate gabungan lamaran, mahasiswa, lowongan, dan hasil untuk layar HRD dan feedback.
 type Candidate struct {
-	App     domain.Application
-	Student domain.User
-	Vacancy domain.Vacancy
-	Result  domain.Result
+	App           domain.Application
+	Student       domain.User
+	Vacancy       domain.Vacancy
+	Result        domain.Result
+	ProdiVerified bool
 }
 
 // RankRow satu kandidat untuk agregat prodi. Tidak pernah keluar dari backend.

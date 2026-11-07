@@ -36,20 +36,26 @@ _IMAGE_MIME_BY_EXTENSION = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png":
 _ITEM_SHAPE = '{"peran": string, "tempat": string, "waktu": string, "poin": string}'
 
 _EXTRACTION_SYSTEM_PROMPT = (
-    "Kamu mengekstrak profil terstruktur dari CV mahasiswa untuk layanan karier kampus. "
-    "Balas HANYA dengan JSON valid berbentuk: "
-    '{"ringkasan": string, "skill": [string], '
-    f'"pengalaman": [{_ITEM_SHAPE}], "proyek": [{_ITEM_SHAPE}], "organisasi": [{_ITEM_SHAPE}], '
-    '"sertifikasi": [string], '
-    '"identitas": {"nim": string, "kampus": string, "semester": number|null, "ipk": number|null}}. '
-    "Aturan: pengalaman = magang dan kerja; proyek = proyek kuliah, PBL, tugas akhir, proyek pribadi; "
-    "organisasi = himpunan, UKM, kepanitiaan; poin = satu kalimat hasil atau tanggung jawab paling konkret "
-    "apa adanya dari CV; waktu ditulis apa adanya dari CV; ringkasan 1-2 kalimat netral tentang fokus "
-    "keahlian ditulis dalam Bahasa Indonesia. Urutkan dari yang terbaru. "
-    "identitas: kampus = nama perguruan tinggi yang sedang ditempuh, ditulis persis seperti di CV; "
-    "nim, semester, dan ipk (skala 4) diisi hanya bila tertulis eksplisit di CV. JANGAN ekstrak umur, jenis kelamin, agama, alamat, atau nomor "
-    "telepon. Field yang tidak tertulis di CV dikosongkan (\"\" atau []) -- JANGAN mengarang."
-    "\n\n" + INJECTION_GUARD
+    "Kamu sistem ekstraksi CV mahasiswa vokasi resmi untuk kampus. "
+    "Tugasmu mengekstrak data profil lengkap, keahlian, dan seluruh sertifikasi/penghargaan dari teks CV.\n"
+    "Balas HANYA dengan objek JSON valid dengan struktur persis berikut:\n"
+    "{\n"
+    '  "ringkasan": string (1-2 kalimat ringkasan profesional fokus keahlian),\n'
+    '  "skill": [string] (daftar keahlian teknis),\n'
+    f'  "pengalaman": [{_ITEM_SHAPE}] (riwayat kerja/magang),\n'
+    f'  "proyek": [{_ITEM_SHAPE}] (proyek kuliah, PBL, open-source SDK, aplikasi personal),\n'
+    f'  "organisasi": [{_ITEM_SHAPE}] (himpunan, kepanitiaan, komunitas),\n'
+    '  "sertifikasi": [string] (WAJIB masukkan setiap sertifikasi, lisensi, kompetensi, serta PENGHARGAAN / JUARA / AWARDS / GRANTEE yang tertulis di CV, misal: Juara 1 KMIPN, Stellar Instawards Grantee, Sertifikat BNSP, dll),\n'
+    '  "identitas": {\n'
+    '    "nim": string,\n'
+    '    "kampus": string,\n'
+    '    "semester": number|null,\n'
+    '    "ipk": number|null\n'
+    '  }\n'
+    "}\n"
+    "PENTING: JANGAN mengosongkan array 'sertifikasi' jika pada teks CV terdapat bagian PENGHARGAAN, AWARDS, SERTIFIKAT, atau GRANTEE. Masukkan judul penghargaan tersebut ke dalam array sertifikasi.\n"
+    "Field yang benar-benar tidak tertulis dikosongkan (\"\" atau []). JANGAN mengarang data identitas pribadi selain yang tertulis.\n\n"
+    + INJECTION_GUARD
 )
 
 # Foto tidak punya teks yang bisa diekstrak, jadi model juga diminta menyalin isinya.
@@ -140,24 +146,46 @@ def _ground_identitas(identitas: Identitas, teks: str) -> Identitas:
     )
 
 
-def _parse_profil(raw: str) -> tuple[Profil, Identitas, str]:
+def _extract_fallback_sertifikasi(teks: str) -> list[str]:
+    """Fallback scanner jika LLM melewatkan bagian sertifikasi/penghargaan."""
+    res: list[str] = []
+    match = re.search(r'(?:PENGHARGAAN|SERTIFIKASI|AWARDS?|PRESTASI|LISENSI)\s*([\s\S]*?)(?:PENDIDIKAN|KEAHLIAN|BAHASA|PENGALAMAN|PROYEK|$)', teks, re.I)
+    if match:
+        section = match.group(1).strip()
+        items = re.split(r'[\n\r]*[●•\-\*]\s*', section)
+        for it in items:
+            cleaned = ' '.join(it.split()).strip(' .-,')
+            if cleaned and len(cleaned) > 3 and not re.match(r'^(?:PENDIDIKAN|KEAHLIAN|BAHASA)', cleaned, re.I):
+                res.append(cleaned)
+    return res
+
+
+def _parse_profil(raw: str, teks_cv: str = "") -> tuple[Profil, Identitas, str]:
     """Balikin (profil, identitas, teks dari model). JSON rusak -> profil kosong, bukan 500,
     supaya mahasiswa tetap bisa mengisi profil manual di langkah cek profil."""
     try:
         data = json.loads(raw)
         if not isinstance(data, dict):
             raise TypeError("bukan objek")
+        extracted_sertifikasi = [str(s).strip() for s in data.get("sertifikasi") or [] if str(s).strip()]
+        if teks_cv:
+            fallback = _extract_fallback_sertifikasi(teks_cv)
+            for f in fallback:
+                if not any(f.lower() in s.lower() or s.lower() in f.lower() for s in extracted_sertifikasi):
+                    extracted_sertifikasi.append(f)
+
         profil = Profil(
             ringkasan=str(data.get("ringkasan") or ""),
             skill=[str(s) for s in data.get("skill") or []],
             pengalaman=_items(data, "pengalaman"),
             proyek=_items(data, "proyek"),
             organisasi=_items(data, "organisasi"),
-            sertifikasi=[str(s) for s in data.get("sertifikasi") or []],
+            sertifikasi=extracted_sertifikasi,
         )
         return profil, _identitas(data), str(data.get("teks") or "")
     except (json.JSONDecodeError, TypeError, AttributeError, ValueError):
-        return Profil(), Identitas(), ""
+        fallback = _extract_fallback_sertifikasi(teks_cv) if teks_cv else []
+        return Profil(sertifikasi=fallback), Identitas(), ""
 
 
 async def _compute(raw_bytes: bytes, ext: str) -> ParseCVResponse:
@@ -180,7 +208,7 @@ async def _compute(raw_bytes: bytes, ext: str) -> ParseCVResponse:
             raise HTTPException(status_code=422, detail="PDF tidak punya teks yang bisa dibaca (kemungkinan hasil scan), unggah sebagai foto")
         provider = get_provider_for_task("complete")
         result = await provider.complete(wrap_untrusted("ISI_CV", teks), system=_EXTRACTION_SYSTEM_PROMPT, json_mode=True)
-        profil, identitas, _ = _parse_profil(result)
+        profil, identitas, _ = _parse_profil(result, teks_cv=teks)
         provider_name, model_name = "default", provider.COMPLETE_MODEL
     else:
         raise HTTPException(status_code=422, detail=f"format file '{ext or '(tanpa ekstensi)'}' belum didukung, hanya PDF dan foto")

@@ -347,7 +347,23 @@ func (s *Store) Candidates(ctx context.Context, vacancyID string) ([]usecase.Can
 	if err != nil {
 		return nil, err
 	}
-	return collect(rows, scanCandidate)
+	candidates, err := collect(rows, scanCandidate)
+	if err != nil {
+		return nil, err
+	}
+
+	// Cek apakah mahasiswa kandidat memiliki bukti sertifikasi yang sudah diverifikasi prodi
+	for i := range candidates {
+		var verifiedCount int
+		err := s.db.QueryRow(ctx, `
+			SELECT COUNT(*) FROM claim_evidences
+			WHERE student_id = $1 AND status = 'verified'
+		`, candidates[i].Student.ID).Scan(&verifiedCount)
+		if err == nil && verifiedCount > 0 {
+			candidates[i].ProdiVerified = true
+		}
+	}
+	return candidates, nil
 }
 
 func (s *Store) FeedbackFor(ctx context.Context, studentID string) ([]usecase.Candidate, error) {

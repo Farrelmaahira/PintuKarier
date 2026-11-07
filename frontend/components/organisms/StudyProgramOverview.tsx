@@ -1,4 +1,4 @@
-import { BookOpen, Buildings, ChartBar } from "@phosphor-icons/react/dist/ssr";
+import { BookOpen, Buildings, ChartBar, GraduationCap } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "../atoms/Badge";
 import { GapSummaryList } from "../molecules/GapSummaryList";
 import { Notice } from "../molecules/Notice";
@@ -35,6 +35,18 @@ export function StudyProgramOverview() {
         </StatGrid>
       </Panel>
       <div style={MODULE_GRID}>
+        <OverviewModuleCard
+          icon={<GraduationCap size={24} color="var(--ink)" />}
+          title="Data Mahasiswa & Portofolio"
+          badge={<Badge tone="green">Audit Bukti Aktif</Badge>}
+          description="Crosscheck CV dan sertifikasi yang diunggah mahasiswa. Berikan validasi prodi resmi yang langsung terlihat di dashboard HRD mitra."
+          href="/prodi/mahasiswa"
+          cta="Buka Daftar Mahasiswa"
+        >
+          <div style={HIGHLIGHT_BOX}>
+            <strong>Integrasi:</strong> Verifikasi prodi otomatis menyematkan lencana <em>🛡️ Terverifikasi Prodi PNJ</em> pada kandidat.
+          </div>
+        </OverviewModuleCard>
         <OverviewModuleCard
           icon={<ChartBar size={24} color="var(--ink)" />}
           title="Analisis Kompetensi"

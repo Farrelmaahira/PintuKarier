@@ -23,7 +23,16 @@ export function CandidateHeader({ candidate }: CandidateHeaderProps) {
         <Link href={backHref} className={app.back}>
           <ArrowLeft size={16} aria-hidden /> Semua kandidat
         </Link>
-        <h1 className={shell.title}>{candidate.name}</h1>
+        <h1 className={shell.title}>
+          {candidate.name}
+          {candidate.prodiVerified && (
+            <span style={{ marginLeft: 12, verticalAlign: "middle" }}>
+              <Badge tone="green" title="Klaim kompetensi & sertifikasi tervalidasi Prodi">
+                🛡️ Terverifikasi Prodi PNJ
+              </Badge>
+            </span>
+          )}
+        </h1>
         <p className={shell.lead}>
           {candidate.studyProgram} · angkatan {candidate.cohortYear} · melamar {candidate.position} pada {candidate.appliedOn}
         </p>

@@ -24,6 +24,11 @@ export function CandidateRow({ candidate, rank }: CandidateRowProps) {
         <span className={rows.main}>
           <span className={rows.top}>
             <strong className={app.name}>{candidate.name}</strong>
+            {candidate.prodiVerified && (
+              <Badge tone="green" title="Sertifikasi & portofolio telah divalidasi oleh Program Studi PNJ">
+                🛡️ Terverifikasi Prodi PNJ
+              </Badge>
+            )}
             <Badge tone={CATEGORY_TONE[candidate.category]}>{candidate.category}</Badge>
             {candidate.warning && (
               <span className={app.flag}>

@@ -93,3 +93,46 @@ func HandleCatatanCreate(d *Deps) http.HandlerFunc {
 		WriteJSON(w, http.StatusCreated, catatanOf(n))
 	}
 }
+
+// HandleProdiStudents mengembalikan daftar mahasiswa prodi dan status bukti klaim portofolio.
+func HandleProdiStudents(d *Deps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		prodi, ok := ownedProdi(w, r, d)
+		if !ok {
+			return
+		}
+		students, err := d.Store.ProdiStudents(r.Context(), prodi)
+		if err != nil {
+			fail(w, err, "mahasiswa prodi")
+			return
+		}
+		WriteJSON(w, http.StatusOK, students)
+	}
+}
+
+// HandleProdiVerifyClaim memproses validasi/approval klaim bukti mahasiswa oleh kaprodi/dosen prodi.
+func HandleProdiVerifyClaim(d *Deps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		prodi, ok := ownedProdi(w, r, d)
+		if !ok {
+			return
+		}
+		claimID := r.PathValue("claimId")
+		if claimID == "" {
+			WriteError(w, http.StatusBadRequest, "claim ID wajib disertakan")
+			return
+		}
+
+		var req ProdiVerifyClaimRequest
+		if !decode(w, r, &req) {
+			return
+		}
+
+		err := d.Store.VerifyClaimByProdi(r.Context(), claimID, prodi, req.Notes, req.Verified)
+		if err != nil {
+			fail(w, err, "klaim bukti")
+			return
+		}
+		WriteJSON(w, http.StatusOK, map[string]any{"ok": true, "claimId": claimID, "verified": req.Verified})
+	}
+}

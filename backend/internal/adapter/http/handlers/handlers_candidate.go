@@ -40,6 +40,7 @@ func kandidatOf(c usecase.Candidate, answers []domain.Answer, now time.Time) Kan
 		Alasan: res.Reason, AlasanKoreksi: res.CorrectionReason, Peringatan: res.Warning, Keputusan: res.Decision,
 		Bukti: []BuktiDTO{}, Prescreen: []string{}, PrescreenTanya: []string{}, Transkrip: []TranskripDTO{},
 		InterviewTanya: c.Vacancy.Interview, Feedback: res.Draft.Ringkasan, FeedbackTerkirim: res.Feedback != nil,
+		ProdiVerified: c.ProdiVerified,
 	}
 	if res.Feedback != nil {
 		k.Feedback = res.Feedback.Ringkasan

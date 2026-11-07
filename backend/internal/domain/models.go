@@ -202,3 +202,18 @@ type ClaimEvidence struct {
 	UpdatedAt         time.Time   `json:"updated_at"`
 }
 
+// ProdiStudentSummary merangkum profil mahasiswa dan status verifikasi klaim bukti untuk koordinator prodi.
+type ProdiStudentSummary struct {
+	ID             string          `json:"id"`
+	Name           string          `json:"name"`
+	NIM            string          `json:"nim"`
+	Institution    string          `json:"institution"`
+	Campus         string          `json:"campus"`
+	Semester       int             `json:"semester"`
+	IPK            float64         `json:"ipk"`
+	TotalClaims    int             `json:"total_claims"`
+	VerifiedClaims int             `json:"verified_claims"`
+	PendingClaims  int             `json:"pending_claims"`
+	Claims         []ClaimEvidence `json:"claims,omitempty"`
+}
+
