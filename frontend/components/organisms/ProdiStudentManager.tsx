@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { CheckCircle, Clock, FilePdf, FileText, MagnifyingGlass, ShieldCheck, XCircle } from "@phosphor-icons/react";
+import { CheckCircle, Clock, FilePdf, FileText, MagnifyingGlass, SealCheck, ShieldCheck, XCircle } from "@phosphor-icons/react";
 import { Badge } from "../atoms/Badge";
 import { Button } from "../atoms/Button";
 import { Notice } from "../molecules/Notice";
@@ -187,9 +187,25 @@ export function ProdiStudentManager() {
                     >
                       <div className={rows.main} style={{ gap: 4 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <strong style={{ fontSize: 14 }}>{s.name}</strong>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <strong style={{ fontSize: 14 }}>{s.name}</strong>
+                            {getVerifiedClaims(s) > 0 && (
+                              <span
+                                title="Terverifikasi Prodi PNJ: Sertifikasi & portofolio tervalidasi"
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  color: "#1d9bf0",
+                                  lineHeight: 1,
+                                  cursor: "help",
+                                }}
+                              >
+                                <SealCheck size={18} weight="fill" />
+                              </span>
+                            )}
+                          </div>
                           {getVerifiedClaims(s) > 0 ? (
-                            <Badge tone="green">🛡️ Verified</Badge>
+                            <Badge tone="green">{getVerifiedClaims(s)} Terverifikasi</Badge>
                           ) : getPendingClaims(s) > 0 ? (
                             <Badge tone="yellow">Review ({getPendingClaims(s)})</Badge>
                           ) : (
