@@ -27,7 +27,7 @@ export interface Candidate {
   reason: string;
   evidence: Evidence[];
   prescreenAnswers: string[];
-  transcript: { answer: string; duration: string }[];
+  transcript: { answer: string; duration: string; audioUrl?: string; snapshotUrl?: string }[];
   /** Diisi kalau sistem menemukan instruksi tersembunyi di CV. */
   warning?: string;
   decision: Decision;

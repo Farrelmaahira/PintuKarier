@@ -55,6 +55,8 @@ export async function CandidateDetail({ params }: CandidateDetailProps) {
                   question={candidate.interviewQuestions?.[index] ?? ""}
                   answer={entry.answer}
                   duration={entry.duration}
+                  audioUrl={entry.audioUrl}
+                  snapshotUrl={entry.snapshotUrl}
                 />
               ))}
             </ol>

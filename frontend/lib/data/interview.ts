@@ -1,4 +1,4 @@
-export type InterviewPhase = "check" | "answer" | "processing" | "done";
+export type InterviewPhase = "check" | "answer" | "paused_camera" | "processing" | "done";
 
 /** Waktu maksimal menjawab satu pertanyaan. */
 export const ANSWER_SECONDS = 120;

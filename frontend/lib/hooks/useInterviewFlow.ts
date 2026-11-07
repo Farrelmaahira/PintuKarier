@@ -14,11 +14,68 @@ export function useInterviewFlow(
   questionCount: number,
   rate: number = 1.0,
 ) {
-  const { uploads, setUploadError, attemptCount, recording, stopRecording, stopStream } = media;
+  const { uploads, setUploadError, attemptCount, recording, stopRecording, stopStream, camera, videoRef } = media;
   const [phase, setPhase] = useState<InterviewPhase>("check");
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(ANSWER_SECONDS);
   const [completedSteps, setCompletedSteps] = useState<number>(0);
+  const prePausePhase = useRef<InterviewPhase>("answer");
+
+  // Deteksi kamera mati atau layar gelap (ditutup) saat wawancara sungguhan
+  useEffect(() => {
+    if (!real || (phase !== "answer" && phase !== "paused_camera")) return;
+
+    let canvas: HTMLCanvasElement | null = null;
+    let ctx: CanvasRenderingContext2D | null = null;
+
+    const checkInterval = window.setInterval(() => {
+      // 1. Cek track video kamera aktif
+      if (camera !== "on" || !videoRef.current || videoRef.current.paused || videoRef.current.ended) {
+        if (phase === "answer") {
+          prePausePhase.current = "answer";
+          setPhase("paused_camera");
+        }
+        return;
+      }
+
+      // 2. Cek apakah kamera ditutupi (deteksi gelap / brightness rata-rata < 15)
+      try {
+        const video = videoRef.current;
+        if (video.videoWidth > 0 && video.videoHeight > 0) {
+          if (!canvas) {
+            canvas = document.createElement("canvas");
+            canvas.width = 32;
+            canvas.height = 24;
+            ctx = canvas.getContext("2d", { willReadFrequently: true });
+          }
+          if (ctx) {
+            ctx.drawImage(video, 0, 0, 32, 24);
+            const imgData = ctx.getImageData(0, 0, 32, 24);
+            const data = imgData.data;
+            let sum = 0;
+            for (let i = 0; i < data.length; i += 4) {
+              sum += (data[i]! + data[i + 1]! + data[i + 2]!) / 3;
+            }
+            const avgBrightness = sum / (data.length / 4);
+
+            // Jika rata-rata kecerahan < 15 (sangat gelap / ditutup tangan/stiker)
+            if (avgBrightness < 15) {
+              if (phase === "answer") {
+                setPhase("paused_camera");
+              }
+            } else if (phase === "paused_camera") {
+              // Pulih kembali
+              setPhase("answer");
+            }
+          }
+        }
+      } catch {
+        // Fallback jika canvas terhambat security context
+      }
+    }, 1000);
+
+    return () => window.clearInterval(checkInterval);
+  }, [real, phase, camera, videoRef]);
 
   const next = () => {
     stopRecording();
