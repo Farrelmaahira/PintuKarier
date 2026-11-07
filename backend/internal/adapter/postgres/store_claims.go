@@ -32,7 +32,7 @@ func (s *Store) SaveClaims(ctx context.Context, claims []domain.ClaimEvidence) e
 
 		query := `
 			INSERT INTO claim_evidences (
-				id, application_id, student_id, claim_type, title, issuer, year,
+				id, COALESCE(application_id, ''), student_id, claim_type, title, issuer, year,
 				context, file_key, file_name, status, match_confidence, verification_notes,
 				created_at, updated_at
 			) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
@@ -64,7 +64,7 @@ func (s *Store) SaveClaims(ctx context.Context, claims []domain.ClaimEvidence) e
 func (s *Store) ClaimsByStudent(ctx context.Context, studentID string) ([]domain.ClaimEvidence, error) {
 	query := `
 		SELECT
-			id, application_id, student_id, claim_type, title, issuer, year,
+			id, COALESCE(application_id, ''), student_id, claim_type, title, issuer, year,
 			context, file_key, file_name, status, match_confidence, verification_notes,
 			created_at, updated_at
 		FROM claim_evidences
@@ -99,7 +99,7 @@ func (s *Store) ClaimsByStudent(ctx context.Context, studentID string) ([]domain
 func (s *Store) ClaimByID(ctx context.Context, claimID, studentID string) (domain.ClaimEvidence, error) {
 	query := `
 		SELECT
-			id, application_id, student_id, claim_type, title, issuer, year,
+			id, COALESCE(application_id, ''), student_id, claim_type, title, issuer, year,
 			context, file_key, file_name, status, match_confidence, verification_notes,
 			created_at, updated_at
 		FROM claim_evidences
@@ -149,7 +149,7 @@ func (s *Store) UpdateClaimStatus(ctx context.Context, claimID, studentID string
 func (s *Store) ClaimsByApplication(ctx context.Context, applicationID string) ([]domain.ClaimEvidence, error) {
 	query := `
 		SELECT
-			id, application_id, student_id, claim_type, title, issuer, year,
+			id, COALESCE(application_id, ''), student_id, claim_type, title, issuer, year,
 			context, file_key, file_name, status, match_confidence, verification_notes,
 			created_at, updated_at
 		FROM claim_evidences
