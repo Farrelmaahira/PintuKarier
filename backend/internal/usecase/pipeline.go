@@ -119,21 +119,23 @@ func (p *Pipeline) profilCV(ctx context.Context, userID, key string) error {
 		return err
 	}
 
-	// Ekstrak klaim sertifikasi dari CV untuk diverifikasi dokumen buktinya (deduplikasi dengan judul yang sudah ada)
+	// Ekstrak klaim sertifikasi dari CV untuk diverifikasi dokumen buktinya (deduplikasi dengan judul yang sudah ada, toleran tanda baca)
 	if len(cv.Profil.Sertifikasi) > 0 {
 		existingClaims, _ := p.Store.ClaimsByStudent(ctx, userID)
 		existingTitles := make(map[string]bool)
 		for _, ec := range existingClaims {
-			existingTitles[strings.ToLower(strings.TrimSpace(ec.Title))] = true
+			existingTitles[normalizeClaimTitle(ec.Title)] = true
 		}
 
 		var newClaims []domain.ClaimEvidence
 		now := time.Now()
 		for i, cert := range cv.Profil.Sertifikasi {
 			certTitle := strings.TrimSpace(cert)
-			if certTitle == "" || existingTitles[strings.ToLower(certTitle)] {
+			norm := normalizeClaimTitle(certTitle)
+			if norm == "" || existingTitles[norm] {
 				continue
 			}
+			existingTitles[norm] = true
 			newClaims = append(newClaims, domain.ClaimEvidence{
 				ID:                fmt.Sprintf("claim-%s-%d-%d", userID, now.Unix(), i),
 				StudentID:         userID,
@@ -326,4 +328,15 @@ func nonNil[T any](s []T) []T {
 		return []T{}
 	}
 	return s
+}
+
+// normalizeClaimTitle membersihkan tanda baca dan spasi untuk deduplikasi judul klaim.
+func normalizeClaimTitle(title string) string {
+	var b strings.Builder
+	for _, r := range strings.ToLower(title) {
+		if (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') {
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }

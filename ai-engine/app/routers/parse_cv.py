@@ -182,9 +182,15 @@ def _extract_fallback_sertifikasi(teks: str) -> list[str]:
         for it in items:
             cleaned = ' '.join(it.split()).strip(' .-,')
             if cleaned and len(cleaned) > 5 and not re.match(r'^(?:PENDIDIKAN|KEAHLIAN|BAHASA|PENGALAMAN|PROYEK)', cleaned, re.I):
-                if not any(cleaned.lower() == r.lower() or (len(cleaned) < 15 and cleaned.lower() in r.lower()) for r in res):
+                c_norm = _norm_claim(cleaned)
+                if not any(_norm_claim(r) == c_norm or (len(c_norm) < 15 and c_norm in _norm_claim(r)) for r in res):
                     res.append(cleaned)
     return res
+
+
+def _norm_claim(s: str) -> str:
+    """Normalisasi string klaim/sertifikasi untuk perbandingan tahan tanda baca dan spasi."""
+    return re.sub(r'[^a-z0-9]+', '', s.lower())
 
 
 def _parse_profil(raw: str, teks_cv: str = "") -> tuple[Profil, Identitas, str]:
@@ -198,8 +204,22 @@ def _parse_profil(raw: str, teks_cv: str = "") -> tuple[Profil, Identitas, str]:
         if teks_cv:
             fallback = _extract_fallback_sertifikasi(teks_cv)
             for f in fallback:
-                if not any(f.lower() in s.lower() or s.lower() in f.lower() for s in extracted_sertifikasi):
+                f_norm = _norm_claim(f)
+                if not any(f_norm in _norm_claim(s) or _norm_claim(s) in f_norm for s in extracted_sertifikasi):
                     extracted_sertifikasi.append(f)
+
+        # Deduplikasi akhir toleran tanda baca (mis. 'Stellar Instawards Grantee 2026' vs 'Stellar Instawards Grantee, 2026')
+        deduped_sertifikasi: list[str] = []
+        seen_norms: set[str] = set()
+        for item in extracted_sertifikasi:
+            norm = _norm_claim(item)
+            if not norm or norm in seen_norms:
+                continue
+            # Cek substring match antar klaim yang sudah ada
+            if any(norm in s or s in norm for s in seen_norms):
+                continue
+            seen_norms.add(norm)
+            deduped_sertifikasi.append(item)
 
         profil = Profil(
             ringkasan=str(data.get("ringkasan") or ""),
@@ -207,7 +227,7 @@ def _parse_profil(raw: str, teks_cv: str = "") -> tuple[Profil, Identitas, str]:
             pengalaman=_items(data, "pengalaman"),
             proyek=_items(data, "proyek"),
             organisasi=_items(data, "organisasi"),
-            sertifikasi=extracted_sertifikasi,
+            sertifikasi=deduped_sertifikasi,
         )
         return profil, _identitas(data), str(data.get("teks") or "")
     except (json.JSONDecodeError, TypeError, AttributeError, ValueError):
