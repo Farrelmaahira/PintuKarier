@@ -21,7 +21,7 @@ export function useInterviewFlow(
   const [completedSteps, setCompletedSteps] = useState<number>(0);
   const prePausePhase = useRef<InterviewPhase>("answer");
 
-  // Deteksi kamera mati atau layar gelap (ditutup) saat wawancara sungguhan
+  // Deteksi kamera mati atau layar gelap/ditutupi jari/objek saat wawancara sungguhan
   useEffect(() => {
     if (!real || (phase !== "answer" && phase !== "paused_camera")) return;
 
@@ -38,7 +38,7 @@ export function useInterviewFlow(
         return;
       }
 
-      // 2. Cek apakah kamera ditutupi (deteksi gelap / brightness rata-rata < 15)
+      // 2. Cek apakah kamera ditutupi (deteksi gelap / kamera ditutup jari atau stiker)
       try {
         const video = videoRef.current;
         if (video.videoWidth > 0 && video.videoHeight > 0) {
@@ -52,19 +52,40 @@ export function useInterviewFlow(
             ctx.drawImage(video, 0, 0, 32, 24);
             const imgData = ctx.getImageData(0, 0, 32, 24);
             const data = imgData.data;
-            let sum = 0;
-            for (let i = 0; i < data.length; i += 4) {
-              sum += (data[i]! + data[i + 1]! + data[i + 2]!) / 3;
-            }
-            const avgBrightness = sum / (data.length / 4);
+            const count = data.length / 4;
+            let sumBrightness = 0;
+            let sumGreen = 0;
+            let sumRed = 0;
+            let sumBlue = 0;
 
-            // Jika rata-rata kecerahan < 15 (sangat gelap / ditutup tangan/stiker)
-            if (avgBrightness < 15) {
+            for (let i = 0; i < data.length; i += 4) {
+              const r = data[i]!;
+              const g = data[i + 1]!;
+              const b = data[i + 2]!;
+              sumRed += r;
+              sumGreen += g;
+              sumBlue += b;
+              sumBrightness += (r + g + b) / 3;
+            }
+
+            const avgBrightness = sumBrightness / count;
+            const avgR = sumRed / count;
+            const avgG = sumGreen / count;
+            const avgB = sumBlue / count;
+
+            // Kamera ditutup terdeteksi bila:
+            // a) Gelap gulita (avgBrightness < 35)
+            // b) Ditutupi jari/kulit/benda dekat (kamera laptop jadi kecokelatan/merah pekat redup, misal R > G*1.4 dan brightness < 80)
+            const isTooDark = avgBrightness < 35;
+            const isFingerCovered = avgBrightness < 80 && avgR > avgG * 1.35 && avgR > avgB * 1.35;
+            const isCovered = isTooDark || isFingerCovered;
+
+            if (isCovered) {
               if (phase === "answer") {
                 setPhase("paused_camera");
               }
             } else if (phase === "paused_camera") {
-              // Pulih kembali
+              // Pulih kembali saat wajah terlihat
               setPhase("answer");
             }
           }
@@ -72,7 +93,7 @@ export function useInterviewFlow(
       } catch {
         // Fallback jika canvas terhambat security context
       }
-    }, 1000);
+    }, 800);
 
     return () => window.clearInterval(checkInterval);
   }, [real, phase, camera, videoRef]);
