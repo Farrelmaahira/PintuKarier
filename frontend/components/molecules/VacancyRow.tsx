@@ -1,3 +1,4 @@
+import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "../atoms/Badge";
 import { Button } from "../atoms/Button";
 import { ChipList } from "./ChipList";
@@ -45,7 +46,12 @@ export function VacancyRow({ vacancy, applied }: VacancyRowProps) {
       </div>
       <div className={rows.actions}>
         {applied ? (
-          <Badge tone="settled">Udah kamu lamar</Badge>
+          <Badge tone="green">
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+              <CheckCircle size={14} weight="bold" />
+              Sudah kamu lamar
+            </span>
+          </Badge>
         ) : closed ? (
           <Badge>Ditutup</Badge>
         ) : (
