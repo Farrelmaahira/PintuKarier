@@ -47,15 +47,28 @@ export function CandidateHeader({ candidate }: CandidateHeaderProps) {
         <p className={shell.lead}>
           {candidate.studyProgram} · angkatan {candidate.cohortYear} · melamar {candidate.position} pada {candidate.appliedOn}
         </p>
-        {candidate.cvUrl && (
-          <div style={{ marginTop: 10 }}>
-            <a href={candidate.cvUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="ghost" icon={<FilePdf size={18} color="var(--cat-red)" />}>
-                Unduh / Lihat Dokumen CV Asli
-              </Button>
-            </a>
-          </div>
-        )}
+        {candidate.cvUrl && (() => {
+          const sanitize = (s: string) => s.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
+          const safeName = sanitize(candidate.name || "Kandidat");
+          const safePos = sanitize(candidate.position || "Lowongan");
+          const downloadFilename = `cv-${safeName}-${safePos}.pdf`;
+          const downloadUrl = `${candidate.cvUrl}${candidate.cvUrl.includes("?") ? "&" : "?"}filename=${encodeURIComponent(downloadFilename)}`;
+          return (
+            <div style={{ marginTop: 10 }}>
+              <a
+                href={downloadUrl}
+                download={downloadFilename}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <Button variant="ghost" icon={<FilePdf size={18} color="var(--cat-red)" />}>
+                  Unduh / Lihat Dokumen CV Asli
+                </Button>
+              </a>
+            </div>
+          );
+        })()}
       </div>
       <div className={app.scoreHead}>
         <ScoreBox value={computeScore(candidate.dimensions)} tone={tone} big />

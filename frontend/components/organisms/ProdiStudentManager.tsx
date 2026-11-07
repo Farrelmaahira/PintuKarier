@@ -225,20 +225,29 @@ export function ProdiStudentManager() {
                   <div><strong>Kampus:</strong> {selectedStudent.campus || "Politeknik Negeri Jakarta"}</div>
                   <div><strong>Program Studi:</strong> {selectedStudent.institution || "D4 Teknik Informatika"}</div>
                   <div><strong>IPK Kumulatif:</strong> {getStudentGpa(selectedStudent)}</div>
-                  {(selectedStudent.cvUrl || selectedStudent.cv_url) && (
-                    <div style={{ marginLeft: "auto" }}>
-                      <a
-                        href={selectedStudent.cvUrl || selectedStudent.cv_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ textDecoration: "none" }}
-                      >
-                        <Button variant="ghost" size="sm" icon={<FilePdf size={16} color="var(--cat-red)" />}>
-                          Dokumen CV Asli
-                        </Button>
-                      </a>
-                    </div>
-                  )}
+                  {(() => {
+                    const rawUrl = selectedStudent.cvUrl || selectedStudent.cv_url;
+                    if (!rawUrl) return null;
+                    const sanitize = (s: string) => s.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
+                    const safeName = sanitize(selectedStudent.name || "Mahasiswa");
+                    const downloadFilename = `cv-${safeName}.pdf`;
+                    const downloadUrl = `${rawUrl}${rawUrl.includes("?") ? "&" : "?"}filename=${encodeURIComponent(downloadFilename)}`;
+                    return (
+                      <div style={{ marginLeft: "auto" }}>
+                        <a
+                          href={downloadUrl}
+                          download={downloadFilename}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Button variant="ghost" size="sm" icon={<FilePdf size={16} color="var(--cat-red)" />}>
+                            Dokumen CV Asli
+                          </Button>
+                        </a>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div style={{ borderTop: "var(--border)", paddingTop: 16 }}>

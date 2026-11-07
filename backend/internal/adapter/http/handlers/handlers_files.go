@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"path/filepath"
@@ -100,6 +101,19 @@ func HandleFileGet(d *Deps) http.HandlerFunc {
 		}
 		w.Header().Set("Content-Type", ct)
 		w.Header().Set("Cache-Control", "public, max-age=86400")
+
+		// Jika parameter `filename` diberikan (misal dari frontend dengan nama rapi),
+		// kirim header Content-Disposition agar browser mengunduh dengan nama tersebut.
+		if fn := r.URL.Query().Get("filename"); fn != "" {
+			cleanFn := filepath.Base(fn)
+			cleanFn = strings.ReplaceAll(cleanFn, `"`, "")
+			cleanFn = strings.ReplaceAll(cleanFn, "\r", "")
+			cleanFn = strings.ReplaceAll(cleanFn, "\n", "")
+			if cleanFn != "" {
+				w.Header().Set("Content-Disposition", fmt.Sprintf(`inline; filename="%s"`, cleanFn))
+			}
+		}
+
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(data)
 	}
