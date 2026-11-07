@@ -13,16 +13,10 @@ interface InterviewChecklistProps {
 
 /** Panel "Sebelum mulai": aturan interview dan pilihan menyalakan kamera. */
 export function InterviewChecklist({ camera, real, onTurnOnCamera, onStart }: InterviewChecklistProps) {
-  const startLabel = camera === "on" ? "Gas, mulai interview" : real ? "Nyalakan Kamera untuk Melamar" : "Mulai tanpa kamera (demo simulasi)";
-  const isStrictReal = real && camera !== "on";
-
   return (
     <Panel title="Sebelum mulai interview">
       <ul className={app.list}>
         <li>3 pertanyaan, tiap jawaban maksimal 2 menit. Bisa selesai lebih cepat.</li>
-        <li>
-          <strong>Anti-Joki & Integritas:</strong> Kamera wajib aktif selama interview lamaran resmi berlangsung.
-        </li>
         <li>
           Sistem akan mendeteksi jika kamera tertutup (gelap) atau dinonaktifkan, dan interview akan otomatis dijeda.
         </li>
@@ -31,24 +25,29 @@ export function InterviewChecklist({ camera, real, onTurnOnCamera, onStart }: In
         </li>
       </ul>
       <div className={app.row}>
-        {camera !== "on" && (
-          <Button onClick={onTurnOnCamera} icon={<VideoCamera size={22} />}>
-            Nyalakan Kamera
-          </Button>
+        {real ? (
+          camera === "on" ? (
+            <Button variant="primary" onClick={onStart}>
+              Gas, mulai interview
+            </Button>
+          ) : (
+            <Button variant="primary" onClick={onTurnOnCamera} icon={<VideoCamera size={22} />}>
+              Nyalakan Kamera
+            </Button>
+          )
+        ) : (
+          <>
+            {camera !== "on" && (
+              <Button onClick={onTurnOnCamera} icon={<VideoCamera size={22} />}>
+                Nyalakan Kamera
+              </Button>
+            )}
+            <Button variant={camera === "off" ? "ghost" : "primary"} onClick={onStart}>
+              {camera === "on" ? "Gas, mulai interview" : "Mulai tanpa kamera (demo simulasi)"}
+            </Button>
+          </>
         )}
-        <Button
-          variant={camera === "off" ? "ghost" : "primary"}
-          onClick={onStart}
-          disabled={isStrictReal}
-        >
-          {startLabel}
-        </Button>
       </div>
-      {isStrictReal && (
-        <p style={{ margin: "10px 0 0 0", fontSize: 13, color: "var(--cat-orange)" }}>
-          ⚠️ Untuk melamar lowongan sungguhan, kamu wajib menyalakan kamera untuk verifikasi wajah anti-joki.
-        </p>
-      )}
     </Panel>
   );
 }
