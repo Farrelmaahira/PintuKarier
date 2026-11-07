@@ -15,29 +15,39 @@ import ui from "@/styles/ui.module.css";
 
 export interface ClaimItem {
   id: string;
-  claim_type: string;
+  claim_type?: string;
+  claimType?: string;
   title: string;
   issuer?: string;
   year?: string;
   context?: string;
   file_key?: string;
+  fileKey?: string;
   file_name?: string;
+  fileName?: string;
   status: "pending_upload" | "verifying" | "verified" | "needs_manual_review" | "rejected";
   match_confidence?: number;
+  matchConfidence?: number;
   verification_notes?: string;
+  verificationNotes?: string;
 }
 
 export interface StudentSummary {
   id: string;
   name: string;
-  nim: string;
-  institution: string;
-  campus: string;
-  semester: number;
-  ipk: number;
-  total_claims: number;
-  verified_claims: number;
-  pending_claims: number;
+  nim?: string;
+  studentNumber?: string;
+  institution?: string;
+  campus?: string;
+  semester?: number;
+  ipk?: number;
+  gpa?: number;
+  total_claims?: number;
+  totalClaims?: number;
+  verified_claims?: number;
+  verifiedClaims?: number;
+  pending_claims?: number;
+  pendingClaims?: number;
   claims?: ClaimItem[];
 }
 
@@ -93,15 +103,23 @@ export function ProdiStudentManager() {
     }
   };
 
+  const getStudentNim = (s: StudentSummary) => s.nim || s.studentNumber || "";
+  const getStudentGpa = (s: StudentSummary) => {
+    const val = s.ipk ?? s.gpa;
+    return typeof val === "number" ? val.toFixed(2) : "0.00";
+  };
+  const getVerifiedClaims = (s: StudentSummary) => s.verified_claims ?? s.verifiedClaims ?? 0;
+  const getPendingClaims = (s: StudentSummary) => s.pending_claims ?? s.pendingClaims ?? 0;
+
   const filtered = students.filter(
     (s) =>
       s.name.toLowerCase().includes(query.toLowerCase()) ||
-      (s.nim && s.nim.includes(query))
+      getStudentNim(s).includes(query)
   );
 
   const totalStudents = students.length;
-  const verifiedCount = students.filter((s) => s.verified_claims > 0).length;
-  const pendingReviewCount = students.reduce((acc, s) => acc + s.pending_claims, 0);
+  const verifiedCount = students.filter((s) => getVerifiedClaims(s) > 0).length;
+  const pendingReviewCount = students.reduce((acc, s) => acc + getPendingClaims(s), 0);
 
   return (
     <div className={app.stack} style={{ gap: 24 }}>
@@ -166,16 +184,16 @@ export function ProdiStudentManager() {
                       <div className={rows.main} style={{ gap: 4 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <strong style={{ fontSize: 14 }}>{s.name}</strong>
-                          {s.verified_claims > 0 ? (
+                          {getVerifiedClaims(s) > 0 ? (
                             <Badge tone="green">🛡️ Verified</Badge>
-                          ) : s.pending_claims > 0 ? (
-                            <Badge tone="yellow">Review ({s.pending_claims})</Badge>
+                          ) : getPendingClaims(s) > 0 ? (
+                            <Badge tone="yellow">Review ({getPendingClaims(s)})</Badge>
                           ) : (
                             <Badge tone="none">0 Klaim</Badge>
                           )}
                         </div>
                         <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                          NIM: {s.nim || "-"} · IPK {s.ipk.toFixed(2)} · Smt {s.semester || "Aktif"}
+                          NIM: {getStudentNim(s) || "-"} · IPK {getStudentGpa(s)} · Smt {s.semester || "Aktif"}
                         </div>
                       </div>
                     </li>
@@ -193,16 +211,16 @@ export function ProdiStudentManager() {
               <Panel
                 title={`Klaim Portofolio & Sertifikasi: ${selectedStudent.name}`}
                 tag={
-                  selectedStudent.verified_claims > 0
-                    ? `${selectedStudent.verified_claims} Terverifikasi Prodi`
+                  getVerifiedClaims(selectedStudent) > 0
+                    ? `${getVerifiedClaims(selectedStudent)} Terverifikasi Prodi`
                     : "Belum Divalidasi"
                 }
               >
                 <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap", fontSize: 13 }}>
-                  <div><strong>NIM:</strong> {selectedStudent.nim || "Belum diisi"}</div>
+                  <div><strong>NIM:</strong> {getStudentNim(selectedStudent) || "Belum diisi"}</div>
                   <div><strong>Kampus:</strong> {selectedStudent.campus || "Politeknik Negeri Jakarta"}</div>
                   <div><strong>Program Studi:</strong> {selectedStudent.institution || "D4 Teknik Informatika"}</div>
-                  <div><strong>IPK Kumulatif:</strong> {selectedStudent.ipk.toFixed(2)}</div>
+                  <div><strong>IPK Kumulatif:</strong> {getStudentGpa(selectedStudent)}</div>
                 </div>
 
                 <div style={{ borderTop: "var(--border)", paddingTop: 16 }}>
