@@ -8,7 +8,7 @@ import { Notice } from "../molecules/Notice";
 import { Panel } from "../molecules/Panel";
 import { Stat } from "../molecules/Stat";
 import { StatGrid } from "../molecules/StatGrid";
-import { api } from "@/lib/api";
+import { getProdiStudentsAction, verifyClaimByProdiAction } from "@/lib/actions/prodiActions";
 import app from "@/styles/app.module.css";
 import rows from "@/styles/rows.module.css";
 import ui from "@/styles/ui.module.css";
@@ -55,12 +55,14 @@ export function ProdiStudentManager() {
     try {
       setLoading(true);
       setError(null);
-      const res = await api<StudentSummary[]>("/prodi/d4-ti/mahasiswa");
-      setStudents(res);
-      if (res.length > 0 && !selectedStudent) {
-        setSelectedStudent(res[0]);
+      const res = await getProdiStudentsAction("d4-teknik-informatika");
+      if (!res.ok) throw new Error(res.error);
+      const list = res.data;
+      setStudents(list);
+      if (list.length > 0 && !selectedStudent) {
+        setSelectedStudent(list[0]);
       } else if (selectedStudent) {
-        const updated = res.find((s) => s.id === selectedStudent.id);
+        const updated = list.find((s) => s.id === selectedStudent.id);
         if (updated) setSelectedStudent(updated);
       }
     } catch (err: any) {
@@ -78,10 +80,8 @@ export function ProdiStudentManager() {
     try {
       setVerifyingId(claimId);
       const notes = verified ? "Telah divalidasi keasliannya oleh Koordinator Prodi PNJ." : "Berkas bukti belum sesuai kriteria.";
-      await api(`/prodi/d4-ti/claims/${claimId}/verify`, {
-        method: "POST",
-        body: { verified, notes },
-      });
+      const res = await verifyClaimByProdiAction("d4-teknik-informatika", claimId, verified, notes);
+      if (!res.ok) throw new Error(res.error);
       setNotice(verified ? "Klaim berhasil diverifikasi oleh Prodi." : "Klaim ditandai belum sesuai.");
       startTransition(() => {
         loadData();
