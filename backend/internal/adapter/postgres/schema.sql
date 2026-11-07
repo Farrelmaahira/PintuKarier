@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS benchmark (
 -- Bukti verifikasi per item klaim sertifikasi / kompetensi di CV mahasiswa.
 CREATE TABLE IF NOT EXISTS claim_evidences (
 	id                 TEXT PRIMARY KEY,
-	application_id     TEXT NOT NULL REFERENCES lamaran(id) ON DELETE CASCADE,
+	application_id     TEXT REFERENCES lamaran(id) ON DELETE CASCADE,
 	student_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 	claim_type         TEXT NOT NULL DEFAULT 'sertifikasi',
 	title              TEXT NOT NULL,
@@ -132,4 +132,17 @@ CREATE TABLE IF NOT EXISTS claim_evidences (
 );
 CREATE INDEX IF NOT EXISTS claim_evidences_student ON claim_evidences (student_id);
 CREATE INDEX IF NOT EXISTS claim_evidences_app ON claim_evidences (application_id);
+
+CREATE TABLE IF NOT EXISTS mitra (
+	id                TEXT PRIMARY KEY,
+	nama_perusahaan   TEXT NOT NULL,
+	bidang_industri   TEXT NOT NULL,
+	jumlah_lowongan   INT NOT NULL DEFAULT 0,
+	jumlah_pelamar    INT NOT NULL DEFAULT 0,
+	feedback_terkirim INT NOT NULL DEFAULT 0,
+	sla_feedback      DOUBLE PRECISION NOT NULL DEFAULT 100.0,
+	status_kemitraan  TEXT NOT NULL DEFAULT 'Terverifikasi Aktif',
+	created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+	updated_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 

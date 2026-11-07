@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -24,6 +25,11 @@ func (s *Store) SaveClaims(ctx context.Context, claims []domain.ClaimEvidence) e
 			createdAt = now
 		}
 
+		var appID any = nil
+		if strings.TrimSpace(c.ApplicationID) != "" {
+			appID = strings.TrimSpace(c.ApplicationID)
+		}
+
 		query := `
 			INSERT INTO claim_evidences (
 				id, application_id, student_id, claim_type, title, issuer, year,
@@ -43,7 +49,7 @@ func (s *Store) SaveClaims(ctx context.Context, claims []domain.ClaimEvidence) e
 				updated_at = EXCLUDED.updated_at
 		`
 		_, err := s.db.Exec(ctx, query,
-			c.ID, c.ApplicationID, c.StudentID, c.ClaimType, c.Title, c.Issuer, c.Year,
+			c.ID, appID, c.StudentID, c.ClaimType, c.Title, c.Issuer, c.Year,
 			c.Context, c.FileKey, c.FileName, string(c.Status), c.MatchConfidence, c.VerificationNotes,
 			createdAt, now,
 		)
