@@ -51,6 +51,9 @@ type Store interface {
 	AdminOverview(ctx context.Context) (domain.AdminOverview, error)
 	AdminJurusan(ctx context.Context) ([]domain.AdminJurusanSummary, error)
 	AdminMitra(ctx context.Context) ([]domain.AdminMitraSummary, error)
+	CreateMitra(ctx context.Context, m domain.AdminMitraSummary) (domain.AdminMitraSummary, error)
+	UpdateMitra(ctx context.Context, m domain.AdminMitraSummary) (domain.AdminMitraSummary, error)
+	DeleteMitra(ctx context.Context, id string) error
 
 	Enqueue(ctx context.Context, key, kind, refID string) (domain.Job, error)
 	Job(ctx context.Context, id string) (domain.Job, error)
@@ -65,6 +68,13 @@ type Store interface {
 
 	Notes(ctx context.Context, prodi string) ([]domain.FollowUpNote, error)
 	CreateNote(ctx context.Context, n domain.FollowUpNote) error
+
+	// Claim evidences (verifikasi berkas sertifikat & klaim kompetensi CV mahasiswa).
+	SaveClaims(ctx context.Context, claims []domain.ClaimEvidence) error
+	ClaimsByStudent(ctx context.Context, studentID string) ([]domain.ClaimEvidence, error)
+	ClaimByID(ctx context.Context, claimID, studentID string) (domain.ClaimEvidence, error)
+	UpdateClaimStatus(ctx context.Context, claimID, studentID string, fileKey, fileName string, status domain.ClaimStatus, confidence float64, notes string) error
+	ClaimsByApplication(ctx context.Context, applicationID string) ([]domain.ClaimEvidence, error)
 }
 
 // Candidate gabungan lamaran, mahasiswa, lowongan, dan hasil untuk layar HRD dan feedback.

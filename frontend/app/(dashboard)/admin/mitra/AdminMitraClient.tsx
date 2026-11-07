@@ -5,8 +5,15 @@ import { AdminPartnersView } from "@/components/organisms/AdminPartnersView";
 import { Skeleton } from "@/components/atoms/Skeleton";
 
 export function AdminMitraClient() {
-  const { filteredPartners, partnerSearchQuery, setPartnerSearchQuery, isLoading } =
-    useAdminCareerCenter();
+  const {
+    filteredPartners,
+    partnerSearchQuery,
+    setPartnerSearchQuery,
+    isLoading,
+    addPartner,
+    editPartner,
+    removePartner,
+  } = useAdminCareerCenter();
 
   if (isLoading && filteredPartners.length === 0) {
     return (
@@ -22,6 +29,9 @@ export function AdminMitraClient() {
       partners={filteredPartners}
       searchQuery={partnerSearchQuery}
       onSearchChange={setPartnerSearchQuery}
+      onAddPartner={addPartner}
+      onEditPartner={editPartner}
+      onDeletePartner={removePartner}
     />
   );
 }

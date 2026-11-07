@@ -72,11 +72,7 @@ export function DepartmentDetailClient({ dept }: DepartmentDetailClientProps) {
             </ul>
           </Panel>
 
-          <Panel
-            title="Kesenjangan Kompetensi & Harmonisasi RPS"
-            tag="Link and Match Industri"
-            flush
-          >
+          <div style={{ border: "var(--border)", background: "var(--surface-raised)" }}>
             <ul className={rows.list}>
               {dept.competencyGaps.map((gap, idx) => (
                 <li key={gap.skill} className={rows.row} style={{ gridTemplateColumns: "1fr" }}>
@@ -119,7 +115,7 @@ export function DepartmentDetailClient({ dept }: DepartmentDetailClientProps) {
                 </li>
               ))}
             </ul>
-          </Panel>
+          </div>
         </div>
 
         <div className={shell.stack}>
@@ -144,11 +140,11 @@ export function DepartmentDetailClient({ dept }: DepartmentDetailClientProps) {
             </ul>
           </Panel>
 
-          <Panel title="Aksi Tindak Lanjut Jurusan" tag="Administrasi">
-            <p className={app.note}>
+          <div style={{ border: "var(--border)", background: "var(--surface-raised)", padding: "20px" }}>
+            <p className={app.note} style={{ marginTop: 0 }}>
               Data hasil seleksi dan gap kompetensi ini dapat dicetak sebagai Berita Acara evaluasi kurikulum untuk rapat pleno jurusan.
             </p>
-            <div style={{ display: "grid", gap: "10px", marginTop: "12px" }}>
+            <div style={{ display: "grid", gap: "10px", marginTop: "14px" }}>
               <Button
                 variant="primary"
                 onClick={() => window.print()}
@@ -164,7 +160,7 @@ export function DepartmentDetailClient({ dept }: DepartmentDetailClientProps) {
                 Audit Kemitraan Terkait
               </Button>
             </div>
-          </Panel>
+          </div>
         </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import { AdminOverviewStats } from "@/lib/data/admin/types";
 import { AdminStatsCards } from "./AdminStatsCards";
 import { Badge } from "../atoms/Badge";
 import { Button } from "../atoms/Button";
-import { Logo } from "../atoms/Logo";
 import { Meter } from "../atoms/Meter";
 import { Panel } from "../molecules/Panel";
 import { Tag } from "../atoms/Tag";
@@ -111,31 +110,16 @@ export function AdminOverview({ overview }: AdminOverviewProps) {
           </Panel>
 
           <Panel title="Harmonisasi Kurikulum & Industri" tag="Inisiatif Kampus Merdeka">
-            <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-              <div style={{ flex: 1 }}>
-                <p className={app.note} style={{ marginBottom: "14px" }}>
-                  Data kesenjangan dari mitra langsung dialirkan ke Dasbor Prodi untuk pembaruan RPS dan modul PBL tiap semester.
-                </p>
-                <Button
-                  href="/admin/jurusan"
-                  icon={<ChartBar size={16} />}
-                >
-                  Lihat Kesenjangan Skill
-                </Button>
-              </div>
-              <div
-                style={{
-                  width: "72px",
-                  height: "72px",
-                  display: "grid",
-                  placeItems: "center",
-                  border: "var(--border)",
-                  background: "var(--surface-warm)",
-                  flexShrink: 0,
-                }}
+            <div>
+              <p className={app.note} style={{ marginBottom: "14px" }}>
+                Data kesenjangan dari mitra langsung dialirkan ke Dasbor Prodi untuk pembaruan RPS dan modul PBL tiap semester.
+              </p>
+              <Button
+                href="/admin/jurusan"
+                icon={<ChartBar size={16} />}
               >
-                <Logo size={48} />
-              </div>
+                Lihat Kesenjangan Skill
+              </Button>
             </div>
           </Panel>
         </div>
