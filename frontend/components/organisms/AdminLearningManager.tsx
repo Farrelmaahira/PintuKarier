@@ -46,23 +46,9 @@ export function AdminLearningManager() {
 
   return (
     <div className={shell.stack} style={{ gap: "20px" }}>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button onClick={openCreateModal} icon={<Plus size={18} weight="bold" />}>
-          Tambah Modul & Drill
-        </Button>
-      </div>
-
-      <Panel flush>
-        <StatGrid cols={4}>
-          <Stat label="Total Modul Industri" value={`${modules.length} Modul`} />
-          <Stat label="Studi Kasus Drill" value={`${drills.length} Kasus`} />
-          <Stat label="Kategori Bidang" value={`${Math.max(1, categories.length - 1)} Bidang`} />
-          <Stat label="Rata-rata Boost Skor" value="+7.6 Poin" />
-        </StatGrid>
-      </Panel>
-
-      <div style={{ display: "grid", gap: "12px" }}>
-        <div style={{ position: "relative", width: "100%" }}>
+      {/* Search and Action Bar */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+        <div style={{ position: "relative", flex: "1 1 320px", maxWidth: "420px" }}>
           <MagnifyingGlass
             size={18}
             style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }}
@@ -77,13 +63,28 @@ export function AdminLearningManager() {
           />
         </div>
 
-        <Segmented
-          label="Kategori Modul"
-          options={categories}
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-        />
+        <Button onClick={openCreateModal} icon={<Plus size={18} weight="bold" />}>
+          Tambah Modul & Drill
+        </Button>
       </div>
+
+      {/* Filter Kategori */}
+      <Segmented
+        label="Kategori Modul"
+        options={categories}
+        value={selectedCategory}
+        onChange={setSelectedCategory}
+      />
+
+      {/* Panel Informasi / Stat Grid */}
+      <Panel flush>
+        <StatGrid cols={4}>
+          <Stat label="Total Modul Industri" value={`${modules.length} Modul`} />
+          <Stat label="Studi Kasus Drill" value={`${drills.length} Kasus`} />
+          <Stat label="Kategori Bidang" value={`${Math.max(1, categories.length - 1)} Bidang`} />
+          <Stat label="Rata-rata Boost Skor" value="+7.6 Poin" />
+        </StatGrid>
+      </Panel>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "20px" }}>
         {filteredModules.map((mod) => {
