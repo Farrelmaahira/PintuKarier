@@ -22,11 +22,23 @@ interface ProfileReviewProps {
 
 /** Profil hasil ekstraksi CV; mahasiswa cek dan rapikan skill sebelum lanjut. */
 export function ProfileReview({ applicationId, profile, onNext }: ProfileReviewProps) {
-  const cvProfile = profile ?? EMPTY_PROFILE;
+  const cvProfile: CvProfile = {
+    summary: profile?.summary ?? "",
+    skills: Array.isArray(profile?.skills) ? profile.skills : [],
+    experience: Array.isArray(profile?.experience) ? profile.experience : [],
+    projects: Array.isArray(profile?.projects) ? profile.projects : [],
+    organizations: Array.isArray(profile?.organizations) ? profile.organizations : [],
+    certifications: Array.isArray(profile?.certifications) ? profile.certifications : [],
+  };
   const skillList = useSkillList(cvProfile.skills);
   const [error, setError] = useState<string | null>(null);
   const [saving, startSaving] = useTransition();
-  const isParsed = Boolean(cvProfile.summary || cvProfile.skills.length || cvProfile.experience.length || cvProfile.projects.length);
+  const isParsed = Boolean(
+    cvProfile.summary ||
+    cvProfile.skills.length ||
+    cvProfile.experience.length ||
+    cvProfile.projects.length
+  );
   const sections = [
     ["Pengalaman", cvProfile.experience],
     ["Proyek", cvProfile.projects],
