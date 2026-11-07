@@ -129,34 +129,61 @@ def _identitas(data: dict) -> Identitas:
 
 def _ground_identitas(identitas: Identitas, teks: str) -> Identitas:
     """Buang isian yang tidak tertulis di teks CV, supaya NIM, kampus, atau IPK karangan model tidak masuk profil."""
-    # Dibatasi spasi supaya potongan nomor HP tidak dianggap NIM.
     norm = f" {_norm(teks)} "
 
     def tertulis(nilai: str) -> str:
         n = _norm(nilai)
         return nilai if n and f" {n} " in norm else ""
 
+    # Ekstrak NIM dari teks jika model gagal (pola umum 8-12 digit atau nim: xxx)
+    nim = tertulis(identitas.nim)
+    if not nim:
+        nim_match = re.search(r'\b(?:nim|npm|student\s*id)\s*[:.]?\s*([0-9]{8,14})\b', teks, re.I)
+        if nim_match:
+            nim = nim_match.group(1).strip()
+
+    # Ekstrak semester: cari kata eksplisit "semester X" atau estimasi dari tahun masuk
+    semester = identitas.semester if identitas.semester and re.search(rf"semester\s*{identitas.semester}\b", teks, re.I) else 0
+    if not semester:
+        explicit = re.search(r'\bsemester\s*([1-8])\b', teks, re.I)
+        if explicit:
+            semester = int(explicit.group(1))
+        else:
+            # Cari khusus di bagian PENDIDIKAN untuk tahun masuk kuliah (e.g. 2024 - Sekarang per 2026 = semester 5/6)
+            edu_section = ""
+            edu_match = re.search(r'\bPENDIDIKAN\b\s*([\s\S]*?)(?:\b(?:KEAHLIAN|BAHASA|PENGHARGAAN|PENGALAMAN|PROYEK)\b|$)', teks, re.I)
+            if edu_match:
+                edu_section = edu_match.group(1)
+            target_text = edu_section if edu_section else teks
+
+            year_match = re.search(r'\b(202[0-6])\s*[-–]\s*(?:sekarang|present)\b', target_text, re.I)
+            if year_match:
+                start_year = int(year_match.group(1))
+                diff_years = max(0, 2026 - start_year)
+                semester = min(14, max(1, diff_years * 2 + 1 if diff_years > 0 else 1))
+
     titik = re.sub(r"(\d),(\d)", r"\1.\2", teks)
     ipk = re.escape(f"{identitas.ipk:g}")
     return Identitas(
-        nim=tertulis(identitas.nim),
+        nim=nim,
         kampus=tertulis(identitas.kampus),
-        semester=identitas.semester if identitas.semester and re.search(rf"semester\s*{identitas.semester}\b", teks, re.I) else 0,
+        semester=semester,
         ipk=identitas.ipk if identitas.ipk and re.search(rf"(?<![\d.]){ipk}0*(?!\d)", titik) else 0,
     )
 
 
 def _extract_fallback_sertifikasi(teks: str) -> list[str]:
-    """Fallback scanner jika LLM melewatkan bagian sertifikasi/penghargaan."""
+    """Fallback scanner jika LLM melewatkan bagian sertifikasi/penghargaan dengan batas kata aman."""
     res: list[str] = []
-    match = re.search(r'(?:PENGHARGAAN|SERTIFIKASI|AWARDS?|PRESTASI|LISENSI)\s*([\s\S]*?)(?:PENDIDIKAN|KEAHLIAN|BAHASA|PENGALAMAN|PROYEK|$)', teks, re.I)
-    if match:
+    pattern = r'\b(?:PENGHARGAAN|SERTIFIKASI|AWARDS?|PRESTASI|LISENSI)\b\s*([\s\S]*?)(?:\b(?:PENDIDIKAN|KEAHLIAN|BAHASA|PENGALAMAN|PROYEK)\b|$)'
+    for match in re.finditer(pattern, teks, re.I):
         section = match.group(1).strip()
         items = re.split(r'[\n\r]*[●•\-\*]\s*', section)
         for it in items:
             cleaned = ' '.join(it.split()).strip(' .-,')
-            if cleaned and len(cleaned) > 3 and not re.match(r'^(?:PENDIDIKAN|KEAHLIAN|BAHASA)', cleaned, re.I):
-                res.append(cleaned)
+            if cleaned and len(cleaned) > 5 and not re.match(r'^(?:PENDIDIKAN|KEAHLIAN|BAHASA|PENGALAMAN|PROYEK)', cleaned, re.I):
+                if not any(cleaned.lower() == r.lower() or (len(cleaned) < 15 and cleaned.lower() in r.lower()) for r in res):
+                    res.append(cleaned)
     return res
 
 

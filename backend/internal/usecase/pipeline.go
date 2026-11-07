@@ -119,13 +119,19 @@ func (p *Pipeline) profilCV(ctx context.Context, userID, key string) error {
 		return err
 	}
 
-	// Ekstrak klaim sertifikasi dari CV untuk diverifikasi dokumen buktinya
+	// Ekstrak klaim sertifikasi dari CV untuk diverifikasi dokumen buktinya (deduplikasi dengan judul yang sudah ada)
 	if len(cv.Profil.Sertifikasi) > 0 {
+		existingClaims, _ := p.Store.ClaimsByStudent(ctx, userID)
+		existingTitles := make(map[string]bool)
+		for _, ec := range existingClaims {
+			existingTitles[strings.ToLower(strings.TrimSpace(ec.Title))] = true
+		}
+
 		var newClaims []domain.ClaimEvidence
 		now := time.Now()
 		for i, cert := range cv.Profil.Sertifikasi {
 			certTitle := strings.TrimSpace(cert)
-			if certTitle == "" {
+			if certTitle == "" || existingTitles[strings.ToLower(certTitle)] {
 				continue
 			}
 			newClaims = append(newClaims, domain.ClaimEvidence{
@@ -142,7 +148,9 @@ func (p *Pipeline) profilCV(ctx context.Context, userID, key string) error {
 			})
 		}
 		if len(newClaims) > 0 {
-			_ = p.Store.SaveClaims(ctx, newClaims)
+			if err := p.Store.SaveClaims(ctx, newClaims); err != nil {
+				slog.Error("gagal menyimpan claims hasil ekstraksi CV", "err", err, "userID", userID)
+			}
 		}
 	}
 

@@ -32,7 +32,7 @@ func (s *Store) SaveClaims(ctx context.Context, claims []domain.ClaimEvidence) e
 
 		query := `
 			INSERT INTO claim_evidences (
-				id, COALESCE(application_id, ''), student_id, claim_type, title, issuer, year,
+				id, application_id, student_id, claim_type, title, issuer, year,
 				context, file_key, file_name, status, match_confidence, verification_notes,
 				created_at, updated_at
 			) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
