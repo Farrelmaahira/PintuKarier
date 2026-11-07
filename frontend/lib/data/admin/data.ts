@@ -173,3 +173,55 @@ export async function fetchAdminPartners(): Promise<AdminPartnerSummary[]> {
     return PNJ_PARTNERS;
   }
 }
+
+export async function createAdminPartner(partner: Partial<AdminPartnerSummary>): Promise<AdminPartnerSummary> {
+  const res = await fetch("/api/admin/mitra", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nama_perusahaan: partner.companyName,
+      bidang_industri: partner.industrySector,
+      jumlah_lowongan: partner.vacancyCount || 0,
+      jumlah_pelamar: partner.applicantCount || 0,
+      feedback_terkirim: partner.feedbackSent || 0,
+      status_kemitraan: partner.partnershipStatus || "Terverifikasi Aktif",
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Gagal menambahkan mitra");
+  }
+  const data = await res.json();
+  return toAppKeys(data) as AdminPartnerSummary;
+}
+
+export async function updateAdminPartner(id: string, partner: Partial<AdminPartnerSummary>): Promise<AdminPartnerSummary> {
+  const res = await fetch(`/api/admin/mitra/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nama_perusahaan: partner.companyName,
+      bidang_industri: partner.industrySector,
+      jumlah_lowongan: partner.vacancyCount || 0,
+      jumlah_pelamar: partner.applicantCount || 0,
+      feedback_terkirim: partner.feedbackSent || 0,
+      status_kemitraan: partner.partnershipStatus || "Terverifikasi Aktif",
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Gagal memperbarui mitra");
+  }
+  const data = await res.json();
+  return toAppKeys(data) as AdminPartnerSummary;
+}
+
+export async function deleteAdminPartner(id: string): Promise<void> {
+  const res = await fetch(`/api/admin/mitra/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Gagal menghapus mitra");
+  }
+}

@@ -64,6 +64,9 @@ var Routes = []Route{
 	{"GET /admin/overview", adminOnly, HandleAdminOverview},
 	{"GET /admin/jurusan", adminOnly, HandleAdminJurusan},
 	{"GET /admin/mitra", adminOnly, HandleAdminMitra},
+	{"POST /admin/mitra", adminOnly, HandleAdminMitraCreate},
+	{"PUT /admin/mitra/{id}", adminOnly, HandleAdminMitraUpdate},
+	{"DELETE /admin/mitra/{id}", adminOnly, HandleAdminMitraDelete},
 
 	{"GET /jobs/{id}", all, HandleJobGet},
 }

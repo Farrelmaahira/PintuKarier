@@ -8,15 +8,24 @@ import {
   AdminPartnerSummary,
 } from "@/lib/data/admin/types";
 import {
+  createAdminPartner,
+  deleteAdminPartner,
   fetchAdminDepartments,
   fetchAdminOverview,
   fetchAdminPartners,
   PNJ_DEPARTMENTS,
   PNJ_OVERVIEW_INITIAL,
   PNJ_PARTNERS,
+  updateAdminPartner,
 } from "@/lib/data/admin/data";
 
-export function useAdminCareerCenter(): AdminCareerCenterState {
+export interface ExtendedAdminCareerCenterState extends AdminCareerCenterState {
+  addPartner: (partner: Partial<AdminPartnerSummary>) => Promise<void>;
+  editPartner: (id: string, partner: Partial<AdminPartnerSummary>) => Promise<void>;
+  removePartner: (id: string) => Promise<void>;
+}
+
+export function useAdminCareerCenter(): ExtendedAdminCareerCenterState {
   const [overview, setOverview] = useState<AdminOverviewStats | null>(PNJ_OVERVIEW_INITIAL);
   const [departments, setDepartments] = useState<AdminDepartmentSummary[]>(PNJ_DEPARTMENTS);
   const [partners, setPartners] = useState<AdminPartnerSummary[]>(PNJ_PARTNERS);
@@ -44,6 +53,21 @@ export function useAdminCareerCenter(): AdminCareerCenterState {
     }
   }, []);
 
+  const addPartner = useCallback(async (partner: Partial<AdminPartnerSummary>) => {
+    await createAdminPartner(partner);
+    await refreshData();
+  }, [refreshData]);
+
+  const editPartner = useCallback(async (id: string, partner: Partial<AdminPartnerSummary>) => {
+    await updateAdminPartner(id, partner);
+    await refreshData();
+  }, [refreshData]);
+
+  const removePartner = useCallback(async (id: string) => {
+    await deleteAdminPartner(id);
+    await refreshData();
+  }, [refreshData]);
+
   useEffect(() => {
     refreshData();
   }, [refreshData]);
@@ -70,5 +94,8 @@ export function useAdminCareerCenter(): AdminCareerCenterState {
     setDepartmentFilter: setActiveDepartmentFilter,
     setPartnerSearchQuery,
     refreshData,
+    addPartner,
+    editPartner,
+    removePartner,
   };
 }

@@ -51,6 +51,9 @@ type Store interface {
 	AdminOverview(ctx context.Context) (domain.AdminOverview, error)
 	AdminJurusan(ctx context.Context) ([]domain.AdminJurusanSummary, error)
 	AdminMitra(ctx context.Context) ([]domain.AdminMitraSummary, error)
+	CreateMitra(ctx context.Context, m domain.AdminMitraSummary) (domain.AdminMitraSummary, error)
+	UpdateMitra(ctx context.Context, m domain.AdminMitraSummary) (domain.AdminMitraSummary, error)
+	DeleteMitra(ctx context.Context, id string) error
 
 	Enqueue(ctx context.Context, key, kind, refID string) (domain.Job, error)
 	Job(ctx context.Context, id string) (domain.Job, error)
