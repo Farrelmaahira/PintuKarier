@@ -154,12 +154,6 @@ export function PracticeResult({
               <Badge tone={overallFluency < 50 ? "orange" : "accent"}>
                 {overallFluency < 50 ? "Red Flag: Perlu Perbaikan" : "Metode STAR"}
               </Badge>
-              {effectiveStatus === "groq" && (
-                <Badge tone="green">✨ Evaluasi Groq AI</Badge>
-              )}
-              {effectiveStatus === "gemini" && (
-                <Badge tone="cyan">✨ Evaluasi Gemini AI</Badge>
-              )}
               {effectiveStatus === "local" && (
                 <Badge tone="settled">⚡ Analisis Cepat (Offline)</Badge>
               )}
