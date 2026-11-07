@@ -187,7 +187,8 @@ func (s *Store) ProdiStudents(ctx context.Context, prodi string) ([]domain.Prodi
 			u.id, u.nama, u.nim, u.instansi, u.kampus, u.semester, u.ipk,
 			COUNT(ce.id) AS total_claims,
 			COUNT(CASE WHEN ce.status = 'verified' THEN 1 END) AS verified_claims,
-			COUNT(CASE WHEN ce.status IN ('pending_upload', 'needs_manual_review') THEN 1 END) AS pending_claims
+			COUNT(CASE WHEN ce.status IN ('pending_upload', 'needs_manual_review') THEN 1 END) AS pending_claims,
+			COALESCE((SELECT cv_key FROM lamaran WHERE mahasiswa_id = u.id AND cv_key != '' ORDER BY updated_at DESC LIMIT 1), '') AS cv_key
 		FROM users u
 		LEFT JOIN claim_evidences ce ON ce.student_id = u.id
 		WHERE u.peran = 'mahasiswa' AND (u.instansi = $1 OR $1 = '')
@@ -205,9 +206,12 @@ func (s *Store) ProdiStudents(ctx context.Context, prodi string) ([]domain.Prodi
 		var st domain.ProdiStudentSummary
 		if err := rows.Scan(
 			&st.ID, &st.Name, &st.NIM, &st.Institution, &st.Campus, &st.Semester, &st.IPK,
-			&st.TotalClaims, &st.VerifiedClaims, &st.PendingClaims,
+			&st.TotalClaims, &st.VerifiedClaims, &st.PendingClaims, &st.CVKey,
 		); err != nil {
 			return nil, err
+		}
+		if st.CVKey != "" {
+			st.CVURL = "/files/" + st.CVKey
 		}
 		students = append(students, st)
 	}

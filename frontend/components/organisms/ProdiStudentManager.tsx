@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { CheckCircle, Clock, FileText, MagnifyingGlass, ShieldCheck, XCircle } from "@phosphor-icons/react";
+import { CheckCircle, Clock, FilePdf, FileText, MagnifyingGlass, ShieldCheck, XCircle } from "@phosphor-icons/react";
 import { Badge } from "../atoms/Badge";
 import { Button } from "../atoms/Button";
 import { Notice } from "../molecules/Notice";
@@ -48,6 +48,10 @@ export interface StudentSummary {
   verifiedClaims?: number;
   pending_claims?: number;
   pendingClaims?: number;
+  cv_key?: string;
+  cvKey?: string;
+  cv_url?: string;
+  cvUrl?: string;
   claims?: ClaimItem[];
 }
 
@@ -216,11 +220,25 @@ export function ProdiStudentManager() {
                     : "Belum Divalidasi"
                 }
               >
-                <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap", fontSize: 13 }}>
+                <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap", fontSize: 13, alignItems: "center" }}>
                   <div><strong>NIM:</strong> {getStudentNim(selectedStudent) || "Belum diisi"}</div>
                   <div><strong>Kampus:</strong> {selectedStudent.campus || "Politeknik Negeri Jakarta"}</div>
                   <div><strong>Program Studi:</strong> {selectedStudent.institution || "D4 Teknik Informatika"}</div>
                   <div><strong>IPK Kumulatif:</strong> {getStudentGpa(selectedStudent)}</div>
+                  {(selectedStudent.cvUrl || selectedStudent.cv_url) && (
+                    <div style={{ marginLeft: "auto" }}>
+                      <a
+                        href={selectedStudent.cvUrl || selectedStudent.cv_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Button variant="ghost" size="sm" icon={<FilePdf size={16} color="var(--cat-red)" />}>
+                          Dokumen CV Asli
+                        </Button>
+                      </a>
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ borderTop: "var(--border)", paddingTop: 16 }}>
@@ -291,7 +309,20 @@ export function ProdiStudentManager() {
                             </div>
                           )}
 
-                          <div style={{ display: "flex", gap: 10, marginTop: 6, justifyContent: "flex-end" }}>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8, justifyContent: "flex-end", alignItems: "center" }}>
+                            {(claim.file_key || claim.fileKey) && (
+                              <a
+                                href={`/files/${claim.file_key || claim.fileKey}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ textDecoration: "none", marginRight: "auto" }}
+                              >
+                                <Button variant="ghost" size="sm" icon={<FilePdf size={16} color="var(--cat-blue)" />}>
+                                  Lihat Berkas Bukti
+                                </Button>
+                              </a>
+                            )}
+
                             {claim.status !== "verified" && (
                               <Button
                                 variant="primary"

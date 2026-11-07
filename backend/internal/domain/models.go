@@ -214,6 +214,8 @@ type ProdiStudentSummary struct {
 	TotalClaims    int             `json:"total_claims"`
 	VerifiedClaims int             `json:"verified_claims"`
 	PendingClaims  int             `json:"pending_claims"`
+	CVKey          string          `json:"cv_key,omitempty"`
+	CVURL          string          `json:"cv_url,omitempty"`
 	Claims         []ClaimEvidence `json:"claims,omitempty"`
 }
 
