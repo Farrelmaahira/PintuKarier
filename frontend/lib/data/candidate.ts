@@ -43,4 +43,6 @@ export interface Candidate {
   interviewQuestions?: string[];
   feedbackSent?: boolean;
   prodiVerified?: boolean;
+  cvUrl?: string;
+  cvKey?: string;
 }

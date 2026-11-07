@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, FilePdf } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "../atoms/Badge";
+import { Button } from "../atoms/Button";
 import { ScoreBox } from "../atoms/ScoreBox";
 import { computeScore } from "@/lib/computeScore";
 import type { Candidate } from "@/lib/data/candidate";
@@ -36,6 +37,15 @@ export function CandidateHeader({ candidate }: CandidateHeaderProps) {
         <p className={shell.lead}>
           {candidate.studyProgram} · angkatan {candidate.cohortYear} · melamar {candidate.position} pada {candidate.appliedOn}
         </p>
+        {candidate.cvUrl && (
+          <div style={{ marginTop: 10 }}>
+            <a href={candidate.cvUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="ghost" icon={<FilePdf size={18} color="var(--cat-red)" />}>
+                Unduh / Lihat Dokumen CV Asli
+              </Button>
+            </a>
+          </div>
+        )}
       </div>
       <div className={app.scoreHead}>
         <ScoreBox value={computeScore(candidate.dimensions)} tone={tone} big />

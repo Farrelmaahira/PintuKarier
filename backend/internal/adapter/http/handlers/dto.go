@@ -149,8 +149,10 @@ type BuktiDTO struct {
 }
 
 type TranskripDTO struct {
-	Jawab  string `json:"jawab"`
-	Durasi string `json:"durasi"`
+	Jawab       string `json:"jawab"`
+	Durasi      string `json:"durasi"`
+	AudioURL    string `json:"audioUrl,omitempty"`
+	SnapshotURL string `json:"snapshotUrl,omitempty"`
 }
 
 type KandidatResponse struct {
@@ -178,6 +180,8 @@ type KandidatResponse struct {
 	Feedback         string         `json:"feedback"`
 	FeedbackTerkirim bool           `json:"feedbackTerkirim"`
 	ProdiVerified    bool           `json:"prodiVerified"`
+	CVURL            string         `json:"cvUrl,omitempty"`
+	CVKey            string         `json:"cvKey,omitempty"`
 }
 
 type KeputusanRequest struct {

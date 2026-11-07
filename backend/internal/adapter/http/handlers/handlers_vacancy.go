@@ -142,7 +142,7 @@ func HandleVacancyKandidat(d *Deps) http.HandlerFunc {
 		now := time.Now()
 		out := []KandidatResponse{}
 		for _, c := range list {
-			k := kandidatOf(c, nil, now)
+			k := kandidatOf(c, nil, now, d.PublicURL)
 			if kategori == "" || k.Kategori == kategori {
 				out = append(out, k)
 			}

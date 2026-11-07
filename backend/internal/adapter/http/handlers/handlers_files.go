@@ -80,6 +80,31 @@ func matches(allowed []string, ct string) bool {
 	return false
 }
 
+// HandleFileGet menyajikan file yang tersimpan (misal CV pdf, rekaman suara wawancara .webm/.mp3, atau snapshot).
+func HandleFileGet(d *Deps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		key := r.PathValue("key")
+		if key == "" || filepath.Base(key) != key || strings.Contains(key, "..") {
+			WriteError(w, http.StatusBadRequest, "key file tidak valid")
+			return
+		}
+		data, err := d.Files.Read(r.Context(), key)
+		if err != nil {
+			WriteError(w, http.StatusNotFound, "file tidak ditemukan")
+			return
+		}
+		ext := strings.ToLower(filepath.Ext(key))
+		ct := "application/octet-stream"
+		if allowed, ok := sniffed[ext]; ok && len(allowed) > 0 {
+			ct = allowed[0]
+		}
+		w.Header().Set("Content-Type", ct)
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(data)
+	}
+}
+
 // CORS hanya untuk /files/: browser upload lintas origin dari frontend.
 // Endpoint lain dipanggil server Next.js, jadi tidak butuh CORS.
 // origins dipisah koma, mis. domain Vercel produksi dan preview.

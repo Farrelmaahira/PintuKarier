@@ -84,5 +84,6 @@ func RegisterRoutes(mux *http.ServeMux, d *Deps) {
 	}
 	files := CORS(d.WebOrigin, HandleFilePut(d))
 	mux.Handle("PUT /files/{key}", files)
+	mux.Handle("GET /files/{key}", CORS(d.WebOrigin, HandleFileGet(d)))
 	mux.Handle("OPTIONS /files/{key}", files)
 }

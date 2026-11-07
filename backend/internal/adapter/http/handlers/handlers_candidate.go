@@ -31,8 +31,12 @@ func durasi(sec int) string {
 	return fmt.Sprintf("%d:%02d", sec/60, sec%60)
 }
 
-func kandidatOf(c usecase.Candidate, answers []domain.Answer, now time.Time) KandidatResponse {
+func kandidatOf(c usecase.Candidate, answers []domain.Answer, now time.Time, publicURL string) KandidatResponse {
 	res := c.Result
+	cvURL := ""
+	if c.App.CVKey != "" {
+		cvURL = publicURL + "/files/" + c.App.CVKey
+	}
 	k := KandidatResponse{
 		ID: c.App.ID, Lowongan: c.Vacancy.ID, Posisi: c.Vacancy.Title, Nama: c.Student.Name, Prodi: c.Student.Institution, Kampus: c.Student.Campus,
 		Angkatan: domain.Angkatan(c.Student.Semester, now), IPK: c.Student.IPK, Dilamar: usecase.TanggalID(c.App.CreatedAt, now),
@@ -41,6 +45,8 @@ func kandidatOf(c usecase.Candidate, answers []domain.Answer, now time.Time) Kan
 		Bukti: []BuktiDTO{}, Prescreen: []string{}, PrescreenTanya: []string{}, Transkrip: []TranskripDTO{},
 		InterviewTanya: c.Vacancy.Interview, Feedback: res.Draft.Ringkasan, FeedbackTerkirim: res.Feedback != nil,
 		ProdiVerified: c.ProdiVerified,
+		CVURL:         cvURL,
+		CVKey:         c.App.CVKey,
 	}
 	if res.Feedback != nil {
 		k.Feedback = res.Feedback.Ringkasan
@@ -55,8 +61,16 @@ func kandidatOf(c usecase.Candidate, answers []domain.Answer, now time.Time) Kan
 	if len(answers) > 0 {
 		k.InterviewTanya = nil
 		for _, a := range answers {
+			audioURL := ""
+			if a.AudioKey != "" && a.AudioKey != "demo" {
+				audioURL = publicURL + "/files/" + a.AudioKey
+			}
 			k.InterviewTanya = append(k.InterviewTanya, a.Question)
-			k.Transkrip = append(k.Transkrip, TranskripDTO{Jawab: a.Transcript, Durasi: durasi(a.Seconds)})
+			k.Transkrip = append(k.Transkrip, TranskripDTO{
+				Jawab:    a.Transcript,
+				Durasi:   durasi(a.Seconds),
+				AudioURL: audioURL,
+			})
 		}
 	}
 	return k
@@ -79,7 +93,7 @@ func candidateDetail(w http.ResponseWriter, r *http.Request, d *Deps, a domain.A
 		fail(w, err, "jawaban")
 		return KandidatResponse{}, false
 	}
-	return kandidatOf(usecase.Candidate{App: a, Student: student, Vacancy: v, Result: res}, answers, time.Now()), true
+	return kandidatOf(usecase.Candidate{App: a, Student: student, Vacancy: v, Result: res}, answers, time.Now(), d.PublicURL), true
 }
 
 func HandleKandidatGet(d *Deps) http.HandlerFunc {

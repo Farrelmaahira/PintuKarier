@@ -11,6 +11,7 @@ const WIRE_TO_APP: Record<string, string> = {
   competencies: "competencies", competencies_covered: "competenciesCovered", competenciesCovered: "competenciesCovered",
   completed_modules: "completedModules", completedModules: "completedModules",
   correct_index: "correctIndex", correctIndex: "correctIndex",
+  cvKey: "cvKey", cvUrl: "cvUrl", cv_key: "cvKey", cv_url: "cvUrl",
   dari: "sender", deskripsi: "description", detik: "seconds", dilamar: "appliedOn", dimensi: "dimensions",
   dimensions: "dimensions", ditutup: "closed", drill_id: "drillId", drillId: "drillId",
   durasi: "duration", duration_minutes: "durationMinutes", durationMinutes: "durationMinutes",
