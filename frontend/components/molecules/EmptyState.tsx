@@ -24,12 +24,15 @@ export function EmptyState({
 
   return (
     <div className={`${ui.empty} ${app.emptyArt} ${large ? app.emptyArtLarge : ""}`}>
-      <Image
-        src={imageSrc}
-        alt=""
-        width={large ? 260 : 120}
-        height={large ? 195 : 120}
-      />
+      <div style={{ maxWidth: large ? 260 : 120, maxHeight: large ? 195 : 120, width: "100%", display: "flex", justifyContent: "flex-start", overflow: "hidden" }}>
+        <Image
+          src={imageSrc}
+          alt=""
+          width={large ? 260 : 120}
+          height={large ? 195 : 120}
+          style={{ width: "100%", height: "auto", objectFit: "contain" }}
+        />
+      </div>
       <h3>{title}</h3>
       {children && <p>{children}</p>}
       {action}

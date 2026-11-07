@@ -115,7 +115,38 @@ func (p *Pipeline) profilCV(ctx context.Context, userID, key string) error {
 		return err
 	}
 	LengkapiProfil(&u, cv)
-	return p.Store.UpdateStudentProfile(ctx, u)
+	if err := p.Store.UpdateStudentProfile(ctx, u); err != nil {
+		return err
+	}
+
+	// Ekstrak klaim sertifikasi dari CV untuk diverifikasi dokumen buktinya
+	if len(cv.Profil.Sertifikasi) > 0 {
+		var newClaims []domain.ClaimEvidence
+		now := time.Now()
+		for i, cert := range cv.Profil.Sertifikasi {
+			certTitle := strings.TrimSpace(cert)
+			if certTitle == "" {
+				continue
+			}
+			newClaims = append(newClaims, domain.ClaimEvidence{
+				ID:                fmt.Sprintf("claim-%s-%d-%d", userID, now.Unix(), i),
+				StudentID:         userID,
+				ClaimType:         "sertifikasi",
+				Title:             certTitle,
+				Context:           fmt.Sprintf("Diekstrak otomatis dari CV mahasiswa: %s", certTitle),
+				Status:            domain.ClaimPendingUpload,
+				MatchConfidence:   0.0,
+				VerificationNotes: "Menunggu mahasiswa mengunggah dokumen bukti sertifikat.",
+				CreatedAt:         now,
+				UpdatedAt:         now,
+			})
+		}
+		if len(newClaims) > 0 {
+			_ = p.Store.SaveClaims(ctx, newClaims)
+		}
+	}
+
+	return nil
 }
 
 // LengkapiProfil isi field profil akun yang masih kosong dari CV dan tambah skill yang belum ada.
