@@ -101,14 +101,15 @@ export const DASHBOARD_MENU: Record<UserRole, { href: string; label: string; ico
   hrd: [
     { href: "/hrd", label: "Kandidat", icon: "users" },
     { href: "/hrd/lowongan", label: "Lowongan", icon: "briefcase" },
+    { href: "/hrd/lowongan/baru", label: "Tambah lowongan", icon: "plus" },
     { href: "/hrd/profil", label: "Profil saya", icon: "user" },
   ],
   prodi: [
     { href: "/prodi", label: "Dasbor Utama", icon: "house" },
-    { href: "/prodi/mahasiswa", label: "Data Mahasiswa & Portofolio", icon: "cap" },
+    { href: "/prodi/mahasiswa", label: "Data Mahasiswa", icon: "cap" },
     { href: "/prodi/kompetensi", label: "Analisis Kompetensi", icon: "chart" },
-    { href: "/prodi/kurikulum", label: "Rekomendasi RPS & PBL", icon: "book" },
-    { href: "/prodi/industri", label: "Kebutuhan Industri & IKU", icon: "building" },
+    { href: "/prodi/kurikulum", label: "Rekomendasi RPS", icon: "book" },
+    { href: "/prodi/industri", label: "Kebutuhan Industri", icon: "building" },
     { href: "/prodi/profil", label: "Profil saya", icon: "user" },
   ],
   admin: [

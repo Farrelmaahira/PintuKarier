@@ -230,7 +230,6 @@
   align-items: start;
   gap: 24px;
   padding-bottom: 28px;
-  border-bottom: var(--border);
 }
 
 .title {

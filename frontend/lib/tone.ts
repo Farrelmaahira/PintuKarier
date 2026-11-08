@@ -28,3 +28,17 @@ export const DECISION_TONE: Record<string, Tone> = {
   Lolos: "green",
   "Belum lolos": "orange",
 };
+
+/** Warna isi Meter/ScoreBox per tone (satu warna per makna). */
+export const TONE_COLOR: Partial<Record<Tone, string>> = {
+  green: "var(--cat-green)",
+  yellow: "var(--cat-yellow)",
+  orange: "var(--cat-orange)",
+  accent: "var(--accent)",
+};
+
+/** Ambang skor kesiapan: >= 80 memenuhi, >= 65 dipertimbangkan, di bawahnya perlu dikembangkan. */
+export const READY_THRESHOLD = 80;
+export function scoreTone(score: number): Tone {
+  return score >= READY_THRESHOLD ? "green" : score >= 65 ? "yellow" : "orange";
+}

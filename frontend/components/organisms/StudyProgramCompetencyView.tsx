@@ -4,7 +4,8 @@ import { useState } from "react";
 import { EyeSlash } from "@phosphor-icons/react";
 import { CompetencyRankingPanel } from "../molecules/CompetencyRankingPanel";
 import { EmptyState } from "../molecules/EmptyState";
-import { LabeledSegmented } from "../molecules/LabeledSegmented";
+import { CategoryFilter } from "../molecules/CategoryFilter";
+import { FilterMenu } from "../molecules/FilterMenu";
 import { Panel } from "../molecules/Panel";
 import { Stat } from "../molecules/Stat";
 import { StatGrid } from "../molecules/StatGrid";
@@ -16,6 +17,7 @@ import app from "@/styles/app.module.css";
 import shell from "@/styles/shell.module.css";
 
 const MIN_CANDIDATES = 10;
+const TONES = ["var(--cat-green)", "var(--cat-lilac)", "var(--cat-yellow)", "var(--cat-cyan)", "var(--cat-orange)"];
 
 interface StudyProgramCompetencyViewProps {
   ranking: Ranking;
@@ -29,6 +31,11 @@ export function StudyProgramCompetencyView({ ranking, notes, studyProgramId, stu
   const periods = Object.keys(ranking).sort(comparePeriods);
   const [period, setPeriod] = useState(periods[0] ?? "");
   const [position, setPosition] = useState(POSITIONS[0]!);
+  const positionOptions = POSITIONS.map((label, i) => ({
+    label,
+    count: ranking[period]?.[label]?.count ?? 0,
+    tone: i === 0 ? "var(--ink)" : TONES[(i - 1) % TONES.length]!,
+  }));
   const notesProps = { notes, studyProgramId, studyProgramName };
 
   if (!periods.length) {
@@ -53,10 +60,20 @@ export function StudyProgramCompetencyView({ ranking, notes, studyProgramId, stu
   const change = previousCount ? ` (${candidateCount >= previousCount ? "+" : ""}${candidateCount - previousCount})` : "";
 
   return (
-    <div className={app.stack} style={{ gap: 24 }}>
-      <div className={app.filters}>
-        <LabeledSegmented title="Periode rekrutmen" label="Periode" options={periods} value={period} onChange={setPeriod} />
-        <LabeledSegmented title="Jenis posisi" label="Jenis posisi" options={POSITIONS} value={position} onChange={setPosition} />
+    <div className={shell.stack}>
+      <div className={app.listHead}>
+        <div className={app.listHeadText}>
+          <h2 className={app.listTitle}>Analisis Kompetensi</h2>
+          <p className={app.meta} style={{ marginTop: 4 }}>
+            Pilih jenis posisi untuk melihat kompetensi yang paling sering kurang pada periode {period}.
+          </p>
+        </div>
+        <CategoryFilter
+          value={position}
+          onChange={setPosition}
+          options={positionOptions}
+          action={<FilterMenu fields={[{ key: "period", title: "Periode rekrutmen", options: periods }]} values={{ period }} onApply={(v) => setPeriod(v.period)} />}
+        />
       </div>
       <Panel flush>
         <StatGrid cols={4}>

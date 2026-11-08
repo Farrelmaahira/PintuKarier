@@ -12,19 +12,19 @@ export function AdminStatsCards({ overview }: AdminStatsCardsProps) {
     <Panel flush>
       <StatGrid cols={4}>
         <Stat
-          label="Mahasiswa Aktif PNJ"
+          label="Mahasiswa aktif"
           value={overview.totalStudents.toLocaleString("id-ID")}
         />
         <Stat
-          label="Mitra Industri Aktif"
+          label="Mitra aktif"
           value={`${overview.totalPartners} Mitra`}
         />
         <Stat
-          label="Total Lamaran Masuk"
+          label="Lamaran masuk"
           value={overview.totalApplications.toLocaleString("id-ID")}
         />
         <Stat
-          label="SLA Feedback Mitra"
+          label="SLA feedback"
           value={`${overview.feedbackRate.toFixed(1)}%`}
         />
       </StatGrid>

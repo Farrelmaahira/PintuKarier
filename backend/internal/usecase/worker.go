@@ -12,6 +12,9 @@ import (
 // MaxAttempts job dicoba maksimal tiga kali dengan jeda 5 detik lalu 10 detik.
 const MaxAttempts = 3
 
+// dbOpTimeout batas satu operasi antrean job ke database.
+const dbOpTimeout = 20 * time.Second
+
 // JobRunner dijalankan worker untuk tiap job.
 type JobRunner interface {
 	Run(ctx context.Context, j domain.Job) error
@@ -26,7 +29,10 @@ func RunWorkers(ctx context.Context, store Store, runner JobRunner, n int) {
 
 func workLoop(ctx context.Context, store Store, runner JobRunner) {
 	for ctx.Err() == nil {
-		j, ok, err := store.ClaimJob(ctx)
+		// Batas waktu supaya koneksi DB yang putus diam-diam (idle timeout Azure) tidak membekukan worker.
+		cctx, cancel := context.WithTimeout(ctx, dbOpTimeout)
+		j, ok, err := store.ClaimJob(cctx)
+		cancel()
 		if err != nil {
 			slog.Error("ambil job gagal", "err", err)
 		}
@@ -58,7 +64,9 @@ func RunOne(ctx context.Context, store Store, runner JobRunner, j domain.Job) {
 			retry = time.Duration(j.Attempts) * 5 * time.Second
 		}
 	}
-	if err := store.FinishJob(ctx, j.ID, runErr, retry); err != nil {
+	fctx, fcancel := context.WithTimeout(ctx, dbOpTimeout)
+	defer fcancel()
+	if err := store.FinishJob(fctx, j.ID, runErr, retry); err != nil {
 		slog.Error("simpan status job gagal", "id", j.ID, "err", err)
 	}
 }

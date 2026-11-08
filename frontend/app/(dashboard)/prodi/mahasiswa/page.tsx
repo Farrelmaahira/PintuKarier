@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/molecules/PageHeader";
 import { ProdiStudentManager } from "@/components/organisms/ProdiStudentManager";
-import { STUDY_PROGRAM } from "@/lib/data/studyProgram/info";
 import shell from "@/styles/shell.module.css";
 
 export const metadata: Metadata = {
@@ -13,8 +12,8 @@ export default function ProdiMahasiswaPage() {
     <main id="content" className={shell.page}>
       <PageHeader
         href="/prodi"
-        title="Data Mahasiswa & Audit Bukti Portofolio"
-        lead={`Daftar mahasiswa ${STUDY_PROGRAM.name}. Koordinator prodi dapat memeriksa dokumen CV, memverifikasi keaslian sertifikasi/penghargaan, dan memberikan catatan validasi yang langsung tampil di dashboard HRD.`}
+        title="Data Mahasiswa"
+        lead="Periksa CV dan verifikasi sertifikat mahasiswa. Hasilnya langsung tampil di dashboard HRD."
       />
       <ProdiStudentManager />
     </main>

@@ -3,6 +3,8 @@
 import { useAdminCareerCenter } from "@/lib/hooks/useAdminCareerCenter";
 import { AdminDepartmentsView } from "@/components/organisms/AdminDepartmentsView";
 import { Skeleton } from "@/components/atoms/Skeleton";
+import app from "@/styles/app.module.css";
+import shell from "@/styles/shell.module.css";
 
 export function AdminJurusanClient() {
   const { departments, isLoading, activeDepartmentFilter, setDepartmentFilter } =
@@ -10,9 +12,9 @@ export function AdminJurusanClient() {
 
   if (isLoading && departments.length === 0) {
     return (
-      <div style={{ display: "grid", gap: "20px" }}>
+      <div className={shell.stack}>
         <Skeleton height="50px" />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "16px" }}>
+        <div className={app.jobGrid}>
           <Skeleton height="220px" />
           <Skeleton height="220px" />
           <Skeleton height="220px" />

@@ -32,6 +32,15 @@
   --font-sans: var(--font-geist-sans), Arial, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
+  /* Alias untuk token yang dipakai modul admin/learning (sebelumnya tidak terdefinisi). */
+  --ink-secondary: var(--text-muted);
+  --ink-muted: var(--text-subtle);
+  --border-light: var(--line);
+  --status-match: #1f8a5b;
+  --danger: #c92a2a;
+  --danger-soft: #ffebe6;
+  --warn-soft: #fff8e6;
+
   --border: 2px solid var(--outline);
   --hairline: 1px solid var(--line);
   --ease: cubic-bezier(0.525, 0, 0, 1);

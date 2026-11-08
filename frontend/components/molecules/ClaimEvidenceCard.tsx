@@ -5,8 +5,10 @@ import { Certificate, FileText, UploadSimple } from "@phosphor-icons/react";
 import { ClaimEvidenceItem } from "@/lib/data/claim";
 import { ClaimBadge } from "../atoms/ClaimBadge";
 import { Button } from "../atoms/Button";
+import { Callout } from "./Callout";
 import app from "@/styles/app.module.css";
 import rows from "@/styles/rows.module.css";
+import ui from "@/styles/ui.module.css";
 
 export interface ClaimEvidenceCardProps {
   claim: ClaimEvidenceItem;
@@ -29,81 +31,43 @@ export function ClaimEvidenceCard({ claim, uploading, onUpload }: ClaimEvidenceC
   };
 
   return (
-    <div className={rows.row} style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", width: "100%" }}>
-        <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-          <div
-            style={{
-              width: "36px",
-              height: "36px",
-              display: "grid",
-              placeItems: "center",
-              background: "var(--surface-warm)",
-              border: "1px solid var(--ink)",
-              flexShrink: 0,
-            }}
-          >
-            <Certificate size={20} />
-          </div>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-              <strong style={{ fontSize: "15px" }}>{claim.title}</strong>
-              <ClaimBadge status={claim.status} />
-            </div>
+    <li className={`${rows.row} ${rows.cornered}`}>
+      <div className={rows.main}>
+        <div className={ui.itemHead}>
+          <span className={ui.iconTile}>
+            <Certificate size={20} aria-hidden />
+          </span>
+          <div className={ui.itemHeadText}>
+            <strong>{claim.title}</strong>
             {(claim.issuer || claim.year) && (
-              <span className={app.meta} style={{ marginTop: "2px", display: "block" }}>
+              <span className={app.meta}>
                 {claim.issuer} {claim.year ? `· ${claim.year}` : ""}
               </span>
             )}
           </div>
         </div>
 
-        <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".pdf,.png,.jpg,.jpeg,.webp"
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-          />
-          <Button
-            size="sm"
-            variant={claim.status === "verified" ? "plain" : "primary"}
-            loading={uploading}
-            disabled={uploading}
-            onClick={handleTriggerUpload}
-            icon={<UploadSimple size={16} />}
-          >
-            {claim.fileKey ? "Unggah Ulang" : "Unggah Bukti"}
-          </Button>
-        </div>
+        {claim.context && <Callout tone="plain" title="Konteks CV">{claim.context}</Callout>}
+
+        {claim.verificationNotes && (
+          <span className={ui.itemNote}>
+            <FileText size={16} aria-hidden />
+            {claim.verificationNotes}
+            {claim.matchConfidence > 0 && <strong>({Math.round(claim.matchConfidence * 100)}% match)</strong>}
+          </span>
+        )}
       </div>
 
-      {claim.context && (
-        <div
-          style={{
-            fontSize: "13px",
-            color: "var(--muted)",
-            background: "var(--surface-warm)",
-            padding: "8px 12px",
-            borderLeft: "3px solid var(--ink)",
-          }}
-        >
-          <span style={{ fontWeight: 600 }}>Konteks CV: </span>
-          {claim.context}
-        </div>
-      )}
+      <div className={rows.corner}>
+        <ClaimBadge status={claim.status} />
+      </div>
 
-      {claim.verificationNotes && (
-        <div style={{ fontSize: "12px", display: "flex", alignItems: "center", gap: "6px" }}>
-          <FileText size={16} />
-          <span>{claim.verificationNotes}</span>
-          {claim.matchConfidence > 0 && (
-            <span style={{ fontWeight: 600 }}>({Math.round(claim.matchConfidence * 100)}% match)</span>
-          )}
-        </div>
-      )}
-    </div>
+      <div className={rows.actions}>
+        <input ref={fileInputRef} type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" hidden onChange={handleFileChange} />
+        <Button size="sm" variant={claim.status === "verified" ? "plain" : "primary"} loading={uploading} disabled={uploading} onClick={handleTriggerUpload} icon={<UploadSimple size={16} />}>
+          {claim.fileKey ? "Unggah Ulang" : "Unggah Bukti"}
+        </Button>
+      </div>
+    </li>
   );
 }
-

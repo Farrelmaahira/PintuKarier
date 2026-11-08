@@ -35,7 +35,8 @@ def test_ground_identitas_keeps_only_what_the_cv_says() -> None:
     tulis = Identitas(nim="4.33.22.1.05", kampus="Politeknik  Negeri Semarang", semester=6, ipk=3.8)
     assert _ground_identitas(tulis, teks) == tulis
     karangan = Identitas(nim="0812345", kampus="Universitas Diponegoro", semester=7, ipk=3.85)
-    assert _ground_identitas(karangan, teks) == Identitas()
+    # NIM, kampus, dan IPK karangan dibuang. Semester 7 karangan diganti 6 yang memang tertulis di CV.
+    assert _ground_identitas(karangan, teks) == Identitas(semester=6)
     assert _ground_identitas(Identitas(ipk=3.8), "IPK 13.80").ipk == 0
 
 

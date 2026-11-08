@@ -10,6 +10,7 @@ import {
   ChatCircleText,
   GraduationCap,
   House,
+  PlusCircle,
   SignOut,
   UploadSimple,
   User,
@@ -33,6 +34,7 @@ const ICON = {
   book: BookOpen,
   building: Buildings,
   cap: GraduationCap,
+  plus: PlusCircle,
 } as const;
 
 interface SidebarProps {

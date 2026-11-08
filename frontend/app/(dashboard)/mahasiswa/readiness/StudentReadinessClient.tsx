@@ -2,97 +2,57 @@
 
 import { useState } from "react";
 import { useReadinessTracker } from "@/lib/hooks/useReadinessTracker";
+import { Skeleton } from "@/components/atoms/Skeleton";
+import { Button } from "@/components/atoms/Button";
+import { Notice } from "@/components/molecules/Notice";
+import { Segmented } from "@/components/molecules/Segmented";
 import { ReadinessScoreOverview } from "@/components/organisms/ReadinessScoreOverview";
 import { ReadinessDimensionBreakdown } from "@/components/organisms/ReadinessDimensionBreakdown";
 import { ReadinessCompetencyMatrix } from "@/components/organisms/ReadinessCompetencyMatrix";
 import { ReadinessHistoryTimeline } from "@/components/organisms/ReadinessHistoryTimeline";
 import { ReadinessActionRecommendations } from "@/components/organisms/ReadinessActionRecommendations";
-import { Skeleton } from "@/components/atoms/Skeleton";
 import shell from "@/styles/shell.module.css";
-import app from "@/styles/app.module.css";
 
 export function StudentReadinessClient() {
-  const {
-    profile,
-    isLoading,
-    error,
-    targetPosition,
-    setTargetPosition,
-    availablePositions,
-  } = useReadinessTracker();
-  const [activeTab, setActiveTab] = useState<"dimensions" | "competencies" | "history">("dimensions");
+  const { profile, isLoading, error, targetPosition, setTargetPosition, availablePositions, refreshReadiness } = useReadinessTracker();
+  const [tab, setTab] = useState("5 Dimensi");
 
-  if (isLoading && !profile) {
-    return (
-      <div style={{ display: "grid", gap: "20px" }}>
-        <Skeleton height="160px" />
+  if (!profile) {
+    return error ? (
+      <div className={shell.stack}>
+        <Notice tone="error">{error}</Notice>
+        <div>
+          <Button onClick={refreshReadiness}>Coba lagi</Button>
+        </div>
+      </div>
+    ) : (
+      <div className={shell.stack}>
+        <Skeleton height="260px" />
         <Skeleton height="280px" />
       </div>
     );
   }
 
-  if (error && !profile) {
-    return (
-      <div style={{ padding: "40px", textAlign: "center", border: "var(--border)", background: "var(--surface-raised)" }}>
-        {error}
-      </div>
-    );
-  }
-
-  if (!profile) return null;
+  const competencies = profile.competencies ?? [];
+  const history = profile.progressHistory ?? [];
+  const tabs = ["5 Dimensi", "Kompetensi", "Riwayat"];
+  const counts = { "5 Dimensi": (profile.dimensions ?? []).length, Kompetensi: competencies.length, Riwayat: history.length };
 
   return (
-    <div className={shell.stack} style={{ gap: "20px" }}>
-      <ReadinessScoreOverview
-        profile={profile}
-        availablePositions={availablePositions}
-        selectedPosition={targetPosition}
-        onPositionChange={setTargetPosition}
-      />
+    <div className={shell.stack}>
+      {error && <Notice tone="error">{error}</Notice>}
+      <ReadinessScoreOverview profile={profile} availablePositions={availablePositions} selectedPosition={targetPosition} onPositionChange={setTargetPosition} />
 
-      <div className={app.segment} role="tablist" aria-label="Tab Evaluasi Kesiapan">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "dimensions"}
-          aria-pressed={activeTab === "dimensions"}
-          onClick={() => setActiveTab("dimensions")}
-        >
-          5 Dimensi Kesiapan
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "competencies"}
-          aria-pressed={activeTab === "competencies"}
-          onClick={() => setActiveTab("competencies")}
-        >
-          Matriks Kompetensi ({(profile.competencies ?? []).length})
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "history"}
-          aria-pressed={activeTab === "history"}
-          onClick={() => setActiveTab("history")}
-        >
-          Riwayat Evaluasi ({(profile.progressHistory ?? []).length})
-        </button>
+      <div className={shell.split}>
+        <div className={shell.stack} aria-busy={isLoading}>
+          <Segmented label="Tampilan evaluasi kesiapan" options={tabs} counts={counts} value={tab} onChange={setTab} />
+          {tab === "5 Dimensi" && <ReadinessDimensionBreakdown dimensions={profile.dimensions ?? []} />}
+          {tab === "Kompetensi" && <ReadinessCompetencyMatrix competencies={competencies} />}
+          {tab === "Riwayat" && <ReadinessHistoryTimeline history={history} />}
+        </div>
+
+        <ReadinessActionRecommendations recommendations={profile.actionRecommendations ?? []} />
       </div>
-
-      {activeTab === "dimensions" && (
-        <ReadinessDimensionBreakdown dimensions={profile.dimensions ?? []} />
-      )}
-
-      {activeTab === "competencies" && (
-        <ReadinessCompetencyMatrix competencies={profile.competencies ?? []} />
-      )}
-
-      {activeTab === "history" && (
-        <ReadinessHistoryTimeline history={profile.progressHistory ?? []} />
-      )}
-
-      <ReadinessActionRecommendations recommendations={profile.actionRecommendations ?? []} />
     </div>
   );
 }

@@ -1,17 +1,30 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-import { CheckCircle, Clock, FilePdf, FileText, MagnifyingGlass, SealCheck, ShieldCheck, XCircle } from "@phosphor-icons/react";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import { CalendarBlank, CheckCircle, Clock, FilePdf, FileText, IdentificationCard, Medal, Paperclip, SealCheck, ShieldCheck, XCircle } from "@phosphor-icons/react";
 import { Badge } from "../atoms/Badge";
 import { Button } from "../atoms/Button";
+import { Callout } from "../molecules/Callout";
+import { EmptyState } from "../molecules/EmptyState";
+import { CategoryFilter } from "../molecules/CategoryFilter";
+import { FilterMenu } from "../molecules/FilterMenu";
+import { Pagination } from "../molecules/Pagination";
+import { SearchField } from "../molecules/SearchField";
 import { Notice } from "../molecules/Notice";
 import { Panel } from "../molecules/Panel";
 import { Stat } from "../molecules/Stat";
 import { StatGrid } from "../molecules/StatGrid";
 import { getProdiStudentsAction, verifyClaimByProdiAction } from "@/lib/actions/prodiActions";
+import { ALL, countBy } from "@/lib/filters";
 import app from "@/styles/app.module.css";
-import rows from "@/styles/rows.module.css";
+import dashboard from "@/styles/dashboard.module.css";
+import shell from "@/styles/shell.module.css";
 import ui from "@/styles/ui.module.css";
+import rows from "@/styles/rows.module.css";
+
+const STATUS_ORDER = [ALL, "Terverifikasi", "Perlu review", "Belum ada klaim"];
+const STATUS_TONE = ["var(--ink)", "var(--cat-green)", "var(--cat-yellow)", "var(--cat-lilac)"];
+const ITEMS_PER_PAGE = 8;
 
 export interface ClaimItem {
   id: string;
@@ -60,6 +73,9 @@ export function ProdiStudentManager() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState(ALL);
+  const [semester, setSemester] = useState(ALL);
+  const [page, setPage] = useState(1);
   const [selectedStudent, setSelectedStudent] = useState<StudentSummary | null>(null);
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -115,95 +131,108 @@ export function ProdiStudentManager() {
   const getVerifiedClaims = (s: StudentSummary) => s.verified_claims ?? s.verifiedClaims ?? 0;
   const getPendingClaims = (s: StudentSummary) => s.pending_claims ?? s.pendingClaims ?? 0;
 
-  const filtered = students.filter(
-    (s) =>
-      s.name.toLowerCase().includes(query.toLowerCase()) ||
-      getStudentNim(s).includes(query)
-  );
+  const statusOf = (s: StudentSummary) => (getVerifiedClaims(s) > 0 ? STATUS_ORDER[1] : getPendingClaims(s) > 0 ? STATUS_ORDER[2] : STATUS_ORDER[3]);
+  const q = query.trim().toLowerCase();
+  const matchesQuery = (s: StudentSummary) => !q || s.name.toLowerCase().includes(q) || getStudentNim(s).includes(query.trim());
+  const searched = students.filter(matchesQuery);
+  const statusCounts = useMemo(() => {
+    const counts = countBy(searched, statusOf);
+    return Object.fromEntries(STATUS_ORDER.map((k) => [k, counts[k] ?? 0]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [students, query]);
+  const semesters = [ALL, ...Array.from(new Set(students.map((s) => String(s.semester ?? "Aktif")))).sort()];
+  const filtered = searched.filter((s) => (statusFilter === ALL || statusOf(s) === statusFilter) && (semester === ALL || String(s.semester ?? "Aktif") === semester));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const statusOptions = STATUS_ORDER.map((label, i) => ({ label, count: label === ALL ? searched.length : (statusCounts[label] ?? 0), tone: STATUS_TONE[i]! }));
 
   const totalStudents = students.length;
   const verifiedCount = students.filter((s) => getVerifiedClaims(s) > 0).length;
   const pendingReviewCount = students.reduce((acc, s) => acc + getPendingClaims(s), 0);
 
   return (
-    <div className={app.stack} style={{ gap: 24 }}>
+    <div className={shell.stack}>
       {notice && <Notice tone="success">{notice}</Notice>}
       {error && <Notice tone="error">{error}</Notice>}
 
       <Panel flush>
         <StatGrid cols={4}>
-          <Stat label="Total Mahasiswa Terdaftar" value={`${totalStudents} Mahasiswa`} />
-          <Stat label="Mahasiswa Terverifikasi Prodi" value={`${verifiedCount} Mahasiswa`} />
-          <Stat label="Klaim Butuh Audit Bukti" value={`${pendingReviewCount} Dokumen`} />
-          <Stat label="Departemen / Prodi" value="D4 Teknik Informatika" />
+          <Stat label="Total mahasiswa" value={`${totalStudents} Orang`} />
+          <Stat label="Terverifikasi prodi" value={`${verifiedCount} Orang`} />
+          <Stat label="Klaim perlu audit" value={`${pendingReviewCount} Dokumen`} />
+          <Stat label="Program studi" value={<span className={ui.statText}>D4 Teknik Informatika</span>} />
         </StatGrid>
       </Panel>
 
-      <div style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: 20, alignItems: "start" }}>
-        {/* Kolom Kiri: Daftar Mahasiswa & Pencarian */}
-        <Panel
-          title="Daftar Mahasiswa"
-          tag={`${filtered.length} Orang`}
-          flush
-        >
-          <div style={{ padding: "12px 16px", borderBottom: "var(--border)", background: "var(--surface-warm)" }}>
-            <div style={{ position: "relative" }}>
-              <MagnifyingGlass size={16} style={{ position: "absolute", left: 10, top: 10, color: "var(--muted)" }} />
-              <input
-                type="text"
-                className={ui.input}
-                placeholder="Cari nama atau NIM..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                style={{ paddingLeft: 34, height: 36, fontSize: 13, width: "100%" }}
-              />
-            </div>
-          </div>
+      <div className={app.listHead}>
+        <div className={app.listHeadText}>
+          <h2 className={app.listTitle}>Daftar Mahasiswa</h2>
+          <p className={app.meta} style={{ marginTop: 4 }}>
+            Pilih mahasiswa untuk memeriksa bukti portofolionya.
+          </p>
+        </div>
+        <CategoryFilter
+          value={statusFilter}
+          options={statusOptions}
+          onChange={(value) => {
+            setStatusFilter(value);
+            setPage(1);
+          }}
+          action={
+            <FilterMenu
+              fields={[{ key: "semester", title: "Semester", options: semesters }]}
+              values={{ semester }}
+              onApply={(v) => {
+                setSemester(v.semester);
+                setPage(1);
+              }}
+            />
+          }
+        />
+      </div>
 
-          <div style={{ maxHeight: "560px", overflowY: "auto" }}>
+      <div className={dashboard.prodiLayout}>
+        <Panel title="Mahasiswa" tag={`${filtered.length} Orang`} flush>
+          <div className={ui.panelToolbar}>
+            <SearchField
+              value={query}
+              onChange={(value) => {
+                setQuery(value);
+                setPage(1);
+              }}
+              placeholder="Cari nama atau NIM..."
+            />
+          </div>
+          <div className={dashboard.prodiList}>
             {loading ? (
-              <div style={{ padding: "24px 16px", fontSize: 13, color: "var(--muted)" }}>
-                Memuat data mahasiswa...
-              </div>
+              <p className={`${app.meta} ${dashboard.prodiNote}`}>Memuat data mahasiswa...</p>
             ) : filtered.length === 0 ? (
-              <div style={{ padding: "24px 16px", fontSize: 13, color: "var(--muted)" }}>
-                Tidak ada mahasiswa yang cocok.
-              </div>
+              <p className={`${app.meta} ${dashboard.prodiNote}`}>Tidak ada mahasiswa yang cocok.</p>
             ) : (
               <ul className={rows.list}>
-                {filtered.map((s) => {
+                {pageItems.map((s) => {
                   const isSelected = selectedStudent?.id === s.id;
                   return (
                     <li
                       key={s.id}
-                      className={rows.row}
+                      className={`${rows.row} ${dashboard.prodiItem} ${isSelected ? dashboard.prodiItemActive : ""}`}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={isSelected}
                       onClick={() => setSelectedStudent(s)}
-                      style={{
-                        cursor: "pointer",
-                        background: isSelected ? "var(--surface-warm)" : undefined,
-                        borderLeft: isSelected ? "4px solid var(--cat-yellow)" : "4px solid transparent",
-                        padding: "12px 16px",
-                      }}
+                      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setSelectedStudent(s)}
                     >
-                      <div className={rows.main} style={{ gap: 4 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <strong style={{ fontSize: 14 }}>{s.name}</strong>
+                      <div className={app.candMain}>
+                        <div className={dashboard.prodiNameRow}>
+                          <span className={dashboard.cellIcon}>
+                            <strong className={dashboard.cellStrong}>{s.name}</strong>
                             {getVerifiedClaims(s) > 0 && (
-                              <span
-                                title="Terverifikasi Prodi PNJ: Sertifikasi & portofolio tervalidasi"
-                                style={{
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  color: "#1d9bf0",
-                                  lineHeight: 1,
-                                  cursor: "help",
-                                }}
-                              >
+                              <span className={dashboard.sealIcon} title="Terverifikasi Prodi PNJ: Sertifikasi & portofolio tervalidasi">
                                 <SealCheck size={18} weight="fill" />
                               </span>
                             )}
-                          </div>
+                          </span>
                           {getVerifiedClaims(s) > 0 ? (
                             <Badge tone="green">{getVerifiedClaims(s)} Terverifikasi</Badge>
                           ) : getPendingClaims(s) > 0 ? (
@@ -212,9 +241,17 @@ export function ProdiStudentManager() {
                             <Badge tone="none">0 Klaim</Badge>
                           )}
                         </div>
-                        <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                          NIM: {getStudentNim(s) || "-"} · IPK {getStudentGpa(s)} · Smt {s.semester || "Aktif"}
-                        </div>
+                        <span className={app.candFacts}>
+                          <span title="NIM">
+                            <IdentificationCard size={15} aria-hidden /> {getStudentNim(s) || "-"}
+                          </span>
+                          <span title="IPK">
+                            <Medal size={15} aria-hidden /> IPK {getStudentGpa(s)}
+                          </span>
+                          <span title="Semester">
+                            <CalendarBlank size={15} aria-hidden /> Semester {s.semester || "Aktif"}
+                          </span>
+                        </span>
                       </div>
                     </li>
                   );
@@ -222,167 +259,113 @@ export function ProdiStudentManager() {
               </ul>
             )}
           </div>
+          {totalPages > 1 && <Pagination flush label="mahasiswa" currentPage={currentPage} totalPages={totalPages} totalItems={filtered.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={setPage} />}
         </Panel>
 
-        {/* Kolom Kanan: Detail & Bukti Verifikasi Portofolio */}
-        <div className={app.stack} style={{ gap: 20 }}>
+        <div className={app.stack}>
           {selectedStudent ? (
-            <>
-              <Panel
-                title={`Klaim Portofolio & Sertifikasi: ${selectedStudent.name}`}
-                tag={
-                  getVerifiedClaims(selectedStudent) > 0
-                    ? `${getVerifiedClaims(selectedStudent)} Terverifikasi Prodi`
-                    : "Belum Divalidasi"
-                }
-              >
-                <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap", fontSize: 13, alignItems: "center" }}>
-                  <div><strong>NIM:</strong> {getStudentNim(selectedStudent) || "Belum diisi"}</div>
-                  <div><strong>Kampus:</strong> {selectedStudent.campus || "Politeknik Negeri Jakarta"}</div>
-                  <div><strong>Program Studi:</strong> {selectedStudent.institution || "D4 Teknik Informatika"}</div>
-                  <div><strong>IPK Kumulatif:</strong> {getStudentGpa(selectedStudent)}</div>
-                  {(() => {
-                    const rawUrl = selectedStudent.cvUrl || selectedStudent.cv_url;
-                    if (!rawUrl) return null;
-                    const sanitize = (s: string) => s.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
-                    const safeName = sanitize(selectedStudent.name || "Mahasiswa");
-                    const downloadFilename = `cv-${safeName}.pdf`;
-                    const downloadUrl = `${rawUrl}${rawUrl.includes("?") ? "&" : "?"}filename=${encodeURIComponent(downloadFilename)}`;
+            <Panel
+              title={selectedStudent.name}
+              tag={getVerifiedClaims(selectedStudent) > 0 ? `${getVerifiedClaims(selectedStudent)} Terverifikasi Prodi` : "Belum Divalidasi"}
+            >
+              <div className={dashboard.prodiFacts}>
+                <span>
+                  <strong>NIM</strong> {getStudentNim(selectedStudent) || "Belum diisi"}
+                </span>
+                <span>
+                  <strong>Kampus</strong> {selectedStudent.campus || "Politeknik Negeri Jakarta"}
+                </span>
+                <span>
+                  <strong>Prodi</strong> {selectedStudent.institution || "D4 Teknik Informatika"}
+                </span>
+                <span>
+                  <strong>IPK</strong> {getStudentGpa(selectedStudent)}
+                </span>
+                {(() => {
+                  const rawUrl = selectedStudent.cvUrl || selectedStudent.cv_url;
+                  if (!rawUrl) return null;
+                  const sanitize = (v: string) => v.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
+                  const downloadFilename = `cv-${sanitize(selectedStudent.name || "Mahasiswa")}.pdf`;
+                  const downloadUrl = `${rawUrl}${rawUrl.includes("?") ? "&" : "?"}filename=${encodeURIComponent(downloadFilename)}`;
+                  return (
+                    <a className={dashboard.prodiFactsEnd} href={downloadUrl} download={downloadFilename} target="_blank" rel="noopener noreferrer">
+                      <Button variant="ghost" size="sm" icon={<FilePdf size={16} />}>
+                        Dokumen CV Asli
+                      </Button>
+                    </a>
+                  );
+                })()}
+              </div>
+
+              <div className={dashboard.prodiClaims}>
+                <h3 className={dashboard.prodiClaimsTitle}>Sertifikat & penghargaan dari CV</h3>
+
+                {!selectedStudent.claims || selectedStudent.claims.length === 0 ? (
+                  <EmptyState title="Belum ada klaim">Belum ada sertifikat atau penghargaan terdeteksi dari CV mahasiswa ini.</EmptyState>
+                ) : (
+                  selectedStudent.claims.map((claim) => {
+                    const fileKey = claim.file_key || claim.fileKey;
+                    const busy = verifyingId === claim.id || isPending;
                     return (
-                      <div style={{ marginLeft: "auto" }}>
-                        <a
-                          href={downloadUrl}
-                          download={downloadFilename}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Button variant="ghost" size="sm" icon={<FilePdf size={16} color="var(--cat-red)" />}>
-                            Dokumen CV Asli
-                          </Button>
-                        </a>
+                      <div key={claim.id} className={dashboard.prodiClaim}>
+                        <div className={dashboard.prodiNameRow}>
+                          <div>
+                            <span className={dashboard.cellIcon}>
+                              <FileText size={18} />
+                              <strong>{claim.title}</strong>
+                            </span>
+                            {claim.context && <p className={`${app.meta} ${dashboard.prodiQuote}`}>&ldquo;{claim.context}&rdquo;</p>}
+                            {claim.file_name && (
+                              <span className={`${app.meta} ${dashboard.cellIcon}`}>
+                                <Paperclip size={14} /> Berkas Terlampir: <strong>{claim.file_name}</strong>
+                              </span>
+                            )}
+                          </div>
+
+                          {claim.status === "verified" ? (
+                            <Badge tone="green">
+                              <ShieldCheck size={14} /> Terverifikasi Prodi
+                            </Badge>
+                          ) : claim.status === "rejected" ? (
+                            <Badge tone="orange">
+                              <XCircle size={14} /> Ditolak
+                            </Badge>
+                          ) : (
+                            <Badge tone="yellow">
+                              <Clock size={14} /> Menunggu Validasi
+                            </Badge>
+                          )}
+                        </div>
+
+                        {claim.verification_notes && <Callout title="Catatan Audit">{claim.verification_notes}</Callout>}
+
+                        <div className={dashboard.prodiClaimActions}>
+                          {fileKey && (
+                            <a className={dashboard.prodiFileLink} href={`/files/${fileKey}`} target="_blank" rel="noopener noreferrer">
+                              <Button variant="ghost" size="sm" icon={<FilePdf size={16} />}>
+                                Lihat Berkas Bukti
+                              </Button>
+                            </a>
+                          )}
+                          {claim.status !== "verified" ? (
+                            <Button size="sm" disabled={busy} onClick={() => handleVerify(claim.id, true)} icon={<CheckCircle size={16} aria-hidden />}>
+                              {verifyingId === claim.id ? "Memverifikasi..." : "Verifikasi Bukti Ini"}
+                            </Button>
+                          ) : (
+                            <Button variant="ghost" size="sm" disabled={busy} onClick={() => handleVerify(claim.id, false)}>
+                              Cabut Status Verifikasi
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     );
-                  })()}
-                </div>
-
-                <div style={{ borderTop: "var(--border)", paddingTop: 16 }}>
-                  <h4 style={{ margin: "0 0 12px 0", fontSize: 15 }}>
-                    Daftar Sertifikat & Bukti Penghargaan dari CV:
-                  </h4>
-
-                  {!selectedStudent.claims || selectedStudent.claims.length === 0 ? (
-                    <div style={{ padding: "20px", background: "var(--surface-warm)", border: "var(--border)", textAlign: "center" }}>
-                      <p style={{ margin: 0, fontSize: 13, color: "var(--muted)" }}>
-                        Mahasiswa ini belum mengunggah CV atau belum memiliki sertifikasi/penghargaan terdeteksi.
-                      </p>
-                    </div>
-                  ) : (
-                    <div style={{ display: "grid", gap: 14 }}>
-                      {selectedStudent.claims.map((claim) => (
-                        <div
-                          key={claim.id}
-                          style={{
-                            border: "var(--border)",
-                            background: "var(--surface)",
-                            padding: "16px 20px",
-                            display: "grid",
-                            gap: 10,
-                          }}
-                        >
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
-                            <div>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                                <FileText size={18} color="var(--ink)" />
-                                <strong style={{ fontSize: 15 }}>{claim.title}</strong>
-                              </div>
-                              {claim.context && (
-                                <p style={{ margin: 0, fontSize: 13, color: "var(--muted)", fontStyle: "italic" }}>
-                                  "{claim.context}"
-                                </p>
-                              )}
-                              {claim.file_name && (
-                                <div style={{ fontSize: 12, marginTop: 4, color: "var(--cat-blue)" }}>
-                                  📎 Berkas Terlampir: <strong>{claim.file_name}</strong>
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              {claim.status === "verified" ? (
-                                <Badge tone="green">
-                                  <ShieldCheck size={14} style={{ marginRight: 4 }} />
-                                  Terverifikasi Prodi
-                                </Badge>
-                              ) : claim.status === "rejected" ? (
-                                <Badge tone="orange">
-                                  <XCircle size={14} style={{ marginRight: 4 }} />
-                                  Ditolak
-                                </Badge>
-                              ) : (
-                                <Badge tone="yellow">
-                                  <Clock size={14} style={{ marginRight: 4 }} />
-                                  Menunggu Validasi
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-
-                          {claim.verification_notes && (
-                            <div style={{ fontSize: 12, background: "var(--surface-warm)", padding: "8px 12px", border: "1px dashed var(--line)" }}>
-                              <strong>Catatan Audit:</strong> {claim.verification_notes}
-                            </div>
-                          )}
-
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8, justifyContent: "flex-end", alignItems: "center" }}>
-                            {(claim.file_key || claim.fileKey) && (
-                              <a
-                                href={`/files/${claim.file_key || claim.fileKey}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ textDecoration: "none", marginRight: "auto" }}
-                              >
-                                <Button variant="ghost" size="sm" icon={<FilePdf size={16} color="var(--cat-blue)" />}>
-                                  Lihat Berkas Bukti
-                                </Button>
-                              </a>
-                            )}
-
-                            {claim.status !== "verified" && (
-                              <Button
-                                variant="primary"
-                                size="sm"
-                                disabled={verifyingId === claim.id || isPending}
-                                onClick={() => handleVerify(claim.id, true)}
-                                icon={<CheckCircle size={16} aria-hidden />}
-                              >
-                                {verifyingId === claim.id ? "Memverifikasi..." : "Verifikasi Bukti Ini"}
-                              </Button>
-                            )}
-
-                            {claim.status === "verified" && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                disabled={verifyingId === claim.id || isPending}
-                                onClick={() => handleVerify(claim.id, false)}
-                              >
-                                Cabut Status Verifikasi
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Panel>
-            </>
+                  })
+                )}
+              </div>
+            </Panel>
           ) : (
             <Panel title="Detail Mahasiswa">
-              <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--muted)" }}>
-                Pilih salah satu mahasiswa dari daftar di sebelah kiri untuk melihat dan memverifikasi bukti portofolio.
-              </div>
+              <EmptyState title="Pilih mahasiswa">Pilih mahasiswa dari daftar untuk melihat bukti portofolionya.</EmptyState>
             </Panel>
           )}
         </div>
@@ -390,4 +373,3 @@ export function ProdiStudentManager() {
     </div>
   );
 }
-

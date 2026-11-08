@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
@@ -97,6 +98,67 @@ func HandleVacancyGet(d *Deps) http.HandlerFunc {
 			return
 		}
 		WriteJSON(w, http.StatusOK, lowonganOf(v, time.Now()))
+	}
+}
+
+// vacancyFromRequest salin isi form ke lowongan yang sudah ada; perusahaan dan pembuat tetap.
+func vacancyFromRequest(req LowonganRequest, current domain.Vacancy) (domain.Vacancy, error) {
+	v := current
+	v.Title, v.Position, v.Type = req.Posisi, req.Bidang, req.Tipe
+	v.Location, v.Description = strings.TrimSpace(req.Lokasi), strings.TrimSpace(req.Deskripsi)
+	v.Required, v.Preferred = req.Wajib, req.Plus
+	v.Deadline = time.Time{}
+	if req.Deadline != "" {
+		deadline, err := time.Parse(time.DateOnly, req.Deadline)
+		if err != nil {
+			return domain.Vacancy{}, errors.New("deadline harus format YYYY-MM-DD")
+		}
+		v.Deadline = deadline
+	}
+	return v, nil
+}
+
+func HandleVacancyUpdate(d *Deps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		current, ok := ownedVacancy(w, r, d, r.PathValue("id"))
+		if !ok {
+			return
+		}
+		var req LowonganRequest
+		if !decode(w, r, &req) {
+			return
+		}
+		v, err := vacancyFromRequest(req, current)
+		if err == nil {
+			v, err = usecase.UpdateVacancy(v)
+		}
+		if err != nil {
+			WriteError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		if err := d.Store.UpdateVacancy(r.Context(), v); err != nil {
+			fail(w, err, "lowongan")
+			return
+		}
+		WriteJSON(w, http.StatusOK, lowonganOf(v, time.Now()))
+	}
+}
+
+func HandleVacancyDelete(d *Deps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		v, ok := ownedVacancy(w, r, d, r.PathValue("id"))
+		if !ok {
+			return
+		}
+		if v.Applicants > 0 {
+			WriteError(w, http.StatusConflict, "lowongan yang sudah memiliki pelamar tidak dapat dihapus")
+			return
+		}
+		if err := d.Store.DeleteVacancy(r.Context(), v.ID); err != nil {
+			fail(w, err, "lowongan")
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
 	}
 }
 

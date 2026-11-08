@@ -32,14 +32,12 @@ export interface AdminLearningManagerState {
   categories: string[];
   selectedCategory: string;
   searchQuery: string;
-  isModalOpen: boolean;
+  /** Data dari penyimpanan lokal sudah terbaca. */
+  loaded: boolean;
   editingModule: ILearningModule | null;
   form: AdminLearningFormState;
   setSelectedCategory: (cat: string) => void;
   setSearchQuery: (q: string) => void;
-  openCreateModal: () => void;
-  openEditModal: (mod: ILearningModule) => void;
-  closeModal: () => void;
   updateFormField: <K extends keyof AdminLearningFormState>(
     key: K,
     val: AdminLearningFormState[K],
@@ -73,14 +71,51 @@ const DEFAULT_FORM: AdminLearningFormState = {
   readinessBoost: 8,
 };
 
-export function useAdminLearningManager(): AdminLearningManagerState {
+export interface AdminLearningOptions {
+  /** Id modul yang diubah; kosong berarti modul baru. */
+  editId?: string;
+  /** Dipanggil setelah modul tersimpan, mis. untuk kembali ke daftar. */
+  onSaved?: () => void;
+}
+
+function formFromModule(mod: ILearningModule, drill?: ILearningDrill): AdminLearningFormState {
+  return {
+    title: mod.title,
+    category: mod.category,
+    difficulty: mod.difficulty,
+    durationMinutes: mod.durationMinutes,
+    summary: mod.summary,
+    competencies: mod.competenciesCovered.join(", "),
+    estimatedGain: mod.estimatedGain,
+    externalResourceUrl: mod.externalResourceUrl,
+    includeDrill: !!drill,
+    scenario: drill?.scenario ?? "",
+    problemStatement: drill?.problemStatement ?? "",
+    option0: drill?.options[0]?.text ?? "",
+    option1: drill?.options[1]?.text ?? "",
+    option2: drill?.options[2]?.text ?? "",
+    option3: drill?.options[3]?.text ?? "",
+    correctIndex: drill?.correctIndex ?? 0,
+    explanation: drill?.explanation ?? "",
+    readinessBoost: drill?.readinessBoost ?? 8,
+  };
+}
+
+export function useAdminLearningManager({ editId, onSaved }: AdminLearningOptions = {}): AdminLearningManagerState {
   const [modules, setModules] = useState<ILearningModule[]>(BASELINE_LEARNING_OVERVIEW.modules);
   const [drills, setDrills] = useState<ILearningDrill[]>(BASELINE_LEARNING_OVERVIEW.activeDrills);
   const [selectedCategory, setSelectedCategory] = useState<string>("SEMUA");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [editingModule, setEditingModule] = useState<ILearningModule | null>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [initializedFor, setInitializedFor] = useState<string | null>(null);
   const [form, setForm] = useState<AdminLearningFormState>(DEFAULT_FORM);
+  const editingModule = (editId && loaded ? modules.find((m) => m.id === editId) : null) ?? null;
+
+  // Halaman ubah: isi form sekali dari modul yang dipilih begitu data lokal terbaca.
+  if (editingModule && initializedFor !== editingModule.id) {
+    setInitializedFor(editingModule.id);
+    setForm(formFromModule(editingModule, drills.find((d) => d.moduleId === editingModule.id)));
+  }
 
   // Inisialisasi dari localStorage bila ada
   useEffect(() => {
@@ -99,6 +134,7 @@ export function useAdminLearningManager(): AdminLearningManagerState {
     } catch {
       // Fallback baseline
     }
+    setLoaded(true);
   }, []);
 
   const saveToStorage = useCallback(
@@ -112,46 +148,6 @@ export function useAdminLearningManager(): AdminLearningManagerState {
     },
     [],
   );
-
-  const openCreateModal = useCallback(() => {
-    setEditingModule(null);
-    setForm(DEFAULT_FORM);
-    setIsModalOpen(true);
-  }, []);
-
-  const openEditModal = useCallback(
-    (mod: ILearningModule) => {
-      setEditingModule(mod);
-      const drill = drills.find((d) => d.moduleId === mod.id);
-      setForm({
-        title: mod.title,
-        category: mod.category,
-        difficulty: mod.difficulty,
-        durationMinutes: mod.durationMinutes,
-        summary: mod.summary,
-        competencies: mod.competenciesCovered.join(", "),
-        estimatedGain: mod.estimatedGain,
-        externalResourceUrl: mod.externalResourceUrl,
-        includeDrill: !!drill,
-        scenario: drill?.scenario ?? "",
-        problemStatement: drill?.problemStatement ?? "",
-        option0: drill?.options[0]?.text ?? "",
-        option1: drill?.options[1]?.text ?? "",
-        option2: drill?.options[2]?.text ?? "",
-        option3: drill?.options[3]?.text ?? "",
-        correctIndex: drill?.correctIndex ?? 0,
-        explanation: drill?.explanation ?? "",
-        readinessBoost: drill?.readinessBoost ?? 8,
-      });
-      setIsModalOpen(true);
-    },
-    [drills],
-  );
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setEditingModule(null);
-  }, []);
 
   const updateFormField = useCallback(
     <K extends keyof AdminLearningFormState>(
@@ -215,8 +211,8 @@ export function useAdminLearningManager(): AdminLearningManagerState {
     }
 
     saveToStorage(nextModules, nextDrills);
-    closeModal();
-  }, [editingModule, form, modules, drills, saveToStorage, closeModal]);
+    onSaved?.();
+  }, [editingModule, form, modules, drills, saveToStorage, onSaved]);
 
   const deleteModule = useCallback(
     (id: string) => {
@@ -245,14 +241,11 @@ export function useAdminLearningManager(): AdminLearningManagerState {
     categories,
     selectedCategory,
     searchQuery,
-    isModalOpen,
+    loaded,
     editingModule,
     form,
     setSelectedCategory,
     setSearchQuery,
-    openCreateModal,
-    openEditModal,
-    closeModal,
     updateFormField,
     saveModule,
     deleteModule,

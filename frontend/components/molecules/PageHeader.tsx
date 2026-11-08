@@ -1,8 +1,11 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import { Suspense } from "react";
 import { getSession } from "@/lib/getSession";
 import { LANDING_ROLES } from "@/lib/data/roles";
 import { UserProfileBadge } from "./UserProfileBadge";
+import app from "@/styles/app.module.css";
 import shell from "@/styles/shell.module.css";
 
 export interface PageHeaderUser {
@@ -12,10 +15,15 @@ export interface PageHeaderUser {
 }
 
 export interface PageHeaderProps {
-  href: string;
+  /** Rute dasbor untuk badge peran; abaikan bila `aside` diberikan. */
+  href?: string;
   title: string;
   lead: ReactNode;
   user?: PageHeaderUser;
+  /** Tautan kembali di atas judul. */
+  back?: { href: string; label: string };
+  /** Pengganti badge pengguna di kanan header. */
+  aside?: ReactNode;
   children?: ReactNode;
 }
 
@@ -73,18 +81,27 @@ export function PageHeader({
   title,
   lead,
   user,
+  back,
+  aside,
   children,
 }: PageHeaderProps) {
   return (
     <header className={shell.header}>
       <div>
+        {back && (
+          <Link href={back.href} className={app.back}>
+            <ArrowLeft size={16} aria-hidden /> {back.label}
+          </Link>
+        )}
         <h1 className={shell.title}>{title}</h1>
         <p className={shell.lead}>{lead}</p>
         {children}
       </div>
-      <Suspense fallback={null}>
-        <HeaderUserBadge href={href} user={user} />
-      </Suspense>
+      {aside ?? (
+        <Suspense fallback={null}>
+          <HeaderUserBadge href={href ?? ""} user={user} />
+        </Suspense>
+      )}
     </header>
   );
 }

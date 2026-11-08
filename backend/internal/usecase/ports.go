@@ -22,6 +22,9 @@ type Store interface {
 	UpdateStudentProfile(ctx context.Context, u domain.User) error
 
 	CreateVacancy(ctx context.Context, v domain.Vacancy) error
+	// UpdateVacancy mengubah isi lowongan; pembuat dan pertanyaan AI tidak ikut berubah.
+	UpdateVacancy(ctx context.Context, v domain.Vacancy) error
+	DeleteVacancy(ctx context.Context, id string) error
 	// ListVacancies createdBy kosong berarti semua lowongan.
 	ListVacancies(ctx context.Context, createdBy string) ([]domain.Vacancy, error)
 	Vacancy(ctx context.Context, id string) (domain.Vacancy, error)

@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useActionState, useState } from "react";
-import { SignIn, Lightning } from "@phosphor-icons/react";
+import { SignIn } from "@phosphor-icons/react";
 import { Button } from "../atoms/Button";
 import { AuthArt } from "../molecules/AuthArt";
 import { Field } from "../molecules/Field";
 import { Notice } from "../molecules/Notice";
-import { Segmented } from "../molecules/Segmented";
+import { RoleChooser } from "../molecules/RoleChooser";
+import { RoleChosen } from "../molecules/RoleChosen";
 import { login, type AuthState } from "@/lib/actions/login";
 import { USER_ROLES, ROLE_INFO, type UserRole } from "@/lib/data/auth";
 import auth from "@/styles/auth.module.css";
-
-const ROLE_LABELS = USER_ROLES.map((userRole) => ROLE_INFO[userRole].label);
 
 interface RoleLoginPlaceholder {
   email: string;
@@ -39,22 +38,18 @@ const LOGIN_PLACEHOLDERS: Record<UserRole, RoleLoginPlaceholder> = {
   },
 };
 
-/** Form masuk + ilustrasi per peran. */
 export function LoginPanel() {
   const params = useSearchParams();
   const next = params.get("next") ?? "";
   const [state, action, pending] = useActionState<AuthState, FormData>(login, {});
-  const initialRole = USER_ROLES.find((userRole) => next.startsWith(ROLE_INFO[userRole].home)) ?? "mahasiswa";
-  const [role, setRole] = useState<UserRole>(initialRole);
+  // Peran langsung terpilih bila tujuan (?next=) atau ?peran= sudah menunjuknya; selain itu pilih dulu.
+  const fromParam = params.get("peran");
+  const initialRole = USER_ROLES.find((userRole) => next.startsWith(ROLE_INFO[userRole].home)) ?? (USER_ROLES.includes(fromParam as UserRole) ? (fromParam as UserRole) : null);
+  const [role, setRole] = useState<UserRole | null>(initialRole);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const info = ROLE_INFO[role];
-
-  const handleRoleSelect = (label: string) => {
-    const nextRole = USER_ROLES[ROLE_LABELS.indexOf(label)] ?? "mahasiswa";
-    setRole(nextRole);
-  };
+  const info = ROLE_INFO[role ?? "mahasiswa"];
 
   return (
     <div className={auth.split}>
@@ -63,42 +58,31 @@ export function LoginPanel() {
           <h1 className={auth.title}>Masuk dulu, yuk.</h1>
           <p className={auth.lead}>Satu akun, langsung ke dashboard sesuai peran kamu.</p>
         </div>
-        <div className={auth.group}>
-          <span className={auth.label}>Masuk sebagai</span>
-          <Segmented label="Peran" options={ROLE_LABELS} value={info.label} onChange={handleRoleSelect} />
-        </div>
-        <form action={action} className={auth.form} noValidate>
-          <input type="hidden" name="next" value={next} />
-          <Field
-            key={`email-${role}`}
-            label="Email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={setEmail}
-            placeholder={LOGIN_PLACEHOLDERS[role].email}
-          />
-          <Field
-            key={`password-${role}`}
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={setPassword}
-            placeholder={LOGIN_PLACEHOLDERS[role].password}
-          />
+        {role ? (
+          <>
+            <RoleChosen role={role} onChange={() => setRole(null)} />
+            <form action={action} className={auth.form} noValidate>
+              <input type="hidden" name="next" value={next} />
+              <input type="hidden" name="role" value={role} />
+              <Field key={`email-${role}`} label="Email" name="email" type="email" autoComplete="email" value={email} onChange={setEmail} placeholder={LOGIN_PLACEHOLDERS[role].email} />
+              <Field key={`password-${role}`} label="Password" name="password" type="password" autoComplete="current-password" value={password} onChange={setPassword} placeholder={LOGIN_PLACEHOLDERS[role].password} />
 
-          {params.get("expired") && !state.error && <Notice tone="error">Sesi kamu udah habis. Masuk lagi, ya.</Notice>}
-          {params.get("terdaftar") && !state.error && <Notice tone="success">Akun kamu udah jadi. Masuk dulu, ya.</Notice>}
-          {state.error && <Notice tone="error">{state.error}</Notice>}
-          <Button type="submit" loading={pending} block icon={<SignIn size={22} />}>
-            Masuk
-          </Button>
-        </form>
+              {params.get("expired") && !state.error && <Notice tone="error">Sesi kamu udah habis. Masuk lagi, ya.</Notice>}
+              {params.get("terdaftar") && !state.error && <Notice tone="success">Akun kamu udah jadi. Masuk dulu, ya.</Notice>}
+              {state.error && <Notice tone="error">{state.error}</Notice>}
+              <Button type="submit" loading={pending} block icon={<SignIn size={22} />}>
+                Masuk
+              </Button>
+            </form>
+          </>
+        ) : (
+          <div className={auth.group}>
+            <span className={auth.label}>Masuk sebagai</span>
+            <RoleChooser onChoose={setRole} />
+          </div>
+        )}
         <p className={auth.switch}>
-          Belum punya akun? <Link href={`/register?peran=${role}`}>Daftar gratis</Link>
+          Belum punya akun? <Link href={role ? `/register?peran=${role}` : "/register"}>Daftar gratis</Link>
         </p>
       </div>
       <AuthArt img={info.img} tone={info.tone} tag={info.label} title={info.title} description={info.description} />

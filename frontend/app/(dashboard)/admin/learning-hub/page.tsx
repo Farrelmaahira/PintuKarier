@@ -14,8 +14,8 @@ export default function AdminLearningHubPage() {
     <main id="content" className={shell.page}>
       <PageHeader
         href="/admin/learning-hub"
-        title="Manajemen Learning Hub & Drill"
-        lead="Konfigurasi modul kurikulum adaptif industri dan studi kasus drill untuk mahasiswa lintas 7 jurusan Politeknik Negeri Jakarta."
+        title="Kelola Learning Hub"
+        lead="Atur modul belajar dan studi kasus drill untuk mahasiswa."
       />
       <AdminLearningManager />
     </main>

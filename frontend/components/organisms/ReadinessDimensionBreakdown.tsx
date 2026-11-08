@@ -1,7 +1,10 @@
 import { ReadinessDimension } from "@/lib/data/readiness/types";
-import { Tag } from "../atoms/Tag";
+import { scoreTone, TONE_COLOR } from "@/lib/tone";
 import { Meter } from "../atoms/Meter";
+import { Tag } from "../atoms/Tag";
+import { Callout } from "../molecules/Callout";
 import { Panel } from "../molecules/Panel";
+import { ScoreCell } from "../molecules/ScoreCell";
 import rows from "@/styles/rows.module.css";
 import app from "@/styles/app.module.css";
 
@@ -11,38 +14,20 @@ export interface ReadinessDimensionBreakdownProps {
 
 export function ReadinessDimensionBreakdown({ dimensions }: ReadinessDimensionBreakdownProps) {
   return (
-    <Panel
-      title="Rincian 5 Dimensi Penilaian Berbasis Bukti"
-      tag="5 Dimensi Penilaian"
-      flush
-    >
+    <Panel title="Rincian 5 Dimensi Penilaian" tag="Berbasis Bukti" flush>
       <ul className={rows.list}>
         {dimensions.map((dim) => (
-          <li key={dim.name} className={rows.row} style={{ gridTemplateColumns: "1fr auto" }}>
-            <div className={rows.main} style={{ gap: "6px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                <strong style={{ fontSize: "16px", letterSpacing: "-0.02em" }}>{dim.name}</strong>
+          <li key={dim.name} className={rows.row}>
+            <div className={rows.main}>
+              <div className={rows.top}>
+                <strong>{dim.name}</strong>
                 <Tag>Bobot {dim.weight}%</Tag>
               </div>
-
-              <p style={{ fontSize: "14px", color: "var(--text-muted)", margin: 0 }}>
-                {dim.description}
-              </p>
-
-              <Meter value={dim.score} label={dim.name} tone="var(--accent)" />
-
-              <blockquote className={app.quote} style={{ margin: "4px 0 0" }}>
-                “{dim.evidence}”
-                <cite>Bukti Terverifikasi Portofolio / Magang</cite>
-              </blockquote>
+              <p className={app.meta}>{dim.description}</p>
+              <Meter value={dim.score} label={dim.name} tone={TONE_COLOR[scoreTone(dim.score)]} />
+              <Callout tone="plain" title="Bukti terverifikasi portofolio / magang">{dim.evidence}</Callout>
             </div>
-
-            <div style={{ textAlign: "right", minWidth: "64px" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "20px" }}>
-                {dim.score.toFixed(1)}
-              </span>
-              <span style={{ display: "block", fontSize: "11px", color: "var(--text-muted)" }}>/100</span>
-            </div>
+            <ScoreCell value={dim.score.toFixed(1)} label="/100" />
           </li>
         ))}
       </ul>

@@ -5,6 +5,8 @@ export interface VacancySummary {
   location: string;
   type: "Magang" | "Full-time" | "Kontrak";
   deadline: string;
+  /** Tanggal ISO batas lamar; kosong untuk lowongan tanpa batas. */
+  deadlineDate?: string;
   applicants: number;
   tone: string;
   tags: string[];
@@ -14,7 +16,7 @@ export interface VacancySummary {
 export const APPLICATION_STAGES = ["Unggah CV", "Pre-screening", "AI Interview", "Dianalisis AI", "Ditinjau HRD", "Keputusan"];
 
 /** Bentuk GET /lowongan dan GET /lowongan/{id} dari Golang API. */
-export interface Vacancy extends Omit<VacancySummary, "tone" | "deadline"> {
+export interface Vacancy extends Omit<VacancySummary, "tone" | "deadline" | "deadlineDate"> {
   jobField: string;
   /** Tanggal ISO (YYYY-MM-DD) atau kosong. */
   deadline: string;

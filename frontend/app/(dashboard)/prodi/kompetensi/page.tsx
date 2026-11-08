@@ -13,7 +13,7 @@ export default function CompetencyPage() {
       <PageHeader
         href="/prodi"
         title="Analisis Kompetensi"
-        lead="Kompetensi yang paling sering bikin lulusan gugur seleksi, dirangkum anonim tiap periode rekrutmen."
+        lead="Kompetensi yang paling sering membuat lulusan gagal seleksi."
       />
       <Suspense fallback={<Skeleton height="480px" />}>
         <StudyProgramCompetencySection />

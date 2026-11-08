@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import app from "@/styles/app.module.css";
+import { Button } from "../atoms/Button";
+import { SelectField } from "./SelectField";
+import ui from "@/styles/ui.module.css";
 
 export interface InterviewVoiceControlsProps {
   supported: boolean;
@@ -36,113 +38,43 @@ export function InterviewVoiceControls({
   }
 
   return (
-    <div className={app.stack} style={{ gap: 8, margin: "8px 0" }}>
-      <div className={app.row} style={{ alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-        <button
-          type="button"
-          onClick={onToggleSpeak}
-          disabled={disabled}
-          className={app.action}
-          style={{
-            padding: "8px 16px",
-            borderRadius: "6px",
-            border: "1px solid var(--border)",
-            background: isSpeaking ? "var(--cat-lilac)" : "var(--surface)",
-            color: "var(--ink)",
-            fontSize: 14,
-            fontWeight: 500,
-            cursor: disabled ? "not-allowed" : "pointer",
-            transition: "all var(--dur) var(--ease)",
-          }}
-          aria-label={isSpeaking ? "Hentikan suara pertanyaan" : "Dengarkan suara pertanyaan"}
-        >
+    <div className={ui.formStack}>
+      <div className={ui.labelRow}>
+        <Button size="sm" variant={isSpeaking ? "primary" : "ghost"} onClick={onToggleSpeak} disabled={disabled}>
           {isSpeaking ? "Hentikan Suara" : "Dengarkan Soal"}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setShowSettings((prev) => !prev)}
-          className={app.action}
-          style={{
-            padding: "8px 14px",
-            borderRadius: "6px",
-            border: "1px solid var(--border)",
-            background: showSettings ? "var(--surface-raised)" : "transparent",
-            color: "var(--text-subtle)",
-            fontSize: 13,
-            cursor: "pointer",
-          }}
-          aria-expanded={showSettings}
-          aria-label="Pengaturan suara AI"
-        >
+        </Button>
+        <Button size="sm" variant="plain" onClick={() => setShowSettings((prev) => !prev)}>
           Opsi Suara
-        </button>
+        </Button>
       </div>
 
       {showSettings && (
-        <div
-          style={{
-            padding: "14px 16px",
-            borderRadius: 6,
-            border: "1px solid var(--border)",
-            background: "var(--surface)",
-            display: "grid",
-            gap: 12,
-            fontSize: 13,
-          }}
-        >
+        <div className={ui.formSection}>
           {onSelectVoiceGender && (
-            <label style={{ display: "grid", gap: 4 }}>
-              <span style={{ fontWeight: 500, color: "var(--ink)" }}>Karakter Suara:</span>
-              <select
-                value={voiceGender}
-                onChange={(e) => onSelectVoiceGender(e.target.value)}
-                style={{
-                  padding: "6px 10px",
-                  borderRadius: 6,
-                  border: "1px solid var(--border)",
-                  background: "var(--bg)",
-                  color: "var(--ink)",
-                  fontSize: 13,
-                }}
-              >
-                <option value="wanita">Suara Wanita</option>
-                <option value="pria">Suara Pria</option>
-              </select>
-            </label>
+            <SelectField
+              label="Karakter suara"
+              value={voiceGender}
+              onChange={onSelectVoiceGender}
+              options={[
+                { value: "wanita", label: "Suara Wanita" },
+                { value: "pria", label: "Suara Pria" },
+              ]}
+            />
           )}
-
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-            <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontWeight: 500, color: "var(--ink)" }}>Kecepatan:</span>
-              <select
-                value={rate}
-                onChange={(e) => onSelectRate(Number(e.target.value))}
-                style={{
-                  padding: "4px 8px",
-                  borderRadius: 6,
-                  border: "1px solid var(--border)",
-                  background: "var(--bg)",
-                  color: "var(--ink)",
-                  fontSize: 13,
-                }}
-              >
-                <option value={0.85}>0.85x (Santai)</option>
-                <option value={1.0}>1.0x (Normal)</option>
-                <option value={1.15}>1.15x (Cepat)</option>
-              </select>
-            </label>
-
-            <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={autoRead}
-                onChange={(e) => onToggleAutoRead(e.target.checked)}
-                style={{ accentColor: "var(--ink)", cursor: "pointer" }}
-              />
-              <span style={{ color: "var(--ink)" }}>Bacakan otomatis tiap soal</span>
-            </label>
-          </div>
+          <SelectField
+            label="Kecepatan bicara"
+            value={rate}
+            onChange={(v) => onSelectRate(Number(v))}
+            options={[
+              { value: 0.85, label: "0.85x (Santai)" },
+              { value: 1.0, label: "1.0x (Normal)" },
+              { value: 1.15, label: "1.15x (Cepat)" },
+            ]}
+          />
+          <label className={ui.checkRow}>
+            <input type="checkbox" checked={autoRead} onChange={(e) => onToggleAutoRead(e.target.checked)} />
+            Bacakan otomatis tiap soal
+          </label>
         </div>
       )}
     </div>

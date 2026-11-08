@@ -38,6 +38,8 @@ var Routes = []Route{
 	{"GET /lowongan", all, HandleVacancyList},
 	{"POST /lowongan", hrOnly, HandleVacancyCreate},
 	{"GET /lowongan/{id}", all, HandleVacancyGet},
+	{"PATCH /lowongan/{id}", hrOnly, HandleVacancyUpdate},
+	{"DELETE /lowongan/{id}", hrOnly, HandleVacancyDelete},
 	{"POST /lowongan/{id}/analisis", hrOnly, HandleVacancyAnalisis},
 	{"GET /lowongan/{id}/kandidat", hrOnly, HandleVacancyKandidat},
 

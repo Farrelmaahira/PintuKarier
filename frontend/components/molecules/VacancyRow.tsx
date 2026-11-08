@@ -1,4 +1,4 @@
-import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { Buildings, Calendar, MapPin } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "../atoms/Badge";
 import { Button } from "../atoms/Button";
 import { ChipList } from "./ChipList";
@@ -17,26 +17,28 @@ export function VacancyRow({ vacancy, applied }: VacancyRowProps) {
   return (
     <li className={`${rows.row} ${rows.cornered}`}>
       <div className={rows.main}>
+        <span className={app.meta}>{vacancy.applicants} pelamar</span>
         <div className={rows.top}>
-          <span className={app.swatch} style={{ background: vacancy.tone }} aria-hidden />
           <strong className={app.name}>{vacancy.position}</strong>
         </div>
-        <dl className={rows.facts}>
+        <dl className={rows.factsAligned}>
           <div>
-            <dt>Perusahaan</dt>
+            <dt>
+              <Buildings size={14} aria-hidden /> Perusahaan
+            </dt>
             <dd>{vacancy.company}</dd>
           </div>
           <div>
-            <dt>Lokasi</dt>
+            <dt>
+              <MapPin size={14} aria-hidden /> Lokasi
+            </dt>
             <dd>{vacancy.location}</dd>
           </div>
           <div>
-            <dt>Deadline</dt>
+            <dt>
+              <Calendar size={14} aria-hidden /> Deadline
+            </dt>
             <dd>{vacancy.deadline}</dd>
-          </div>
-          <div>
-            <dt>Pelamar</dt>
-            <dd className="num">{vacancy.applicants}</dd>
           </div>
         </dl>
         <ChipList items={vacancy.tags} />
@@ -46,12 +48,7 @@ export function VacancyRow({ vacancy, applied }: VacancyRowProps) {
       </div>
       <div className={rows.actions}>
         {applied ? (
-          <Badge tone="green">
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <CheckCircle size={14} weight="bold" />
-              Sudah kamu lamar
-            </span>
-          </Badge>
+          <Badge tone="settled">Udah kamu lamar</Badge>
         ) : closed ? (
           <Badge>Ditutup</Badge>
         ) : (

@@ -4,18 +4,22 @@ interface PaginationProps {
   totalItems: number;
   itemsPerPage: number;
   onPageChange: (page: number) => void;
+  /** Kata benda pada ringkasan, mis. "lowongan". */
+  label?: string;
+  /** Tanpa bingkai samping; untuk di dalam Panel flush. */
+  flush?: boolean;
 }
 
 import app from "@/styles/app.module.css";
 
-export function Pagination({ currentPage, totalPages, totalItems, itemsPerPage, onPageChange }: PaginationProps) {
+export function Pagination({ currentPage, totalPages, totalItems, itemsPerPage, onPageChange, label = "lowongan", flush }: PaginationProps) {
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
-    <div className={app.pagination}>
+    <div className={`${app.pagination} ${flush ? app.paginationFlush : ""}`}>
       <div className={app.pageInfo}>
-        Menampilkan {startItem}–{endItem} dari {totalItems} lowongan
+        Menampilkan {startItem}–{endItem} dari {totalItems} {label}
       </div>
 
       <div className={app.pageNav} role="navigation" aria-label="Navigasi halaman">

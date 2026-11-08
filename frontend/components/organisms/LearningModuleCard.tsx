@@ -1,6 +1,12 @@
-import { Clock, ArrowSquareOut, Lightning, CheckCircle } from "@phosphor-icons/react";
+import { ArrowSquareOut, CheckCircle, Clock, Lightning } from "@phosphor-icons/react";
 import { ILearningModule, ILearningDrill } from "@/lib/data/learning/types";
+import { Badge } from "../atoms/Badge";
+import { Button } from "../atoms/Button";
+import { Tag } from "../atoms/Tag";
+import { ChipList } from "../molecules/ChipList";
+import app from "@/styles/app.module.css";
 import dashboard from "@/styles/dashboard.module.css";
+import ui from "@/styles/ui.module.css";
 
 export interface LearningModuleCardProps {
   module: ILearningModule;
@@ -8,74 +14,63 @@ export interface LearningModuleCardProps {
   onOpenDrill: (drill: ILearningDrill) => void;
 }
 
-export function LearningModuleCard({
-  module,
-  relatedDrill,
-  onOpenDrill,
-}: LearningModuleCardProps) {
+/** Kartu modul belajar, satu keluarga dengan VacancyCard dan FeedbackCard. */
+export function LearningModuleCard({ module, relatedDrill, onOpenDrill }: LearningModuleCardProps) {
   const isCompleted = module.status === "completed";
 
   return (
-    <div className={dashboard.moduleCard} data-status={module.status}>
-      <div className={dashboard.cardTopBadges}>
-        <span className={dashboard.categoryBadge}>{module.category}</span>
-        <span className={dashboard.difficultyBadge} data-difficulty={module.difficulty}>
-          {module.difficulty}
-        </span>
-        <span className={dashboard.durationBadge}>
-          <Clock size={12} weight="bold" /> {module.durationMinutes} mnt
+    <div className={`${app.jobCard} ${isCompleted ? app.jobCardDone : ""}`}>
+      <div className={app.jobCardTop}>
+        <div className={ui.btnRow}>
+          <Tag>{module.category}</Tag>
+          <span className={dashboard.difficultyBadge} data-difficulty={module.difficulty}>
+            {module.difficulty}
+          </span>
+        </div>
+        <span className={`${app.meta} ${dashboard.cellIcon}`}>
+          <Clock size={14} aria-hidden /> {module.durationMinutes} mnt
         </span>
       </div>
 
-      <h3 className={dashboard.moduleTitle}>{module.title}</h3>
-      <p className={dashboard.moduleSummary}>{module.summary}</p>
+      <div className={app.jobCardBody}>
+        <div className={app.jobCardTitle}>
+          <strong className={app.name} style={{ display: "block", fontSize: 20 }}>
+            {module.title}
+          </strong>
+          <p className={app.meta} style={{ marginTop: 8, fontSize: 14 }}>
+            {module.summary}
+          </p>
+        </div>
 
-      <div className={dashboard.moduleCompetencies}>
-        <span className={dashboard.compLabel}>Kompetensi:</span>
-        <div className={dashboard.compList}>
-          {module.competenciesCovered.map((comp) => (
-            <span key={comp} className={dashboard.compPill}>
-              {comp}
-            </span>
-          ))}
+        <ChipList items={module.competenciesCovered} />
+
+        <div className={app.jobCardCount}>
+          <span className={dashboard.cellIcon}>
+            <Lightning size={14} aria-hidden /> Poin kesiapan
+          </span>
+          <span className="num">+{module.estimatedGain} poin</span>
         </div>
       </div>
 
-      <div className={dashboard.moduleFooter}>
-        <div className={dashboard.gainIndicator}>
-          <Lightning size={14} weight="bold" color="var(--ink)" />
-          <span>+{module.estimatedGain} Poin Kesiapan</span>
-        </div>
-
-        <div className={dashboard.moduleActions}>
+      <div className={app.jobCardFooter}>
+        <div className={ui.btnRow}>
           {module.externalResourceUrl && (
-            <a
-              href={module.externalResourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={dashboard.btnExternal}
-              title="Baca Dokumentasi / Materi"
-            >
-              Materi <ArrowSquareOut size={14} weight="bold" />
-            </a>
+            <Button href={module.externalResourceUrl} external size="sm" variant="ghost" icon={<ArrowSquareOut size={16} />}>
+              Materi
+            </Button>
           )}
-
-          {relatedDrill && !isCompleted && (
-            <button
-              type="button"
-              className={dashboard.btnDrill}
-              onClick={() => onOpenDrill(relatedDrill)}
-            >
+          {!isCompleted && relatedDrill && (
+            <Button size="sm" onClick={() => onOpenDrill(relatedDrill)} icon={<Lightning size={16} />}>
               Uji Drill (+{relatedDrill.readinessBoost})
-            </button>
-          )}
-
-          {isCompleted && (
-            <span className={dashboard.completedBadge}>
-              <CheckCircle size={14} weight="bold" /> Selesai
-            </span>
+            </Button>
           )}
         </div>
+        {isCompleted && (
+          <Badge tone="green">
+            <CheckCircle size={14} weight="bold" /> Selesai
+          </Badge>
+        )}
+        {module.status === "in_progress" && <Badge tone="cyan">Berjalan</Badge>}
       </div>
     </div>
   );

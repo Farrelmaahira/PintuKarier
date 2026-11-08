@@ -16,7 +16,8 @@ func OpenTemp(ctx context.Context, baseURL string) (s *Store, drop func(), err e
 	if err != nil {
 		return nil, nil, err
 	}
-	name := "PINTUKARIER_tmp_" + usecase.NewID("")
+	// Huruf kecil: CREATE DATABASE tanpa kutip melipat nama ke huruf kecil, sedangkan nama di URL koneksi peka huruf.
+	name := "pintukarier_tmp_" + usecase.NewID("")
 	if _, err := admin.Exec(ctx, "CREATE DATABASE "+name); err != nil {
 		_ = admin.Close(ctx)
 		return nil, nil, err

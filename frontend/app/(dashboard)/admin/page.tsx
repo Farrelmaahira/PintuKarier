@@ -10,8 +10,8 @@ export default function AdminPage() {
     <main id="content" className={shell.page}>
       <PageHeader
         href="/admin"
-        title="Dasbor Eksekutif Kampus"
-        lead="Pengawasan makro serapan kerja, kesiapan kompetensi lulusan, dan kepatuhan feedback industri di seluruh 7 jurusan Politeknik Negeri Jakarta."
+        title="Dasbor Kampus"
+        lead="Serapan kerja, kesiapan lulusan, dan SLA feedback di seluruh jurusan."
       />
       <AdminOverviewSection />
     </main>

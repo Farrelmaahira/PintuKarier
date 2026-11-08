@@ -5,6 +5,7 @@ interface LabeledSegmentedProps {
   title: string;
   label: string;
   options: string[];
+  counts?: Record<string, number>;
   value: string;
   onChange: (value: string) => void;
 }
@@ -12,7 +13,7 @@ interface LabeledSegmentedProps {
 /** Pilihan satu-dari-banyak dengan judul di atasnya. */
 export function LabeledSegmented({ title, ...segmented }: LabeledSegmentedProps) {
   return (
-    <div className={app.stack}>
+    <div className={app.labeled}>
       <span className={app.label}>{title}</span>
       <Segmented {...segmented} />
     </div>

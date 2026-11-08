@@ -170,3 +170,54 @@
     width: min(100%, 360px);
   }
 }
+
+/* ---------- Pilih peran: satu per baris dengan ikon ---------- */
+.roleGrid {
+  display: grid;
+  gap: 2px;
+  border: var(--border);
+  background: var(--ink);
+}
+
+.roleOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 12px 14px;
+  background: var(--surface-raised);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  transition: background var(--dur) var(--ease);
+}
+
+.roleOption:hover {
+  background: var(--surface-warm);
+}
+
+/* Peran yang sudah dipilih, dengan tautan untuk menggantinya. */
+.roleChosen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  border: var(--border);
+  background: var(--surface-warm);
+  font-size: 14px;
+}
+
+.roleChosen strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.roleChange {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

@@ -2,6 +2,7 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import type { ReactNode } from "react";
 import { Button } from "../atoms/Button";
 import app from "@/styles/app.module.css";
+import ui from "@/styles/ui.module.css";
 
 interface OverviewModuleCardProps {
   icon: ReactNode;
@@ -13,22 +14,22 @@ interface OverviewModuleCardProps {
   children?: ReactNode;
 }
 
-/** Kartu akses cepat ke satu modul Dasbor Prodi: judul, badge, penjelasan, ringkasan, dan tombol buka. */
+/** Kartu akses cepat ke satu modul Dasbor Prodi, satu keluarga dengan VacancyCard: header, isi, dan tombol buka. */
 export function OverviewModuleCard({ icon, title, badge, description, href, cta, children }: OverviewModuleCardProps) {
   return (
-    <div style={{ border: "var(--border)", background: "var(--surface)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-      <div style={{ padding: 20, display: "grid", gap: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            {icon}
-            <strong style={{ fontSize: 17 }}>{title}</strong>
-          </div>
-          {badge}
-        </div>
+    <div className={app.jobCard}>
+      <div className={app.jobCardTop}>
+        <span className={ui.itemHead} style={{ alignItems: "center" }}>
+          {icon}
+          <strong className={app.name}>{title}</strong>
+        </span>
+        {badge}
+      </div>
+      <div className={app.jobCardBody}>
         <p className={app.meta}>{description}</p>
         {children}
       </div>
-      <div style={{ padding: 14, borderTop: "var(--border)", background: "var(--surface-raised)" }}>
+      <div className={app.jobCardFooter}>
         <Button href={href} size="sm" block icon={<ArrowUpRight size={18} />}>
           {cta}
         </Button>

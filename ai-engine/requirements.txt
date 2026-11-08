@@ -11,3 +11,6 @@ httpx==0.27.2
 
 # Ekstraksi teks PDF buat parse CV
 pypdf==6.14.0
+
+# Validasi kecocokan teks bukti hasil OCR (app/ocr_validator.py)
+rapidfuzz==3.14.6

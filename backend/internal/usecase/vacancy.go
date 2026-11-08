@@ -19,21 +19,41 @@ func NewID(prefix string) string {
 var tipeLowongan = map[string]bool{"Magang": true, "Full-time": true, "Kontrak": true}
 
 func CreateVacancy(v domain.Vacancy) (domain.Vacancy, error) {
+	if err := validateVacancy(v); err != nil {
+		return domain.Vacancy{}, err
+	}
 	v.Title, v.Company, v.Position = strings.TrimSpace(v.Title), strings.TrimSpace(v.Company), strings.TrimSpace(v.Position)
-	if v.Title == "" || v.Company == "" || v.Position == "" || v.CreatedBy == "" {
-		return domain.Vacancy{}, errors.New("posisi, perusahaan, kelompok posisi, dan pembuat wajib diisi")
-	}
-	if !tipeLowongan[v.Type] {
-		return domain.Vacancy{}, errors.New("tipe harus Magang, Full-time, atau Kontrak")
-	}
 	v.Required, v.Preferred = cleanList(v.Required), cleanList(v.Preferred)
-	if len(v.Required) == 0 {
-		return domain.Vacancy{}, errors.New("minimal satu syarat wajib")
-	}
 	v.ID = NewID("low-")
 	v.CreatedAt = time.Now()
 	v.Prescreen, v.Interview = domain.DefaultPrescreen, domain.DefaultInterview
 	return v, nil
+}
+
+// UpdateVacancy validasi dan rapikan lowongan yang sudah ada; id, pembuat, dan pertanyaan tidak diubah.
+func UpdateVacancy(v domain.Vacancy) (domain.Vacancy, error) {
+	if v.ID == "" {
+		return domain.Vacancy{}, errors.New("id lowongan wajib diisi")
+	}
+	if err := validateVacancy(v); err != nil {
+		return domain.Vacancy{}, err
+	}
+	v.Title, v.Company, v.Position = strings.TrimSpace(v.Title), strings.TrimSpace(v.Company), strings.TrimSpace(v.Position)
+	v.Required, v.Preferred = cleanList(v.Required), cleanList(v.Preferred)
+	return v, nil
+}
+
+func validateVacancy(v domain.Vacancy) error {
+	if strings.TrimSpace(v.Title) == "" || strings.TrimSpace(v.Company) == "" || strings.TrimSpace(v.Position) == "" || v.CreatedBy == "" {
+		return errors.New("posisi, perusahaan, kelompok posisi, dan pembuat wajib diisi")
+	}
+	if !tipeLowongan[v.Type] {
+		return errors.New("tipe harus Magang, Full-time, atau Kontrak")
+	}
+	if len(cleanList(v.Required)) == 0 {
+		return errors.New("minimal satu syarat wajib")
+	}
+	return nil
 }
 
 func cleanList(in []string) []string {

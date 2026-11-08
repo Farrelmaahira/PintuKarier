@@ -3,6 +3,7 @@
 import { useAdminCareerCenter } from "@/lib/hooks/useAdminCareerCenter";
 import { AdminPartnersView } from "@/components/organisms/AdminPartnersView";
 import { Skeleton } from "@/components/atoms/Skeleton";
+import shell from "@/styles/shell.module.css";
 
 export function AdminMitraClient() {
   const {
@@ -17,7 +18,7 @@ export function AdminMitraClient() {
 
   if (isLoading && filteredPartners.length === 0) {
     return (
-      <div style={{ display: "grid", gap: "20px" }}>
+      <div className={shell.stack}>
         <Skeleton height="44px" />
         <Skeleton height="300px" />
       </div>

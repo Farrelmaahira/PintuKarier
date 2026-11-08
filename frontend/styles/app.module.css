@@ -169,13 +169,14 @@
 }
 
 .catFilter button {
-  flex: 1 1 160px;
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  height: 48px;
   min-height: 48px;
-  padding: 8px 14px;
+  padding: 8px 12px;
   background: var(--surface-raised);
   font-size: 14px;
   font-weight: 500;
@@ -224,6 +225,10 @@
 
 .segment button {
   flex: 1 1 9em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-height: 40px;
   padding: 8px 12px;
   background: var(--surface-raised);
@@ -335,6 +340,13 @@
   transform: translateX(4px);
 }
 
+/* Kotak skor persegi 88x88, setinggi blok nama + tiga baris keterangan. */
+.candidate .rowLink > .score {
+  width: 88px;
+  height: 88px;
+  font-size: 34px;
+}
+
 .rank {
   font-family: var(--font-mono);
   font-size: 13px;
@@ -344,7 +356,50 @@
 .rowEnd {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+
+/* Kolom nama + keterangan kandidat: rapat (2px), seperti lulusin. */
+.candMain {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.candTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Keterangan kandidat: satu item per baris, lurus ke bawah. */
+.candFacts {
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.candFacts > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.candName {
+  line-height: 1.15;
+}
+
+/* Badge kategori di atas badge keputusan, rata kanan. */
+.rowEndBadges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
 
 .flag {
@@ -851,6 +906,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
   border: var(--border);
   background: var(--surface);
   transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
@@ -861,31 +917,90 @@
   transform: translateY(-2px);
 }
 
+.jobCardClosed {
+  opacity: 0.6;
+}
+
 .jobCardTop {
   display: flex;
+  min-height: 56px;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding: 12px 18px;
+  padding: 16px 20px;
   border-bottom: var(--border);
-  background: var(--surface-raised);
+  background: var(--surface);
 }
 
 .jobCardBody {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 18px;
   flex: 1;
+  gap: 14px;
+  padding: 20px;
+}
+
+.jobCardTitle {
+  min-height: 88px;
+}
+
+.jobCardMeta {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.jobCardMeta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jobCardCount {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.jobCardCount .num {
+  font-weight: 500;
+  color: var(--ink);
 }
 
 .jobCardFooter {
-  padding: 14px 18px;
-  border-top: var(--border);
-  background: var(--surface-warm);
   display: flex;
-  justify-content: space-between;
+  min-height: 68px;
   align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: var(--border);
+  background: var(--surface);
+}
+
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.listHeadText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.listTitle {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
 }
 
 /* ---------- Pagination ---------- */
@@ -943,4 +1058,73 @@
 .pageBtn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
+}
+
+/* Chip jumlah di dalam tombol Segmented. */
+.segCount {
+  flex: none;
+}
+
+/* Judul grup di atas Segmented: lebih dekat ke tombolnya daripada ke grup lain. */
+.labeled {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Filter kategori + aksi di sebelah kanan (mis. tombol Filter tanggal). */
+.catRow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+}
+
+.catRow > .catFilter {
+  flex: 1;
+}
+
+.paginationFlush {
+  margin-top: 0;
+  border-width: 2px 0 0;
+}
+
+/* Kartu yang sudah selesai: latar hijau lembut. */
+.jobCardDone,
+.jobCardDone:hover {
+  background: color-mix(in srgb, var(--cat-green) 28%, var(--surface));
+}
+
+.jobCardDone .jobCardTop,
+.jobCardDone .jobCardFooter {
+  background: transparent;
+}
+
+/* Grid kartu di dalam Panel flush (mis. lowongan milik HRD). */
+.cardGridPad {
+  padding: 20px;
+  list-style: none;
+}
+
+.jobCardFooterGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: var(--border);
+  background: var(--surface);
+}
+
+/* Tautan kecil di header panel (mis. "Detail 7 Jurusan"), tanpa margin bawah. */
+.backInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.backInline:hover {
+  color: var(--text);
 }

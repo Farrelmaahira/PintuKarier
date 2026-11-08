@@ -1,3 +1,4 @@
+import { Plus } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "../atoms/Button";
 import { EmptyState } from "../molecules/EmptyState";
 import { Panel } from "../molecules/Panel";
@@ -15,11 +16,22 @@ export function CandidateBoard({ vacancies, activeVacancy, candidates }: Candida
   if (!activeVacancy) {
     return (
       <Panel title="Kandidat">
-        <EmptyState title="Belum ada lowongan" img="undraw/empty" large action={<Button href="/hrd/lowongan">Buat lowongan</Button>}>
+        <EmptyState title="Belum ada lowongan" img="undraw/empty" large action={<Button href="/hrd/lowongan/baru">Buat lowongan</Button>}>
           Buat lowongan dulu. Kandidat muncul di sini setelah mereka selesai AI Interview dan kamu jalankan analisis.
         </EmptyState>
       </Panel>
     );
   }
-  return <ActiveCandidateBoard vacancies={vacancies} activeVacancy={activeVacancy} candidates={candidates} />;
+  return (
+    <ActiveCandidateBoard
+      vacancies={vacancies}
+      activeVacancy={activeVacancy}
+      candidates={candidates}
+      extraActions={
+        <Button size="sm" variant="ghost" href="/hrd/lowongan/baru" icon={<Plus size={18} />}>
+          Buat lowongan
+        </Button>
+      }
+    />
+  );
 }

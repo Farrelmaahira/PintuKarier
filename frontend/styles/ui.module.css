@@ -114,6 +114,7 @@
 .badge {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   height: 26px;
   padding: 0 8px;
   border: 1px solid var(--ink);
@@ -771,4 +772,480 @@
 
 .panelBody > .disclosure:first-child > summary {
   padding-top: 0;
+}
+
+/* ---------- Modal (dialog bingkai 2px, setara Dialog di lulusin) ---------- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 15, 29, 0.65);
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow: hidden;
+  border: var(--border);
+  background: var(--surface-raised);
+  box-shadow: 0 20px 48px rgba(0, 15, 29, 0.22);
+}
+
+.modalWide {
+  max-width: 680px;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: var(--border);
+  background: var(--surface);
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.modalClose {
+  display: flex;
+  padding: 6px;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.modalClose:hover:not(:disabled) {
+  color: var(--ink);
+}
+
+.modalBody {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.modalFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: var(--border);
+  background: var(--surface);
+}
+
+.modalIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* ---------- Callout (kotak catatan dengan garis tepi kiri) ---------- */
+.callout {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  background: var(--surface-raised);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.callout-plain {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.callout-warn {
+  border-color: var(--cat-yellow);
+  background: var(--warn-soft);
+  color: var(--ink);
+}
+
+.callout-error {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.calloutTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ---------- Toolbar & kolom pencarian ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.search {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 480px;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search .input {
+  padding-left: 42px;
+}
+
+/* ---------- Tombol ikon aksi (varian danger) ---------- */
+.iconBtnDanger {
+  color: var(--danger);
+}
+
+.iconBtnDanger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+button.iconBtn {
+  width: 32px;
+  height: 32px;
+  background: var(--surface-raised);
+  cursor: pointer;
+}
+
+/* ---------- Pembantu tata letak form ---------- */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.formStack {
+  display: grid;
+  gap: 12px;
+}
+
+.formSection {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: var(--border);
+  background: var(--surface-warm);
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- FilterBar ---------- */
+.filterBar {
+  display: grid;
+  gap: 18px;
+  padding: 16px;
+  border: var(--border);
+  background: var(--surface-raised);
+}
+
+.filterGroups {
+  display: grid;
+  gap: 20px;
+}
+
+.filterSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: var(--hairline);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.linkBtn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.linkBtn:hover {
+  color: var(--accent);
+}
+
+/* ---------- ScoreCell: angka mono + keterangan kecil di kolom kanan baris ---------- */
+.scoreCell {
+  display: grid;
+  min-width: 60px;
+  text-align: right;
+}
+
+.scoreCellValue {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.scoreCellLabel {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ---------- Hero skor kesiapan ---------- */
+.readyHero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 280px);
+  align-items: center;
+  gap: 24px;
+  padding: 24px 20px;
+}
+
+.readyHeroText {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
+.readyHeroLead {
+  font-size: 18px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+/* Bar skor dengan penanda ambang minimum. */
+.thresholdTrack {
+  position: relative;
+  padding: 0 20px 36px;
+  border-bottom: var(--border);
+}
+
+.thresholdTick {
+  position: absolute;
+  top: -4px;
+  bottom: 28px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.thresholdLabel {
+  position: absolute;
+  bottom: 10px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .readyHero {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .readyHero > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Baris label + aksi kecil di kanan, dan baris tombol. */
+.labelRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.btnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+fieldset.formSection {
+  min-width: 0;
+}
+
+/* Nilai Stat berupa teks (bukan angka): boleh turun baris dan memakai font sans. */
+.statText {
+  display: block;
+  font-size: clamp(18px, 1.8vw, 24px);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Dropdown: panah kustom dengan jarak dari tepi kanan (panah bawaan browser menempel ke tepi). */
+select.input {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 256 256'%3E%3Cpath fill='%23000f1d' d='M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+
+/* ---------- Toolbar di dalam Panel flush (filter di antara header dan daftar) ---------- */
+.panelToolbar {
+  display: grid;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: var(--border);
+  background: var(--surface-warm);
+}
+
+/* ---------- DateFilter: tombol Filter + popover rentang tanggal ---------- */
+.filterWrap {
+  position: relative;
+  display: flex;
+  flex: none;
+}
+
+.filterBtn {
+  align-self: stretch;
+  padding: 8px 12px;
+  border: var(--border);
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.filterBtn:hover {
+  background: var(--surface-warm);
+}
+
+.filterBtn[aria-expanded="true"],
+.filterBtnActive {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.filterBtn[aria-expanded="true"]:hover,
+.filterBtnActive:hover {
+  background: var(--ink);
+}
+
+.filterPop {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 5;
+  display: grid;
+  gap: 14px;
+  width: 260px;
+  padding: 14px;
+  border: var(--border);
+  background: var(--surface);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.filterPopActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.filterPopBtn {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.filterPopBtn:hover {
+  background: var(--surface-warm);
+}
+
+.filterPopPrimary,
+.filterPopPrimary:hover {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+/* ---------- Kotak ikon persegi (di samping judul item daftar) ---------- */
+.iconTile {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ink);
+  background: var(--surface-warm);
+}
+
+.itemHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.itemHeadText {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.itemNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Baris catatan di dasar panel (pakai bersama .panelToolbar): teks kiri, info singkat kanan. */
+.noteStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  border-top: var(--border);
+  border-bottom: 0;
+  font-size: 13px;
 }

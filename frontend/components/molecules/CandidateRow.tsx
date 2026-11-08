@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { CaretRight, SealCheck, ShieldWarning } from "@phosphor-icons/react/dist/ssr";
+import { CalendarBlank, CaretRight, GraduationCap, ListChecks, SealCheck, ShieldWarning } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "../atoms/Badge";
 import { ScoreBox } from "../atoms/ScoreBox";
 import type { Candidate } from "@/lib/data/candidate";
 import { computeScore } from "@/lib/computeScore";
 import { CATEGORY_TONE, DECISION_TONE } from "@/lib/tone";
 import app from "@/styles/app.module.css";
+import dashboard from "@/styles/dashboard.module.css";
 import rows from "@/styles/rows.module.css";
 
 interface CandidateRowProps {
@@ -21,39 +22,37 @@ export function CandidateRow({ candidate, rank }: CandidateRowProps) {
       <Link href={`/hrd/kandidat/${candidate.id}`} className={app.rowLink}>
         <span className={app.rank}>{String(rank).padStart(2, "0")}</span>
         <ScoreBox value={computeScore(candidate.dimensions)} tone={CATEGORY_TONE[candidate.category]!} />
-        <span className={rows.main}>
-          <span className={rows.top}>
-            <strong className={app.name}>{candidate.name}</strong>
+        <span className={app.candMain}>
+          <span className={app.candTop}>
+            <strong className={`${app.name} ${app.candName}`}>{candidate.name}</strong>
             {candidate.prodiVerified && (
-              <span
-                title="Terverifikasi Prodi PNJ: Sertifikasi & portofolio tervalidasi resmi"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#1d9bf0",
-                  lineHeight: 1,
-                  cursor: "help",
-                }}
-                aria-label="Terverifikasi Prodi PNJ"
-              >
+              <span className={dashboard.sealIcon} title="Terverifikasi Prodi PNJ: Sertifikasi & portofolio tervalidasi resmi" aria-label="Terverifikasi Prodi PNJ">
                 <SealCheck size={20} weight="fill" />
               </span>
             )}
-            <Badge tone={CATEGORY_TONE[candidate.category]}>{candidate.category}</Badge>
             {candidate.warning && (
               <span className={app.flag}>
                 <ShieldWarning size={16} aria-hidden /> Prompt injection
               </span>
             )}
           </span>
-          <span className={app.meta}>
-            {candidate.studyProgram} · angkatan {candidate.cohortYear} ·{" "}
-            {unmetCount ? `${unmetCount} syarat belum penuh` : "semua syarat terpenuhi"}
+          <span className={app.candFacts}>
+            <span title="Program studi">
+              <GraduationCap size={15} aria-hidden /> {candidate.studyProgram}
+            </span>
+            <span title="Angkatan">
+              <CalendarBlank size={15} aria-hidden /> Angkatan {candidate.cohortYear}
+            </span>
+            <span title="Syarat">
+              <ListChecks size={15} aria-hidden /> {unmetCount ? `${unmetCount} syarat belum penuh` : "Semua syarat terpenuhi"}
+            </span>
           </span>
         </span>
         <span className={app.rowEnd}>
-          <Badge tone={DECISION_TONE[candidate.decision]}>{candidate.decision}</Badge>
+          <span className={app.rowEndBadges}>
+            <Badge tone={CATEGORY_TONE[candidate.category]}>{candidate.category}</Badge>
+            <Badge tone={DECISION_TONE[candidate.decision]}>{candidate.decision}</Badge>
+          </span>
           <CaretRight size={20} aria-hidden />
         </span>
       </Link>

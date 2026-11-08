@@ -11,8 +11,8 @@ export default function StudyProgramPage() {
     <main id="content" className={shell.page}>
       <PageHeader
         href="/prodi"
-        title="Dasbor Program Studi"
-        lead={`${STUDY_PROGRAM.name}, ${STUDY_PROGRAM.campus}. Ringkasan eksekutif link-and-match kurikulum kampus dengan standar seleksi industri.`}
+        title="Dasbor Prodi"
+        lead={`${STUDY_PROGRAM.name}, ${STUDY_PROGRAM.campus}. Kurikulum dan kebutuhan industri dalam satu ringkasan.`}
       />
       <StudyProgramOverview />
     </main>

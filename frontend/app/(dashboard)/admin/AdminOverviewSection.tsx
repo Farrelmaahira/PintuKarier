@@ -3,13 +3,15 @@
 import { useAdminCareerCenter } from "@/lib/hooks/useAdminCareerCenter";
 import { AdminOverview } from "@/components/organisms/AdminOverview";
 import { Skeleton } from "@/components/atoms/Skeleton";
+import { Notice } from "@/components/molecules/Notice";
+import shell from "@/styles/shell.module.css";
 
 export function AdminOverviewSection() {
   const { overview, isLoading, error } = useAdminCareerCenter();
 
   if (isLoading && !overview) {
     return (
-      <div style={{ display: "grid", gap: "20px" }}>
+      <div className={shell.stack}>
         <Skeleton height="110px" />
         <Skeleton height="360px" />
       </div>
@@ -18,9 +20,7 @@ export function AdminOverviewSection() {
 
   if (error && !overview) {
     return (
-      <div style={{ padding: "40px", textAlign: "center", border: "var(--border)", background: "var(--surface-raised)" }}>
-        {error}
-      </div>
+      <Notice tone="error">{error}</Notice>
     );
   }
 

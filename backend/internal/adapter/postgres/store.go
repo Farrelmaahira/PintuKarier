@@ -134,6 +134,21 @@ func (s *Store) CreateVacancy(ctx context.Context, v domain.Vacancy) error {
 	return err
 }
 
+func (s *Store) UpdateVacancy(ctx context.Context, v domain.Vacancy) error {
+	var deadline *time.Time
+	if !v.Deadline.IsZero() {
+		deadline = &v.Deadline
+	}
+	_, err := s.db.Exec(ctx, `UPDATE lowongan SET posisi=$2, bidang=$3, lokasi=$4, tipe=$5, deskripsi=$6, deadline=$7, wajib=$8, plus=$9 WHERE id=$1`,
+		v.ID, v.Title, v.Position, v.Location, v.Type, v.Description, deadline, toJSON(v.Required), toJSON(nonNil(v.Preferred)))
+	return err
+}
+
+func (s *Store) DeleteVacancy(ctx context.Context, id string) error {
+	_, err := s.db.Exec(ctx, `DELETE FROM lowongan WHERE id=$1`, id)
+	return err
+}
+
 func (s *Store) ListVacancies(ctx context.Context, createdBy string) ([]domain.Vacancy, error) {
 	rows, err := s.db.Query(ctx, `SELECT `+vacancyCols+` FROM lowongan l WHERE $1 = '' OR l.created_by = $1 ORDER BY l.created_at DESC`, createdBy)
 	if err != nil {

@@ -1,3 +1,5 @@
+import app from "@/styles/app.module.css";
+
 interface GapSummaryListProps {
   gaps: [string, number][];
 }
@@ -5,16 +7,13 @@ interface GapSummaryListProps {
 /** Daftar singkat kompetensi dengan persentase kandidat yang belum memenuhi. */
 export function GapSummaryList({ gaps }: GapSummaryListProps) {
   return (
-    <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
+    <div>
       {gaps.map(([name, percent]) => (
-        <li
-          key={name}
-          style={{ display: "flex", justifyContent: "space-between", padding: "6px 10px", background: "var(--surface-warm)", fontSize: 13, borderLeft: "3px solid var(--cat-orange)" }}
-        >
+        <div key={name} className={app.jobCardCount} style={{ paddingBottom: 8 }}>
           <span>{name}</span>
-          <strong className="num">{percent}% kurang</strong>
-        </li>
+          <span className="num">{percent}% kurang</span>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { api } from "../api";
 import { validateEmail } from "../validateEmail";
-import type { UserRole } from "../data/auth";
+import { ROLE_INFO, USER_ROLES, type UserRole } from "../data/auth";
 import { safeNext } from "../safeNext";
 import { setSession } from "../setSession";
 
@@ -46,6 +46,14 @@ export async function login(
         (e as Error).cause === 401
           ? "Email atau password salah."
           : (e as Error).message,
+      email,
+    };
+  }
+  // Peran yang dipilih di form harus sama dengan peran akun; kalau tidak, sesi tidak dibuat.
+  const chosen = form.get("role");
+  if (USER_ROLES.includes(chosen as UserRole) && chosen !== response.role) {
+    return {
+      error: `Akun ini terdaftar sebagai ${ROLE_INFO[response.role].label}, bukan ${ROLE_INFO[chosen as UserRole].label}. Ganti peran dulu, ya.`,
       email,
     };
   }

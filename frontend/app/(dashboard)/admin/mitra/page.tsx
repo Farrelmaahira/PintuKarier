@@ -10,8 +10,8 @@ export default function AdminMitraPage() {
     <main id="content" className={shell.page}>
       <PageHeader
         href="/admin/mitra"
-        title="Mitra Perusahaan & Audit SLA"
-        lead="Daftar korporasi mitra rekrutmen resmi Politeknik Negeri Jakarta beserta kepatuhan pengiriman feedback ke kandidat."
+        title="Mitra Industri"
+        lead="Perusahaan mitra rekrutmen dan kepatuhan feedback ke kandidat."
       />
       <AdminMitraClient />
     </main>

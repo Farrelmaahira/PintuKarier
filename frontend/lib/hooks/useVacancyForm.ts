@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, type FormEvent } from "react";
-import { createVacancy } from "../actions/createVacancy";
+import { createVacancy, type NewVacancy } from "../actions/createVacancy";
 import { POSITIONS } from "../data/studyProgram/info";
 
 export const JOB_FIELDS = POSITIONS.filter((position) => position !== "Semua posisi");
@@ -19,11 +19,16 @@ const EMPTY_FORM = {
 };
 export type VacancyFormValues = typeof EMPTY_FORM;
 
-/** State, validasi, dan pengiriman form lowongan baru; `onCreated` dipanggil setelah berhasil. */
-export function useVacancyForm(onCreated: () => void) {
-  const [form, setForm] = useState(EMPTY_FORM);
+export interface VacancyFormOptions {
+  initialValues?: VacancyFormValues;
+  /** Pengganti penyimpanan bawaan (buat baru), mis. untuk mengubah lowongan. */
+  save?: (input: NewVacancy) => ReturnType<typeof createVacancy>;
+}
+
+/** State, validasi, dan pengiriman form lowongan; `onSaved` menerima nama posisi setelah berhasil. */
+export function useVacancyForm(onSaved: (position: string) => void, options: VacancyFormOptions = {}) {
+  const [form, setForm] = useState<VacancyFormValues>(options.initialValues ?? EMPTY_FORM);
   const [tried, setTried] = useState(false);
-  const [savedPosition, setSavedPosition] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, startSaving] = useTransition();
 
@@ -38,18 +43,15 @@ export function useVacancyForm(onCreated: () => void) {
     if (positionError || mustHaveError) return;
     startSaving(async () => {
       setError(null);
-      const result = await createVacancy({
+      const save = options.save ?? createVacancy;
+      const result = await save({
         ...form,
         position: form.position.trim(),
         mustHave: splitLines(form.mustHave),
         niceToHave: splitLines(form.niceToHave),
       });
       if (!result.ok) return setError(result.error);
-      setSavedPosition(result.data.position);
-      // Jenis dan kelompok posisi dipertahankan untuk lowongan berikutnya.
-      setForm((current) => ({ ...EMPTY_FORM, jobField: current.jobField, type: current.type }));
-      setTried(false);
-      onCreated();
+      onSaved(result.data.position);
     });
   };
 
@@ -59,7 +61,6 @@ export function useVacancyForm(onCreated: () => void) {
     submit,
     saving,
     error,
-    savedPosition,
     errors: { position: tried ? positionError : null, mustHave: tried ? mustHaveError : null },
   };
 }

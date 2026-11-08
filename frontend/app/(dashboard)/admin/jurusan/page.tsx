@@ -10,8 +10,8 @@ export default function AdminJurusanPage() {
     <main id="content" className={shell.page}>
       <PageHeader
         href="/admin/jurusan"
-        title="Statistik 7 Jurusan"
-        lead="Pemantauan daya serap lulusan, kesenjangan kompetensi prioritas, dan rata-rata skor kesiapan kerja per jurusan Politeknik Negeri Jakarta."
+        title="Statistik Jurusan"
+        lead="Daya serap lulusan dan kesenjangan kompetensi per jurusan."
       />
       <AdminJurusanClient />
     </main>

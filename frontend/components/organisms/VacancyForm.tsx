@@ -1,49 +1,39 @@
-"use client";
-
-import { useState } from "react";
-import { Plus } from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "../atoms/Button";
 import { EmptyState } from "../molecules/EmptyState";
-import { HrVacancyRow } from "../molecules/HrVacancyRow";
+import { HrVacancyCard } from "../molecules/HrVacancyCard";
 import { Notice } from "../molecules/Notice";
 import { Panel } from "../molecules/Panel";
-import { VacancyFormFields } from "./VacancyFormFields";
 import type { Vacancy } from "@/lib/data/student";
-import { useVacancyForm } from "@/lib/hooks/useVacancyForm";
 import app from "@/styles/app.module.css";
-import rows from "@/styles/rows.module.css";
 
 interface VacancyFormProps {
   vacancies: Vacancy[];
+  /** Posisi lowongan yang baru dibuat, untuk pesan sukses. */
+  created?: string;
 }
 
-/** Lowongan milik HRD + form buat lowongan baru lewat API. */
-export function VacancyForm({ vacancies }: VacancyFormProps) {
-  const [open, setOpen] = useState(false);
-  const state = useVacancyForm(() => setOpen(false));
-
+/** Lowongan milik HRD; buat dan ubah lowongan dikerjakan di halaman sendiri. */
+export function VacancyForm({ vacancies, created }: VacancyFormProps) {
   return (
     <Panel
       title="Lowongan aktif"
       flush
       actions={
-        <Button size="sm" variant="ghost" onClick={() => setOpen(!open)} icon={<Plus size={18} />}>
-          {open ? "Tutup" : "Buat lowongan"}
+        <Button size="sm" variant="ghost" href="/hrd/lowongan/baru" icon={<Plus size={18} />}>
+          Buat lowongan
         </Button>
       }
     >
-      {open && <VacancyFormFields state={state} />}
-      {state.savedPosition && (
-        <div className={app.pad}>
-          <Notice tone="success">
-            “{state.savedPosition}” udah dibuka. Pertanyaan pre-screening dan AI Interview-nya lagi disusun AI dari syarat kamu.
-          </Notice>
+      {created && (
+        <div className={app.pad} style={{ borderBottom: "var(--border)" }}>
+          <Notice tone="success">“{created}” udah dibuka. Pertanyaan pre-screening dan AI Interview-nya lagi disusun AI dari syarat kamu.</Notice>
         </div>
       )}
       {vacancies.length ? (
-        <ul className={rows.list}>
+        <ul className={`${app.jobGrid} ${app.cardGridPad}`}>
           {vacancies.map((vacancy) => (
-            <HrVacancyRow key={vacancy.id} vacancy={vacancy} />
+            <HrVacancyCard key={vacancy.id} vacancy={vacancy} />
           ))}
         </ul>
       ) : (

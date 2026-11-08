@@ -1,15 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { AdminDepartmentSummary } from "@/lib/data/admin/types";
 import { ArrowRight } from "@phosphor-icons/react";
 import { Button } from "../atoms/Button";
 import { Tag } from "../atoms/Tag";
+import { EmptyState } from "../molecules/EmptyState";
+import { SearchField } from "../molecules/SearchField";
+import { Segmented } from "../molecules/Segmented";
 import { Panel } from "../molecules/Panel";
 import { Stat } from "../molecules/Stat";
 import { StatGrid } from "../molecules/StatGrid";
 import shell from "@/styles/shell.module.css";
 import ui from "@/styles/ui.module.css";
-import app from "@/styles/app.module.css";
+import dashboard from "@/styles/dashboard.module.css";
+
+const ALL_DEPTS = "Semua Jurusan";
 
 export interface AdminDepartmentsViewProps {
   departments: AdminDepartmentSummary[];
@@ -22,11 +28,7 @@ export function AdminDepartmentsView({
   activeFilter,
   onFilterChange,
 }: AdminDepartmentsViewProps) {
-  const displayedDepartments =
-    activeFilter === "ALL"
-      ? departments
-      : departments.filter((d) => d.departmentCode === activeFilter);
-
+  const [query, setQuery] = useState("");
   const getDeptName = (dept: AdminDepartmentSummary) => {
     const raw = dept as unknown as Record<string, unknown>;
     return (
@@ -37,33 +39,28 @@ export function AdminDepartmentsView({
     );
   };
 
-  return (
-    <div className={shell.stack} style={{ gap: "20px" }}>
-      <div className={app.segment} role="tablist" aria-label="Filter Jurusan PNJ">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeFilter === "ALL"}
-          aria-pressed={activeFilter === "ALL"}
-          onClick={() => onFilterChange("ALL")}
-        >
-          Semua Jurusan ({departments.length})
-        </button>
-        {departments.map((d) => (
-          <button
-            key={d.departmentCode}
-            type="button"
-            role="tab"
-            aria-selected={activeFilter === d.departmentCode}
-            aria-pressed={activeFilter === d.departmentCode}
-            onClick={() => onFilterChange(d.departmentCode)}
-          >
-            {d.departmentCode}
-          </button>
-        ))}
-      </div>
+  const q = query.trim().toLowerCase();
+  const displayedDepartments = departments.filter(
+    (d) =>
+      (activeFilter === "ALL" || d.departmentCode === activeFilter) &&
+      (!q || getDeptName(d).toLowerCase().includes(q) || d.departmentCode.toLowerCase().includes(q)),
+  );
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "20px" }}>
+  return (
+    <div className={shell.stack}>
+      <div className={ui.toolbar}>
+        <SearchField value={query} onChange={setQuery} placeholder="Cari nama atau kode jurusan..." />
+      </div>
+      <Segmented
+        label="Jurusan"
+        options={[ALL_DEPTS, ...departments.map((d) => d.departmentCode)]}
+        value={activeFilter === "ALL" ? ALL_DEPTS : activeFilter}
+        onChange={(v) => onFilterChange(v === ALL_DEPTS ? "ALL" : v)}
+      />
+
+      {displayedDepartments.length === 0 && <EmptyState title="Jurusan tidak ditemukan">Coba kata kunci lain atau reset filter.</EmptyState>}
+
+      <div className={dashboard.moduleGrid}>
         {displayedDepartments.map((dept) => {
           const deptName = getDeptName(dept);
           const gaps = dept.competencyGaps ?? [];
@@ -84,35 +81,18 @@ export function AdminDepartmentsView({
                 </StatGrid>
               </div>
 
-              <div style={{ padding: "16px 20px", display: "grid", gap: "8px", borderTop: "var(--border)", background: "var(--surface)" }}>
-                <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", color: "var(--text-muted)" }}>
-                  3 Kesenjangan Kompetensi Teratas Industri:
-                </span>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              <div className={dashboard.deptGaps}>
+                <span className={dashboard.deptGapsTitle}>3 Kesenjangan Kompetensi Teratas Industri:</span>
+                <div className={dashboard.chipRow}>
                   {gaps.map((skill) => (
                     <Tag key={skill}>{skill}</Tag>
                   ))}
                 </div>
-                <span style={{ fontSize: "11px", color: "var(--text-subtle)", marginTop: "4px" }}>
-                  Agregasi seleksi riil periode Gasal 2026/2027 · Berbasis bukti penolakan
-                </span>
+                <span className={dashboard.deptGapsNote}>Agregasi seleksi riil periode Gasal 2026/2027 · Berbasis bukti penolakan</span>
               </div>
 
-              <div
-                style={{
-                  padding: "10px 20px",
-                  borderTop: "var(--border)",
-                  background: "var(--surface-raised)",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Button
-                  href={`/admin/jurusan/${dept.departmentCode.toLowerCase()}`}
-                  size="sm"
-                  variant="ghost"
-                  icon={<ArrowRight size={16} />}
-                >
+              <div className={dashboard.deptFoot}>
+                <Button href={`/admin/jurusan/${dept.departmentCode.toLowerCase()}`} size="sm" variant="ghost" icon={<ArrowRight size={16} />}>
                   Detail &amp; Kurikulum Jurusan
                 </Button>
               </div>

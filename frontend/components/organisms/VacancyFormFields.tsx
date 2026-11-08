@@ -4,15 +4,17 @@ import { Notice } from "../molecules/Notice";
 import { Segmented } from "../molecules/Segmented";
 import { JOB_FIELDS, type useVacancyForm } from "@/lib/hooks/useVacancyForm";
 import app from "@/styles/app.module.css";
+import ui from "@/styles/ui.module.css";
 
 const TYPES = ["Magang", "Full-time", "Kontrak"];
 
 interface VacancyFormFieldsProps {
   state: ReturnType<typeof useVacancyForm>;
+  submitLabel?: string;
+  onCancel?: () => void;
 }
 
-/** Isian form lowongan baru. */
-export function VacancyFormFields({ state }: VacancyFormFieldsProps) {
+export function VacancyFormFields({ state, submitLabel = "Buka lowongan", onCancel }: VacancyFormFieldsProps) {
   const { form, setField, errors } = state;
   return (
     <form className={`${app.stack} ${app.pad}`} noValidate onSubmit={state.submit}>
@@ -40,9 +42,16 @@ export function VacancyFormFields({ state }: VacancyFormFieldsProps) {
         helper="Opsional, satu per baris."
       />
       {state.error && <Notice tone="error">{state.error}</Notice>}
-      <Button type="submit" loading={state.saving} disabled={state.saving}>
-        Buka lowongan
-      </Button>
+      <div className={ui.btnRow}>
+        <Button type="submit" loading={state.saving} disabled={state.saving}>
+          {submitLabel}
+        </Button>
+        {onCancel && (
+          <Button variant="plain" onClick={onCancel} disabled={state.saving}>
+            Batal
+          </Button>
+        )}
+      </div>
     </form>
   );
 }

@@ -55,3 +55,27 @@ func TestApplyRejectsEmptyIDs(t *testing.T) {
 		t.Error("expected error for empty student id")
 	}
 }
+
+func TestUpdateVacancy(t *testing.T) {
+	v := sampleVacancy()
+	v.ID = "low-1"
+	got, err := UpdateVacancy(v)
+	if err != nil {
+		t.Fatalf("UpdateVacancy: %v", err)
+	}
+	if got.ID != "low-1" || got.Title != "Backend Intern" || len(got.Required) != 1 || got.Required[0] != "Go" {
+		t.Fatalf("vacancy = %+v", got)
+	}
+	cases := map[string]func(*domain.Vacancy){
+		"tanpa id":     func(v *domain.Vacancy) { v.ID = "" },
+		"tipe salah":   func(v *domain.Vacancy) { v.Type = "Paruh waktu" },
+		"tanpa syarat": func(v *domain.Vacancy) { v.Required = []string{" "} },
+	}
+	for name, mutate := range cases {
+		bad := v
+		mutate(&bad)
+		if _, err := UpdateVacancy(bad); err == nil {
+			t.Errorf("%s: want error", name)
+		}
+	}
+}

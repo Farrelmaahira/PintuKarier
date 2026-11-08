@@ -1,103 +1,65 @@
+import { ReadinessProfile } from "@/lib/data/readiness/types";
+import { CATEGORY_TONE, READY_THRESHOLD, scoreTone, TONE_COLOR } from "@/lib/tone";
 import { Badge } from "../atoms/Badge";
+import { Meter } from "../atoms/Meter";
+import { ScoreBox } from "../atoms/ScoreBox";
 import { Panel } from "../molecules/Panel";
+import { SelectField } from "../molecules/SelectField";
 import { Stat } from "../molecules/Stat";
 import { StatGrid } from "../molecules/StatGrid";
-import { ReadinessProfile } from "@/lib/data/readiness/types";
-import { CATEGORY_TONE, Tone } from "@/lib/tone";
+import ui from "@/styles/ui.module.css";
 
 export interface ReadinessScoreOverviewProps {
   profile: ReadinessProfile;
-  availablePositions?: readonly string[];
-  selectedPosition?: string;
-  onPositionChange?: (position: string) => void;
+  availablePositions: readonly string[];
+  selectedPosition: string;
+  onPositionChange: (position: string) => void;
 }
 
-export function ReadinessScoreOverview({
-  profile,
-  availablePositions,
-  selectedPosition,
-  onPositionChange,
-}: ReadinessScoreOverviewProps) {
-  const categoryTone: Tone =
-    CATEGORY_TONE[profile.overallCategory] ??
-    (profile.overallScore >= 80
-      ? "green"
-      : profile.overallScore >= 65
-      ? "yellow"
-      : "orange");
-
-  const positionValue =
-    availablePositions && onPositionChange ? (
-      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-        <select
-          value={selectedPosition || profile.targetPosition}
-          onChange={(e) => onPositionChange(e.target.value)}
-          aria-label="Ganti Posisi Sasaran Karier"
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "14px",
-            fontWeight: 700,
-            border: "1px solid var(--ink)",
-            background: "var(--surface)",
-            padding: "4px 8px",
-            color: "var(--ink)",
-            cursor: "pointer",
-            width: "100%",
-            maxWidth: "320px",
-          }}
-        >
-          {availablePositions.map((pos) => (
-            <option key={pos} value={pos}>
-              {pos}
-            </option>
-          ))}
-        </select>
-        <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-          Ubah fokus target untuk evaluasi spesifik
-        </span>
-      </div>
-    ) : (
-      profile.targetPosition || "Frontend Developer"
-    );
+export function ReadinessScoreOverview({ profile, availablePositions, selectedPosition, onPositionChange }: ReadinessScoreOverviewProps) {
+  const score = profile.overallScore;
+  const tone = CATEGORY_TONE[profile.overallCategory] ?? scoreTone(score);
+  const gap = READY_THRESHOLD - score;
+  const dims = [...(profile.dimensions ?? [])].sort((a, b) => b.score - a.score);
+  const potential = (profile.actionRecommendations ?? []).reduce((sum, r) => sum + r.potentialUp, 0);
 
   return (
-    <Panel title="Indeks Kesiapan Kerja Mahasiswa" tag="Evaluasi Berbasis Bukti" flush>
-      <StatGrid cols={3}>
-        <Stat
-          label="Posisi Sasaran Karier"
-          value={positionValue}
+    <Panel title="Indeks Kesiapan Kerja" tag={profile.targetPosition} flush>
+      <div className={ui.readyHero}>
+        <ScoreBox value={Math.round(score)} tone={tone} big />
+        <div className={ui.readyHeroText}>
+          <Badge tone={tone}>{profile.overallCategory}</Badge>
+          <p className={ui.readyHeroLead}>
+            {gap > 0 ? (
+              <>
+                <strong>{gap.toFixed(1)} poin lagi</strong> menuju ambang seleksi kerja ({READY_THRESHOLD}).
+              </>
+            ) : (
+              <>Skor kamu sudah melewati ambang seleksi kerja ({READY_THRESHOLD}).</>
+            )}
+          </p>
+        </div>
+        <SelectField
+          label="Posisi sasaran karier"
+          value={selectedPosition}
+          onChange={onPositionChange}
+          options={availablePositions.map((p) => ({ value: p, label: p }))}
         />
-        <Stat
-          label="Indeks Kesiapan"
-          value={`${profile.overallScore.toFixed(1)} / 100`}
-        />
-        <Stat
-          label="Status Rekomendasi"
-          value={<Badge tone={categoryTone}>{profile.overallCategory}</Badge>}
-        />
-      </StatGrid>
+      </div>
 
-      <div
-        style={{
-          padding: "14px 20px",
-          borderTop: "var(--border)",
-          background: "var(--surface-warm)",
-          fontSize: "13px",
-          color: "var(--text-muted)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "8px",
-        }}
-      >
-        <span>
-          Skor dihitung dinamis dari bukti nyata portofolio, magang industri, jawaban wawancara AI, dan drill kompetensi.
-        </span>
-        <span style={{ fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--ink)" }}>
-          Ambang minimum seleksi kerja: 80.0
+      <div className={ui.thresholdTrack}>
+        <Meter value={score} label="Indeks kesiapan" tone={TONE_COLOR[tone]} />
+        <span className={ui.thresholdTick} style={{ left: `calc(20px + (100% - 40px) * ${READY_THRESHOLD / 100})` }} aria-hidden />
+        <span className={ui.thresholdLabel} style={{ left: `calc(20px + (100% - 40px) * ${READY_THRESHOLD / 100})` }}>
+          Ambang {READY_THRESHOLD}
         </span>
       </div>
+
+      <StatGrid cols={3}>
+        <Stat label="Indeks kesiapan" value={<span className={ui.statText}>{`${score.toFixed(1)} / 100`}</span>} />
+        <Stat label="Dimensi terkuat" value={<span className={ui.statText}>{dims[0]?.name ?? "-"}</span>} />
+        <Stat label="Potensi kenaikan" value={<span className={ui.statText}>{`+${potential} poin`}</span>} />
+      </StatGrid>
     </Panel>
   );
 }
