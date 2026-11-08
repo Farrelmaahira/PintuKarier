@@ -19,6 +19,22 @@ services:
       timeout: 5s
       retries: 10
 
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      - DATABASE_URL=postgres://pintukarier:pintukarier_dev_password@postgres:5432/pintukarier?sslmode=disable
+      - AI_ENGINE_URL=http://ai-engine:8000
+      - STORAGE_DIR=/data/files
+    ports:
+      - "8080:8080"
+    volumes:
+      - backend_storage:/data/files
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   ai-engine:
     build: ./ai-engine
     restart: unless-stopped
@@ -28,3 +44,4 @@ services:
 
 volumes:
   postgres_data:
+  backend_storage:

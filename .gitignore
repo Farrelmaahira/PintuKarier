@@ -59,3 +59,11 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
+# Auto-generated agent docs
+AGENTS.md
+frontend/AGENTS.md
+
+# Graphify cache
+graphify-out/cache/
+

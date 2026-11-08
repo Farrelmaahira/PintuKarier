@@ -1,0 +1,1130 @@
+/* Layar aplikasi Pintu Karier. Bahasa visual: kotak, border 2px ink, tanpa shadow,
+   transisi CSS saja (DESIGN.md section 8: "App pages: CSS transitions only"). */
+
+/* ---------- Layout bantu ---------- */
+.stack {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.pad {
+  padding: 20px;
+  border-bottom: var(--border);
+}
+
+.toolbar {
+  padding: 14px 20px;
+  border-top: var(--border);
+  border-bottom: var(--border);
+  background: var(--surface-warm);
+}
+
+.filters {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: var(--border);
+  background: var(--surface-warm);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.note {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-muted);
+  max-width: 62ch;
+}
+
+.letter {
+  font-size: 18px;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  max-width: 62ch;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.at {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+  padding-left: 18px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.back:hover {
+  color: var(--text);
+}
+
+.textarea {
+  height: auto;
+  min-height: 110px;
+  padding: 12px 14px;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.inline {
+  display: flex;
+}
+
+.inline .squareBtn {
+  border-left: 0;
+}
+
+.squareBtn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  flex: none;
+  border: var(--border);
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* ---------- Chip & swatch ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.chip button {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+}
+
+.chip button:hover {
+  background: var(--cat-orange);
+  color: var(--ink);
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--ink);
+}
+
+/* ---------- Filter kategori (tab bar adaptif flex-wrap) ----------
+   Menggunakan flex-wrap (bukan grid) agar tombol di baris berikutnya melebar
+   mengisi ruang baris dan tidak menyisakan rongga hitam (black void). */
+.catFilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border: var(--border);
+  background: var(--ink);
+}
+
+.catFilter button {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 48px;
+  min-height: 48px;
+  padding: 8px 12px;
+  background: var(--surface-raised);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  line-height: 1.2;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.catFilter button:hover {
+  background: var(--surface-warm);
+}
+
+.catFilter button[aria-pressed="true"] {
+  background: var(--tone);
+  color: var(--ink);
+}
+
+/* "Semua" memakai tone ink, jadi teksnya dibalik. */
+.catFilter button[aria-pressed="true"]:first-child {
+  color: var(--on-ink);
+}
+
+.catCount {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* ---------- Segmented ----------
+   Celah 2px di atas latar ink: garis antar tombol selalu utuh, berapa pun jumlah baris.
+   Flex, bukan grid: tombol di baris terakhir melebar mengisi baris, jadi tidak ada sel kosong hitam. */
+.segment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border: var(--border);
+  background: var(--ink);
+}
+
+.segment button {
+  flex: 1 1 9em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 12px;
+  background: var(--surface-raised);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.segment button:hover {
+  background: var(--surface-warm);
+}
+
+.segment button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+/* ---------- Skor ---------- */
+.score {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border: var(--border);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+}
+
+.scoreBig {
+  width: 96px;
+  height: 96px;
+  font-size: 44px;
+}
+
+.scoreHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.dims {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.dim {
+  display: grid;
+  grid-template-columns: minmax(0, 13em) minmax(0, 1fr) 3ch;
+  align-items: center;
+  gap: 14px;
+  font-size: 14px;
+}
+
+.dimName {
+  font-weight: 500;
+}
+
+.dimWeight {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 560px) {
+  .dim {
+    grid-template-columns: minmax(0, 1fr) 3ch;
+  }
+  .dim > :nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* ---------- Baris kandidat ---------- */
+.candidate {
+  padding: 0;
+  display: block;
+}
+
+.rowLink {
+  display: grid;
+  grid-template-columns: 2.5ch auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  transition: background var(--dur) var(--ease);
+}
+
+.rowLink:hover {
+  background: var(--surface-warm);
+}
+
+.rowLink svg:last-child {
+  transition: transform var(--dur) var(--ease);
+}
+
+.rowLink:hover .rowEnd svg {
+  transform: translateX(4px);
+}
+
+/* Kotak skor persegi 88x88, setinggi blok nama + tiga baris keterangan. */
+.candidate .rowLink > .score {
+  width: 88px;
+  height: 88px;
+  font-size: 34px;
+}
+
+.rank {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-subtle);
+}
+
+.rowEnd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Kolom nama + keterangan kandidat: rapat (2px), seperti lulusin. */
+.candMain {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.candTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Keterangan kandidat: satu item per baris, lurus ke bawah. */
+.candFacts {
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.candFacts > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.candName {
+  line-height: 1.15;
+}
+
+/* Badge kategori di atas badge keputusan, rata kanan. */
+.rowEndBadges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 8px;
+  background: var(--cat-orange);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .rowLink {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .rank {
+    display: none;
+  }
+  .rowEnd {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Lamaran ---------- */
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.stage > :first-child {
+  height: 10px;
+}
+
+/* ---------- Tanya-jawab pre-screening ---------- */
+.qa {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.qa li {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.qa li + li {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.qa strong {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Bukti & transkrip ---------- */
+.evidenceList {
+  list-style: none;
+}
+
+.evidence,
+.transcript {
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+}
+
+.evidence + .evidence,
+.transcript + .transcript {
+  border-top: var(--border);
+}
+
+.evidenceHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.evidenceHead strong {
+  font-weight: 500;
+  margin-right: auto;
+}
+
+.quote {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-left: 4px solid var(--accent);
+  background: var(--surface);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.quote cite {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.missing {
+  padding: 10px 14px;
+  border-left: 4px solid var(--cat-orange);
+  background: var(--surface-warm);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.ask,
+.answer {
+  display: grid;
+  gap: 4px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.ask {
+  font-weight: 500;
+}
+
+.answer {
+  padding-left: 14px;
+  border-left: 2px solid var(--line);
+  color: var(--text-muted);
+}
+
+.who {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-subtle);
+}
+
+/* ---------- Upload & proses ---------- */
+.uploadWrap {
+  display: grid;
+  gap: 14px;
+}
+
+.drop {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 44px 20px;
+  border: 2px dashed var(--ink);
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.drop:hover,
+.drop:focus-within {
+  background-color: color-mix(in srgb, var(--accent) 14%, var(--surface));
+}
+
+.drop span {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.parse {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+}
+
+.fileChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start;
+  padding: 8px 12px;
+  border: var(--border);
+  background: var(--cat-lilac);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.steps {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.steps li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-subtle);
+  transition: color var(--dur) var(--ease);
+}
+
+.steps li::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 2px solid var(--line);
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.steps li[data-state="now"] {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.steps li[data-state="now"]::before {
+  border-color: var(--ink);
+  background: var(--accent);
+  animation: blink 0.9s var(--ease) infinite alternate;
+}
+
+.steps li[data-state="done"] {
+  color: var(--text);
+}
+
+.steps li[data-state="done"]::before {
+  border-color: var(--ink);
+  background: var(--cat-green);
+}
+
+@keyframes blink {
+  to {
+    opacity: 0.35;
+  }
+}
+
+.exp {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.exp p {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ---------- AI Interview ---------- */
+.stage16 {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border: var(--border);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.video[data-on="true"] {
+  opacity: 1;
+}
+
+.videoOff {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 20px;
+  color: var(--on-ink);
+  text-align: center;
+  background-image:
+    linear-gradient(to right, var(--ink-raised) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ink-raised) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+
+.bigCheck {
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+}
+
+.videoBar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 12px;
+  border: var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background var(--dur) var(--ease);
+}
+
+.rec[data-live="true"] {
+  background: var(--cat-orange);
+}
+
+.recDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-subtle);
+}
+
+.recDot[data-live="true"] {
+  background: var(--ink);
+  animation: blink 0.6s ease-in-out infinite alternate;
+}
+
+.question {
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+/* ---------- Feedback ---------- */
+.areas {
+  list-style: none;
+}
+
+.area {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  padding: 20px;
+}
+
+.area + .area {
+  border-top: var(--border);
+}
+
+.area p {
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.areaNo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: var(--border);
+  background: var(--cat-yellow);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* ---------- Dasbor Prodi ---------- */
+.comps {
+  list-style: none;
+}
+
+.comp {
+  display: grid;
+  grid-template-columns: 2.5ch minmax(0, 1fr) 9ch;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+.comp + .comp {
+  border-top: var(--border);
+}
+
+.compMain {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.compHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 16px;
+}
+
+.compHead strong {
+  font-weight: 500;
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--ink);
+  background: var(--surface-muted);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.delta[data-tone="up"] {
+  background: var(--cat-orange);
+}
+
+.delta[data-tone="down"] {
+  background: var(--cat-green);
+}
+
+.notes {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.noteItem {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ---------- Empty state & landing bantu ---------- */
+.emptyArt img {
+  width: 96px;
+  height: auto;
+}
+
+.emptyArtLarge {
+  justify-items: center;
+  text-align: center;
+}
+
+.emptyArtLarge img {
+  width: min(260px, 100%);
+}
+
+.emptyArtLarge p {
+  max-width: 52ch;
+}
+
+.strike {
+  text-decoration: line-through;
+  text-decoration-color: var(--cat-orange);
+  text-decoration-thickness: 2px;
+}
+
+.accept {
+  background: var(--cat-green);
+}
+
+/* Meter di app: isinya tumbuh saat pertama tampil. */
+.stack [role="meter"] > span,
+.dims [role="meter"] > span,
+.comps [role="meter"] > span {
+  animation: grow 0.9s var(--ease) both;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------- Job cards grid ---------- */
+.jobGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.jobCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  border: var(--border);
+  background: var(--surface);
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+.jobCard:hover {
+  background: var(--surface-warm);
+  transform: translateY(-2px);
+}
+
+.jobCardClosed {
+  opacity: 0.6;
+}
+
+.jobCardTop {
+  display: flex;
+  min-height: 56px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: var(--border);
+  background: var(--surface);
+}
+
+.jobCardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 14px;
+  padding: 20px;
+}
+
+.jobCardTitle {
+  min-height: 88px;
+}
+
+.jobCardMeta {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.jobCardMeta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jobCardCount {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.jobCardCount .num {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.jobCardFooter {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: var(--border);
+  background: var(--surface);
+}
+
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.listHeadText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.listTitle {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border: var(--border);
+  background: var(--surface);
+  margin-top: 12px;
+}
+
+.pageInfo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.pageNav {
+  display: inline-flex;
+  border: var(--border);
+}
+
+.pageBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--surface);
+  color: var(--ink);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.pageBtn + .pageBtn {
+  border-left: var(--border);
+}
+
+.pageBtn:hover:not(:disabled) {
+  background: var(--surface-warm);
+}
+
+.pageBtn[aria-current="page"] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.pageBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Chip jumlah di dalam tombol Segmented. */
+.segCount {
+  flex: none;
+}
+
+/* Judul grup di atas Segmented: lebih dekat ke tombolnya daripada ke grup lain. */
+.labeled {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Filter kategori + aksi di sebelah kanan (mis. tombol Filter tanggal). */
+.catRow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+}
+
+.catRow > .catFilter {
+  flex: 1;
+}
+
+.paginationFlush {
+  margin-top: 0;
+  border-width: 2px 0 0;
+}
+
+/* Kartu yang sudah selesai: latar hijau lembut. */
+.jobCardDone,
+.jobCardDone:hover {
+  background: color-mix(in srgb, var(--cat-green) 28%, var(--surface));
+}
+
+.jobCardDone .jobCardTop,
+.jobCardDone .jobCardFooter {
+  background: transparent;
+}
+
+/* Grid kartu di dalam Panel flush (mis. lowongan milik HRD). */
+.cardGridPad {
+  padding: 20px;
+  list-style: none;
+}
+
+.jobCardFooterGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: var(--border);
+  background: var(--surface);
+}
+
+/* Tautan kecil di header panel (mis. "Detail 7 Jurusan"), tanpa margin bawah. */
+.backInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.backInline:hover {
+  color: var(--text);
+}

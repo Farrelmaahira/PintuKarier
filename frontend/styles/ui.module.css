@@ -1,0 +1,1251 @@
+/* ---------- Split CTA button ---------- */
+.btn {
+  display: inline-flex;
+  align-items: stretch;
+  min-height: 56px;
+  border: var(--border);
+  background: var(--surface-raised);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-align: left;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+}
+
+.btnLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  flex: 1;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.btnIcon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  flex: none;
+  border-left: var(--border);
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.btnIcon svg {
+  transition: transform var(--dur) var(--ease);
+}
+
+.btn:hover:not(:disabled) .btnIcon svg {
+  transform: translate(2px, -2px);
+}
+
+.primary .btnLabel {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.primary:hover:not(:disabled) .btnLabel {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.ghost .btnLabel {
+  background: transparent;
+}
+
+.ghost:hover:not(:disabled) .btnLabel {
+  background: var(--surface-warm);
+}
+
+.danger .btnIcon {
+  background: var(--cat-orange);
+}
+
+.plain .btnLabel {
+  justify-content: center;
+}
+
+.plain:hover:not(:disabled) .btnLabel {
+  background: var(--surface-warm);
+}
+
+.sm {
+  min-height: 44px;
+  font-size: 15px;
+}
+
+.sm .btnLabel {
+  padding: 0 14px;
+}
+
+.sm .btnIcon {
+  width: 44px;
+}
+
+.block {
+  display: flex;
+  width: 100%;
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Status badge ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.tone-none {
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+.tone-lilac {
+  background: var(--cat-lilac);
+}
+.tone-accent {
+  background: var(--accent);
+}
+.tone-yellow {
+  background: var(--cat-yellow);
+}
+.tone-cyan {
+  background: var(--cat-cyan);
+}
+.tone-green {
+  background: var(--cat-green);
+}
+.tone-settled {
+  background: var(--surface-raised);
+  color: var(--text);
+  border-color: var(--outline);
+}
+.tone-orange {
+  background: var(--cat-orange);
+}
+
+/* ---------- Status track ---------- */
+.track {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr));
+  border: var(--border);
+}
+
+.track4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.trackCell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 72px;
+  padding: 12px;
+  border-right: var(--border);
+  color: var(--text-subtle);
+  font-size: 14px;
+}
+
+.trackCell:not(.trackDone) {
+  background: var(--surface-raised);
+}
+
+.trackCell:last-child {
+  border-right: 0;
+}
+
+.trackCell strong {
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+}
+
+.trackDone {
+  color: var(--ink);
+}
+
+.trackCurrent {
+  color: var(--ink);
+  box-shadow: inset 0 -4px 0 var(--ink);
+}
+
+.trackNote {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+@media (max-width: 720px) {
+  .track {
+    grid-template-columns: 1fr;
+  }
+  .trackCell {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: var(--border);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .trackCell:last-child {
+    border-bottom: 0;
+  }
+}
+
+/* ---------- Tag chip ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--outline);
+  background: var(--surface-raised);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.tagSim {
+  background: var(--cat-yellow);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ---------- Panel ---------- */
+.panelWrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panelWrap > .tag {
+  align-self: flex-start;
+  border-bottom: 0;
+}
+
+.panel {
+  border: var(--border);
+  background: var(--surface-raised);
+  min-width: 0;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  padding: 12px 20px;
+  border-bottom: var(--border);
+}
+
+.panelTitle {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.panelBody {
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+}
+
+.flush {
+  padding: 0;
+  gap: 0;
+}
+
+/* ---------- Field ---------- */
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.input {
+  height: 48px;
+  width: 100%;
+  padding: 0 14px;
+  border: var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--cat-orange);
+}
+
+.inputMono {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.helper {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.fieldError {
+  justify-self: start;
+  padding: 3px 8px;
+  background: var(--cat-orange);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Notice ---------- */
+.notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: var(--border);
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.notice svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.notice a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.notice-info {
+  background: var(--surface-warm);
+  color: var(--text);
+}
+.notice-success {
+  background: var(--cat-green);
+}
+.notice-error {
+  background: var(--cat-orange);
+}
+.notice-pending {
+  background: var(--cat-lilac);
+}
+
+/* ---------- Stat ---------- */
+.stat {
+  display: grid;
+  gap: 6px;
+  padding: 16px 20px;
+  min-width: 0;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.statCompact .stat {
+  padding: 10px 12px;
+}
+
+.statCompact .statValue {
+  font-size: clamp(16px, 1.4vw, 20px);
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+.statCompact .statLabel {
+  font-size: 11px;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+}
+
+.statGrid > * + * {
+  border-left: var(--border);
+}
+
+.statGrid[data-cols="1"] > * + * {
+  border-left: 0;
+  border-top: var(--border);
+}
+
+@media (max-width: 720px) {
+  .statGrid {
+    grid-template-columns: 1fr;
+  }
+  .statGrid > * + * {
+    border-left: 0;
+    border-top: var(--border);
+  }
+}
+
+/* ---------- Address ---------- */
+.addr {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.iconBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+}
+
+.iconBtn:hover {
+  border-color: var(--outline);
+  color: var(--text);
+}
+
+/* ---------- Skeleton ---------- */
+.skeleton {
+  display: block;
+  height: 1em;
+  background: var(--surface-muted);
+  animation: pulse 1.4s var(--ease) infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* ---------- Empty state ---------- */
+.empty {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding: 28px 20px;
+  background: var(--surface-warm);
+}
+
+.empty h3 {
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.empty p {
+  color: var(--text-muted);
+  max-width: 52ch;
+  line-height: 1.4;
+}
+
+/* ---------- Illustration slot ---------- */
+.slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: var(--ratio, 4 / 3);
+  overflow: hidden;
+}
+
+.slot img {
+  object-fit: contain;
+}
+
+.slotCaption {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  padding: 12px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+  opacity: 0.7;
+}
+
+/* ---------- Key/value list ---------- */
+.kv {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 10px 20px;
+  font-size: 15px;
+}
+
+.kv dt {
+  color: var(--text-muted);
+}
+
+.kv dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Funding progress ---------- */
+.progress {
+  display: grid;
+  gap: 8px;
+}
+
+.progressBar {
+  position: relative;
+  height: 14px;
+  border: var(--border);
+  background: var(--surface-muted);
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform var(--dur) var(--ease);
+}
+
+/* ---------- Bar chart ----------
+   Tanpa latar sendiri: teks, garis, dan sumbu ikut currentColor section-nya. */
+.chart {
+  display: grid;
+  gap: clamp(24px, 3vw, 36px);
+  margin: 0;
+}
+
+.chartTitle {
+  font-size: clamp(17px, 1.6vw, 22px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 32px;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.1vw, 15px);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.swatch {
+  width: 16px;
+  height: 16px;
+}
+
+/* margin kanan = ruang label nilai di ujung bar terpanjang; di HP dipersempit supaya plot tidak jadi sempit. */
+.plot,
+.axis {
+  position: relative;
+  margin-right: 11ch;
+}
+
+@media (max-width: 560px) {
+  .plot,
+  .axis {
+    margin-right: 5.5rem;
+  }
+}
+
+.plot {
+  display: grid;
+  gap: clamp(28px, 3.5vw, 44px);
+}
+
+.gridline {
+  position: absolute;
+  top: 0;
+  bottom: -8px;
+  width: 1px;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.group {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+
+.groupLabel {
+  margin-bottom: 6px;
+  font-size: clamp(17px, 1.7vw, 24px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: clamp(22px, 2.4vw, 34px);
+}
+
+.barFill {
+  flex-shrink: 0; /* panjang bar = skala, jangan ikut menyusut karena label nilai */
+  height: 100%;
+}
+
+.barValue {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.2vw, 16px);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: color-mix(in srgb, currentColor 75%, transparent);
+}
+
+.axis {
+  height: 1.4em;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1vw, 14px);
+  color: color-mix(in srgb, currentColor 60%, transparent);
+}
+
+.axis span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.axis span:first-child {
+  transform: none;
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.progressMeta strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ---------- Disclosure ---------- */
+.disclosure {
+  border-top: 1px solid var(--line);
+}
+
+.disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 2px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure > summary::before {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.disclosure[open] > summary::before {
+  content: "−";
+}
+
+.disclosure > summary:hover {
+  color: var(--text);
+}
+
+.disclosureBody {
+  display: grid;
+  gap: 14px;
+  padding-top: 12px;
+}
+
+/* ---------- Facts ---------- */
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+}
+
+.facts dt {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.facts dd {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.panelBody > .disclosure:first-child {
+  border-top: 0;
+}
+
+.panelBody > .disclosure:first-child > summary {
+  padding-top: 0;
+}
+
+/* ---------- Modal (dialog bingkai 2px, setara Dialog di lulusin) ---------- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 15, 29, 0.65);
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow: hidden;
+  border: var(--border);
+  background: var(--surface-raised);
+  box-shadow: 0 20px 48px rgba(0, 15, 29, 0.22);
+}
+
+.modalWide {
+  max-width: 680px;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: var(--border);
+  background: var(--surface);
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.modalClose {
+  display: flex;
+  padding: 6px;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.modalClose:hover:not(:disabled) {
+  color: var(--ink);
+}
+
+.modalBody {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.modalFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: var(--border);
+  background: var(--surface);
+}
+
+.modalIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* ---------- Callout (kotak catatan dengan garis tepi kiri) ---------- */
+.callout {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  background: var(--surface-raised);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.callout-plain {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.callout-warn {
+  border-color: var(--cat-yellow);
+  background: var(--warn-soft);
+  color: var(--ink);
+}
+
+.callout-error {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.calloutTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ---------- Toolbar & kolom pencarian ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.search {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 480px;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search .input {
+  padding-left: 42px;
+}
+
+/* ---------- Tombol ikon aksi (varian danger) ---------- */
+.iconBtnDanger {
+  color: var(--danger);
+}
+
+.iconBtnDanger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+button.iconBtn {
+  width: 32px;
+  height: 32px;
+  background: var(--surface-raised);
+  cursor: pointer;
+}
+
+/* ---------- Pembantu tata letak form ---------- */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.formStack {
+  display: grid;
+  gap: 12px;
+}
+
+.formSection {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: var(--border);
+  background: var(--surface-warm);
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- FilterBar ---------- */
+.filterBar {
+  display: grid;
+  gap: 18px;
+  padding: 16px;
+  border: var(--border);
+  background: var(--surface-raised);
+}
+
+.filterGroups {
+  display: grid;
+  gap: 20px;
+}
+
+.filterSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: var(--hairline);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.linkBtn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.linkBtn:hover {
+  color: var(--accent);
+}
+
+/* ---------- ScoreCell: angka mono + keterangan kecil di kolom kanan baris ---------- */
+.scoreCell {
+  display: grid;
+  min-width: 60px;
+  text-align: right;
+}
+
+.scoreCellValue {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.scoreCellLabel {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ---------- Hero skor kesiapan ---------- */
+.readyHero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 280px);
+  align-items: center;
+  gap: 24px;
+  padding: 24px 20px;
+}
+
+.readyHeroText {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
+.readyHeroLead {
+  font-size: 18px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+/* Bar skor dengan penanda ambang minimum. */
+.thresholdTrack {
+  position: relative;
+  padding: 0 20px 36px;
+  border-bottom: var(--border);
+}
+
+.thresholdTick {
+  position: absolute;
+  top: -4px;
+  bottom: 28px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.thresholdLabel {
+  position: absolute;
+  bottom: 10px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .readyHero {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .readyHero > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Baris label + aksi kecil di kanan, dan baris tombol. */
+.labelRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.btnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+fieldset.formSection {
+  min-width: 0;
+}
+
+/* Nilai Stat berupa teks (bukan angka): boleh turun baris dan memakai font sans. */
+.statText {
+  display: block;
+  font-size: clamp(18px, 1.8vw, 24px);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Dropdown: panah kustom dengan jarak dari tepi kanan (panah bawaan browser menempel ke tepi). */
+select.input {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 256 256'%3E%3Cpath fill='%23000f1d' d='M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+
+/* ---------- Toolbar di dalam Panel flush (filter di antara header dan daftar) ---------- */
+.panelToolbar {
+  display: grid;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: var(--border);
+  background: var(--surface-warm);
+}
+
+/* ---------- DateFilter: tombol Filter + popover rentang tanggal ---------- */
+.filterWrap {
+  position: relative;
+  display: flex;
+  flex: none;
+}
+
+.filterBtn {
+  align-self: stretch;
+  padding: 8px 12px;
+  border: var(--border);
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.filterBtn:hover {
+  background: var(--surface-warm);
+}
+
+.filterBtn[aria-expanded="true"],
+.filterBtnActive {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.filterBtn[aria-expanded="true"]:hover,
+.filterBtnActive:hover {
+  background: var(--ink);
+}
+
+.filterPop {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 5;
+  display: grid;
+  gap: 14px;
+  width: 260px;
+  padding: 14px;
+  border: var(--border);
+  background: var(--surface);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.filterPopActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.filterPopBtn {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.filterPopBtn:hover {
+  background: var(--surface-warm);
+}
+
+.filterPopPrimary,
+.filterPopPrimary:hover {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+/* ---------- Kotak ikon persegi (di samping judul item daftar) ---------- */
+.iconTile {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ink);
+  background: var(--surface-warm);
+}
+
+.itemHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.itemHeadText {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.itemNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Baris catatan di dasar panel (pakai bersama .panelToolbar): teks kiri, info singkat kanan. */
+.noteStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  border-top: var(--border);
+  border-bottom: 0;
+  font-size: 13px;
+}
